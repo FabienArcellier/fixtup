@@ -1,0 +1,2 @@
+[fixtup]
+fixture = {{ fixtup_path }}
