@@ -1,5 +1,5 @@
 import click
-from click.exceptions import UsageError
+from click.exceptions import Abort, ClickException
 
 from fixtup.exceptions import FixtupException
 from fixtup.settings.base import read_settings
@@ -13,4 +13,4 @@ def info():
         click.echo(f"Fixtures: {settings.fixtures_dir}")
         exit(0)
     except FixtupException as exception:
-        raise UsageError(exception.msg) from exception
+        raise ClickException(exception.msg) from exception
