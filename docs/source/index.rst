@@ -1,7 +1,7 @@
 Fixtup
 ######
 
-``Fixtup`` facilite l'écriture de tests automatiques en python qui s'appuie sur des ressources externes.
+``Fixtup`` facilite l'écriture de tests automatiques en python qui s'appuie un environnement complexe.
 
 Une ressource externe peut etre aussi simple qu'un dossier de travail ou un service plus complexe comme
 une base de donnée postgresql, un broker de message rabbitmq, ou un service cloud comme AWS S3, ...
