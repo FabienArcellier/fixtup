@@ -52,7 +52,7 @@ class SetupCfg(SettingsParser):
         parser = configparser.ConfigParser()
         parser.read(manifest_expected_path)
 
-        return Settings.from_manifest(path, dict(parser["fixtup"]))
+        return Settings.from_manifest(manifest_expected_path, dict(parser["fixtup"]))
 
     def append_settings(self, path: str, settings: Settings):
         pass

@@ -55,7 +55,7 @@ class PyprojectToml(SettingsParser):
         with io.open(manifest_expected_path) as file_pointer:
             global_settings = toml.load(file_pointer)
             settings = global_settings["tools.fixtup"]
-            return Settings.from_manifest(path, settings)
+            return Settings.from_manifest(manifest_expected_path, settings)
 
     def append_settings(self, path: str, settings: Settings):
         """

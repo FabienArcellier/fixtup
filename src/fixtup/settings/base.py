@@ -46,7 +46,7 @@ def read_settings() -> Settings:
     if is_python_project is False:
         raise PythonManifestMissing("not a python project (or any of the parent directories): setup.cfg or pyproject.toml")
 
-    raise FixtupSettingsMissing("no fixtup in this project, you should run fixtup init")
+    raise FixtupSettingsMissing("fixtup not configured in this project, you should run fixtup init")
 
 def write_settings(settings: Settings):
     """

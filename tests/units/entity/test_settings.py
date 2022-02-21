@@ -32,6 +32,13 @@ class TestSettings(unittest.TestCase):
         # Assert
         self.assertFalse(hasattr(entity, "stupid_attribute"))
 
+    def test_configuration_dir_should_return_the_directory_of_the_manifest(self):
+        # Arrange
+        settings = Settings(configuration_path="hello/world/setup.cfg", fixtures="test/fixtures")
+
+        # Acts & Assert
+        self.assertEqual("hello/world", settings.configuration_dir)
+
 
 if __name__ == '__main__':
     unittest.main()
