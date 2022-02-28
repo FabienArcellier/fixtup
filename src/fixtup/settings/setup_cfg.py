@@ -21,7 +21,7 @@ class SetupCfg(SettingsParser):
         manifest_exists = os.path.isfile(manifest_expected_path)
 
         if manifest_exists:
-            logger.debug(f'manifest pyproject.toml is present : {manifest_expected_path}')
+            logger.debug(f'manifest setup.cfg is present : {manifest_expected_path}')
 
         return manifest_exists
 

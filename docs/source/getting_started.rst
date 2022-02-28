@@ -28,6 +28,7 @@ one by one. Vous retrouverez cet exemple complet dans le repository de code de `
     └── tests
         ├── fixtures
         │   └── thumbnail_context
+        |       ├── fixtup.yml
         │       └── file.png
         └── integrations
             ├── __init__.py

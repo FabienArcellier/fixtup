@@ -25,6 +25,7 @@ mounted from the fixture.
         └── fixtures
             └── database_context
                 ├── docker-compose.yml
+                ├── fixtup.yml
                 └── .hooks
                     ├── hook_mounted.py.sample
                     ├── hook_started.py
