@@ -1,5 +1,5 @@
 [fixtup]
-fixture = {{ fixtup_path }}
+fixture = {{ fixtures }}
 plugins=
     fixtup.plugins.docker
     fixtup.plugins.dotenv

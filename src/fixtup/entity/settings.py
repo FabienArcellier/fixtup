@@ -40,7 +40,7 @@ class Settings:
         :return:
         """
         _settings: Dict[str, Any] = {'configuration_path': None}
-        fields = [field for field in attr.fields(cls)]
+        fields = [field.name for field in attr.fields(cls)]
         for key, value in settings.items():
             if key in fields:
                 _settings[key] = value
@@ -59,13 +59,36 @@ class Settings:
         :param settings: key / value with settings extract from manifest
         """
 
-        _settings = {'configuration_path': manifest_path}
+        _settings: dict = {'configuration_path': manifest_path}
         fields = [field.name for field in attr.fields(cls)]
         for key, value in settings.items():
             if key in fields:
                 _settings[key] = value
 
         return Settings(**_settings)
+
+    @classmethod
+    def default_settings_for_init(cls, configuration_path: str, fixtures: str) -> 'Settings':
+        """
+        create default settings to write as fixtup configuration when a user
+        initialize its python project with the command ``fixtup init``
+
+        >>> from fixtup.settings.base import write_settings
+        >>>
+        >>> settings = Settings.default_settings_for_init("/home/xxx/my_project/setup.cfg", "tests/fixtures")
+        >>> write_settings(settings)
+
+        :param manifest_path: the path of the manifest that describes the python project (pyproject.toml, ...)
+        :param settings: key / value with settings extract from manifest
+        """
+        return Settings(
+            configuration_path=configuration_path,
+            fixtures=fixtures,
+            plugins=[
+                "fixtup.plugins.docker",
+                "fixtup.plugins.dotenv"
+            ]
+        )
 
     @property
     def configuration_dir(self) -> Optional[str]:

@@ -42,6 +42,37 @@ class TestCli(unittest.TestCase):
             self.assertIn("Configuration", result.output)
             self.assertIn("Fixtures", result.output)
 
+    def test_init_should_configure_a_project_to_use_fixtup(self):
+        self.skipTest("not implemented")
+
+        # Arrange
+        send_text("tests/fixture")
+        send_text("setup.cfg")
+
+        with fixtup.up('python_project'):
+            # Acts
+            result = self._runner.invoke(cli, ['init'])
+
+            # Assert
+            self.assertEqual(0, result.exit_code)
+
+            settings = read_settings()
+            self.assertEqual("tests/fixture", settings.fixtures)
+            self.assertIn("fixtup.plugins.docker", settings.plugins)
+
+    def test_init_should_ignore_a_project_already_configured(self):
+        # Arrange
+        send_text("tests/fixture")
+        send_text("setup.cfg")
+
+        with fixtup.up('fixtup_project'):
+            # Acts
+            result = self._runner.invoke(cli, ['init'])
+
+            # Assert
+            self.assertEqual(2, result.exit_code)
+            self.assertIn("Fixtup is already configured, use fixtup info for more info", result.output)
+
     def test_new_should_generate_a_new_fixture(self):
         # Arrange
         send_text("hello world")

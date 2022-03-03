@@ -53,9 +53,9 @@ class SetupCfg(SettingsParser):
         parser.read(manifest_expected_path)
 
         settings = parser["fixtup"]
-        settings = _parse(settings)
+        _settings = _parse(settings)
 
-        return Settings.from_manifest(manifest_expected_path, dict(settings))
+        return Settings.from_manifest(manifest_expected_path, _settings)
 
     def append_settings(self, path: str, settings: Settings):
         pass
@@ -69,8 +69,8 @@ class SetupCfg(SettingsParser):
         return manifest_expected_path
 
 
-def _parse(settings: configparser.SectionProxy):
-    output = {}
+def _parse(settings: configparser.SectionProxy) -> dict:
+    output: dict = {}
     for attribute in settings:
         value = settings[attribute]
 

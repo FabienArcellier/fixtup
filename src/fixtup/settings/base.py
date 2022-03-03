@@ -52,14 +52,10 @@ def write_settings(settings: Settings):
     """
     Write the settings to the existing project manifest
 
-    Recherche depuis le working directory le manifest du projet (setup.cfg, pyproject.toml, ...) dans les dossiers
-    parents.
+    ouvre le manifest projet et écrit à la fin la configuration
 
-    Si les settings pour tool.fixtup sont absents, ils sont écrits à la fin du fichier projet. Cette fonction est
-    utilisé par la command `fixtup init` lors de l'initialisation d'un projet fixtup.
-
-    En cas d'absence d'un fichier de configuration, un message d'erreur est affiché à l'utilisateur.
-    :param settings:
+    :param manifest_path: the path of the python project manifest that may be setup.cfg or pyproject.toml
+    :param settings: the default settings
     :return:
     """
     raise NotImplementedError()
