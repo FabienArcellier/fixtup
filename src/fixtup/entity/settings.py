@@ -1,19 +1,34 @@
 import os.path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 import attr
 
+
 @attr.s
 class Settings:
+    """
+
+    """
+
     """
     The file of path that contains the configuration of fixtup
     """
     configuration_path: Optional[str] = attr.ib()
 
     """
-    Le chemin du dossier qui contient les fixtures
+    The path to the repository that contains the fixtures
     """
     fixtures: str = attr.ib()
+
+    """
+    list of python modules to load as fixtup plugin.
+
+    The modules must be installed in the system or in the same virtual environment as
+    fixup.
+
+    If a module is not setup, fixtup displays a warning but continues its execution.
+    """
+    plugins: List[str] = attr.ib(factory=list)
 
     @classmethod
     def from_configuration(cls, settings: Dict[str, Any]) -> 'Settings':
@@ -25,7 +40,7 @@ class Settings:
         :return:
         """
         _settings: Dict[str, Any] = {'configuration_path': None}
-        fields = [field.name for field in attr.fields(cls)]
+        fields = [field for field in attr.fields(cls)]
         for key, value in settings.items():
             if key in fields:
                 _settings[key] = value
@@ -35,6 +50,10 @@ class Settings:
     @classmethod
     def from_manifest(cls, manifest_path: str, settings: dict) -> 'Settings':
         """
+        load settings entity based on a manifest lik pyproject.toml or setup.cfg
+
+        the manifest is already parsed before being managed by this factory. The goal of this
+        factory is to keep the information of origin of settings.
 
         :param manifest_path: the path of the manifest that describes the python project (pyproject.toml, ...)
         :param settings: key / value with settings extract from manifest

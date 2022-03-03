@@ -5,13 +5,22 @@ Getting Started
     :backlinks: top
 
 On this page, you will start a new project to show how to use ``Fixtup``.
-You should have ten minutes to follow this tuorial.
+You should have ten minutes to follow this tutorial.
+
+In this tutorial, we'll test some code that makes a thumbnail.
+
+The goal is to run automatic tests on code that write
+on the file system without having to manage by hand
+cleaning up files that were generated like the thumbnail.
 
 First, you have to install fixtup in your python environment.
 
 .. code-block:: bash
 
     pip install fixtup
+
+Expected result
+***************
 
 In this example, we will use this organisation for our code repository. We will create those elements
 one by one. Vous retrouverez cet exemple complet dans le repository de code de ``Fixtup`` dans
@@ -34,6 +43,19 @@ one by one. Vous retrouverez cet exemple complet dans le repository de code de `
             ├── __init__.py
             └── test_utils.py
 
+
+La première chose à faire est de configurer `Fixtup`. le cli est la pour vous rendre la vie plus facile.
+Avec la commande ``fixtup init``, vous allez configurer votre projet
+
+Starting step by step
+*********************
+
+.. code-block:: bash
+
+    $ fixtup init
+    Fixtures repository ? tests/fixtures
+    Python manifest ? setup.cfg
+
 In the next step you need to configure `Fixtup` in your project manifest
 ``setup.cfg``. You will declare a directory that will contains your fixtures.
 
@@ -42,6 +64,9 @@ In the next step you need to configure `Fixtup` in your project manifest
 
     [fixtup]
     fixtures=tests/fixtures
+    plugins=
+        fixtup.plugins.docker
+        fixtup.plugins.dotenv
 
 Before writing your first fixture, you will implement the function thumbnail in ``lib/utils.py``.
 To run the function thumbnail, you need to setup pillow in your python environment ``pip install Pillow``.
@@ -62,15 +87,17 @@ This function work on a file, build a new file. To test it, we need a file and a
 
 .. code-block:: bash
 
-    fixture new --key thumbnail_context
+    $ fixture new
+    Fixture identifier ? thumbnail_context
+    Is this fixture is shared between all the tests ? no
 
-Cette commande initialise une nouvelle fixture. Sans option, c'est juste un dossier vide. Il est stocké dans
-``tests/fixtures/thumbnail_context``. Nous allons ajouter l'image ``file.png`` dans ce dossier.
+This command initializes a new fixture. It's a folder with fixtup.yml that contains fixtup settings for this fixture.
+It is stored in ``tests/fixtures/thumbnail_context``. We will add the ``file.png`` image to this folder.
 
 .. image:: _static/file.png
 
 Test with unittest
-*****************************
+==================
 
 It's time to test the function ``thumbnail`` with ``unittest``. We will call our fixture in the test with ``fixtup.up``.
 
@@ -101,11 +128,16 @@ It's time to test the function ``thumbnail`` with ``unittest``. We will call our
 On every test invocation, ``Fixtup`` will create a working directory in your ``/tmp``. This directory is a clone of
 the one defined in ``tests/fixtures/thumbnail_context``.
 
+.. note::
+
+    On your computer, it may be different. ``Fixtup`` use temporary directory of the system.
+    `/tmp` is usually the one on linux based environment.
+
 When the context is closing, this directory is destroyed. If you want to check what happen inside, you have to
 stop the code execution with a breakpoint on the assertion line and check what is inside.
 
 Use in setUp
-============
+------------
 
 You can use the same fixture for all the tests in one test case using ``setUp``. The fixture will be destroyed at the
 end of each test. You don't have to write the code for the ``tearDown``.
@@ -137,7 +169,7 @@ end of each test. You don't have to write the code for the ``tearDown``.
             self.assertTrue(os.path.isfile(expected_thumbnail_file)
 
 Test with pytest
-***************************
+================
 
 ``Fixtup`` works the same with ``pytest``. We will call our fixture in the test with ``fixtup.up``.
 
@@ -168,7 +200,7 @@ When the context is closing, this directory is destroyed. If you want to check w
 stop the code execution with a breakpoint on the assertion line and check what is inside.
 
 Use in a pytest fixture
-=======================
+-----------------------
 
 To write once the initialization code of a fixture of ``Fixtup`` and use it in many tests, you can write a fixture for
 ``pytest``.

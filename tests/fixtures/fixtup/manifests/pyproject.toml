@@ -4,3 +4,7 @@ build-backend = "setuptools.build_meta:__legacy__"
 
 [tools.fixtup]
 fixtures = "tests/fixtures/fixtup"
+plugins=[
+    "fixtup.plugins.docker",
+    "fixtup.plugins.dotenv"
+]

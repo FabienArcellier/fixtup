@@ -51,6 +51,18 @@ class TestPyprojectToml(unittest.TestCase):
             # Assert
             self.assertFalse(section_is_present)
 
+    def test_read_settings_should_load_manifest_information(self):
+        # Arrange
+        with fixtup.up('manifests') as wd:
+            cwd = os.getcwd()
+
+            # Acts
+            settings = self._tested.read_settings(cwd)
+
+            # Assert
+            self.assertEqual("tests/fixtures/fixtup", settings.fixtures)
+            self.assertIn("fixtup.plugins.docker", settings.plugins)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -8,6 +8,13 @@ class TestSettings(unittest.TestCase):
         self.fake_manifest_dir = 'hello/world'
         pass
 
+    def test_configuration_dir_should_return_the_directory_of_the_manifest(self):
+        # Arrange
+        settings = Settings(configuration_path="hello/world/setup.cfg", fixtures="test/fixtures")
+
+        # Acts & Assert
+        self.assertEqual("hello/world", settings.configuration_dir)
+
     def test_from_manifest_should_extract_fixture(self):
         # Arrange
 
@@ -16,6 +23,20 @@ class TestSettings(unittest.TestCase):
 
         # Assert
         self.assertEqual("test/fixtures", entity.fixtures)
+
+    def test_from_manifest_should_extract_plugins_list(self):
+        # Arrange
+
+        # Acts
+        entity = Settings.from_manifest(self.fake_manifest_dir, {
+            "fixtures": "test/fixtures",
+            "plugins": [
+                "fixtup.plugins.docker"
+            ]
+        })
+
+        # Assert
+        self.assertEqual(["fixtup.plugins.docker"], entity.plugins)
 
     def test_from_manifest_should_ignore_attributes_that_does_not_exists_in_settings(self):
         # Arrange
@@ -32,12 +53,14 @@ class TestSettings(unittest.TestCase):
         # Assert
         self.assertFalse(hasattr(entity, "stupid_attribute"))
 
-    def test_configuration_dir_should_return_the_directory_of_the_manifest(self):
+    def test_from_manifest_should_ignore_missing_plugins_attribute(self):
         # Arrange
-        settings = Settings(configuration_path="hello/world/setup.cfg", fixtures="test/fixtures")
 
-        # Acts & Assert
-        self.assertEqual("hello/world", settings.configuration_dir)
+        # Acts
+        entity = Settings.from_manifest(self.fake_manifest_dir, {"fixtures": "test/fixtures"})
+
+        # Assert
+        self.assertEqual([], entity.plugins)
 
 
 if __name__ == '__main__':

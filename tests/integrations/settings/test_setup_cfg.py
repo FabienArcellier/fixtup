@@ -2,7 +2,6 @@ import os
 import unittest
 
 import fixtup
-from fixtup.settings.pyproject_toml import PyprojectToml
 from fixtup.settings.setup_cfg import SetupCfg
 
 
