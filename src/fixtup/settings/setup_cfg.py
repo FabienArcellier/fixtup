@@ -11,6 +11,8 @@ logger = get_logger()
 
 
 class SetupCfg(SettingsParser):
+    manifest = "setup.cfg"
+
     def has_manifest(self, path: str) -> bool:
         """
         check if the manifest pyproject.toml exists in the current path

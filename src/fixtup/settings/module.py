@@ -15,6 +15,7 @@ def configure_from_code(settings: Settings):
 
 
 class ModuleSettings(SettingsParser):
+    manifest = None
 
     def has_manifest(self, path: str) -> bool:
         """

@@ -1,4 +1,19 @@
+from typing import List
+
+
 class Prompt():
+
+    def choice(self, question: str, choices: List[str]) -> str:
+        """
+        ask the user to make a choice based on propositions
+
+        The user has to pick a specific choice, he can't valide the input
+        if the value does not match the choice exactly
+
+        >>> prompt = lookup_prompt()
+        >>> manifest = prompt.choice("Python manifests ?", choices=["setup.cfg", "pyproject.toml"])
+        """
+        raise NotImplementedError
 
     def fixture_repository(self) -> str:
         """

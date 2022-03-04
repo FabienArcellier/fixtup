@@ -25,6 +25,13 @@ class Mock(Prompt):
     requires user input
     """
 
+    def choice(self, question: str, choices: List[str]) -> str:
+        mocked_input: List[str] = thread_store.input
+        _input = mocked_input.pop(0)
+        assert _input in choices, f"{_input} does not match the available choices {choices}"
+
+        return _input
+
     def fixture_repository(self) -> str:
         mocked_input: List[str] = thread_store.input
         return mocked_input.pop(0)

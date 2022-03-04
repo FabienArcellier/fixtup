@@ -6,12 +6,34 @@ from prompt_toolkit.validation import ValidationError
 
 import fixtup
 from fixtup.prompt.prompt_toolkit import NewFixtureValidator, directory_completer, \
-    FixtureRepositoryValidator, RecursiveDirectoryCompleter
+    FixtureRepositoryValidator, RecursiveDirectoryCompleter, ChoicesValidator
 
 
 class TestValidationError(unittest.TestCase):
-    def setUp(self):
-        pass
+
+    def test_ChoicesValidator_validate_should_accept_one_of_the_proposed_choice(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            validator = ChoicesValidator(['choice 1', 'choice 2'])
+            document = Mock()
+            document.text = 'choice 1'
+
+            # Acts
+            validator.validate(document=document)
+
+    def test_ChoicesValidator_validate_should_accept_only_proposed_choices(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            validator = ChoicesValidator(['choice 1', 'choice 2'])
+            document = Mock()
+            document.text = 'choice'
+
+            # Acts
+            try:
+                validator.validate(document=document)
+                self.fail('the document is not a choice, this test should raise a ValidationError')
+            except ValidationError as exception:
+                pass
 
     def test_FixtureRepositoryValidator_validate_should_raise_validation_error_when_directory_exists_and_is_not_empty(self):
         # Arrange

@@ -13,6 +13,7 @@ RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resources'))
 
 
 class PyprojectToml(SettingsParser):
+    manifest = "pyproject.toml"
 
     def has_manifest(self, path: str) -> bool:
         """
