@@ -14,14 +14,20 @@ def reset_input() -> None:
     """
     thread_store.input = []
 
+
 def send_text(input: str):
     thread_store.input.append(input)
+
 
 class Mock(Prompt):
     """
     Fake implementation of a prompt to perform unit test that
     requires user input
     """
+
+    def fixture_repository(self) -> str:
+        mocked_input: List[str] = thread_store.input
+        return mocked_input.pop(0)
 
     def new_fixture(self, fixture_repository: str) -> str:
         mocked_input: List[str] = thread_store.input

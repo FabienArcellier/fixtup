@@ -4,11 +4,20 @@ from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
 from prompt_toolkit.shortcuts import confirm
 from prompt_toolkit.validation import Document, Validator, ValidationError
+from prompt_toolkit.completion import Completer, Completion
 
 from fixtup.prompt.base import Prompt
 
 
 class PromptToolkit(Prompt):
+
+    def fixture_repository(self) -> str:
+        cwd = os.getcwd()
+        fixture_repository = prompt('Fixture repository ? ',
+                         completer=RecursiveDirectoryCompleter(cwd),
+                         validator=FixtureRepositoryValidator(cwd))
+
+        return fixture_repository
 
     def new_fixture(self, fixture_repository: str) -> str:
         fixture = prompt('Fixture identifier ? ',
@@ -20,6 +29,29 @@ class PromptToolkit(Prompt):
 
     def confirm(self, question: str) -> bool:
         return confirm(question)
+
+class FixtureRepositoryValidator(Validator):
+    """
+    Check if the choice of the directory choosen as fixture repository does not exists or
+    is empty.
+
+    Fixtup can't use a directory that exists and contains other file
+    """
+
+    def __init__(self, cwd: str):
+        """
+
+        :param cwd: current working directory
+        """
+        super().__init__()
+        self.cwd = cwd
+
+    def validate(self, document: Document):
+        text = document.text
+
+        target = os.path.join(self.cwd, text)
+        if os.path.isdir(target) and len(os.listdir(target)) > 0:
+            raise ValidationError(message=f'"{text}" must be a new directory or an empty directory.')
 
 
 class NewFixtureValidator(Validator):
@@ -47,10 +79,45 @@ class NewFixtureValidator(Validator):
 def directory_completer(directory) -> FuzzyWordCompleter:
     """
     return a list of element on which perform autocomplete based
-    on directory content
+    on directory content. This method perform autocomplete only on
+    the direct content of the directory
 
     >>> directory_completer('/home/hello')
     :param directory: the directory to scan to get the autocomplete proposition
     """
     elements = sorted(os.listdir(directory))
     return FuzzyWordCompleter(elements)
+
+
+class RecursiveDirectoryCompleter(Completer):
+    """
+    return a list of element on which perform autocomplete based
+    on directory content
+
+    >>> RecursiveDirectoryCompleter('/home/hello')
+
+    :param directory: the directory to scan to get the autocomplete proposition
+    :param ignore_hidden_directory: ignore the hidden directory when crawling
+    """
+
+    def __init__(self, directory: str, ignore_hidden_directory=True):
+        super().__init__()
+        self.directory = directory
+        self.ignore_hidden_directory = ignore_hidden_directory
+
+    def get_completions(self, document, complete_event):
+        base_directory = os.path.dirname(document.text)
+        root_directory = os.path.join(self.directory, base_directory)
+
+        if os.path.isdir(root_directory):
+            for directory in os.listdir(root_directory):
+                _complete_path = os.path.join(root_directory, directory)
+                if not os.path.isdir(_complete_path):
+                    continue
+
+                if self.ignore_hidden_directory is True and directory.startswith('.'):
+                    continue
+
+                _directory = os.path.join(base_directory, directory)
+                if document.text in _directory:
+                    yield Completion(directory, start_position=0)

@@ -1,5 +1,17 @@
 class Prompt():
 
+    def fixture_repository(self) -> str:
+        """
+        ask the user the path of fixture repository he want to use.
+
+        A user can enter the path of a new folder or select the path of an empty folder.
+        It cannot select the path of a folder that already contains files or folders.
+
+        >>> prompt = lookup_prompt()
+        >>> fixture_repository = prompt.fixture_repository()
+        """
+        raise NotImplementedError
+
     def new_fixture(self, fixture_repository: str) -> str:
         """
         ask to the user a name of a new fixture he want to generate.

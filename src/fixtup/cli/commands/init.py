@@ -13,12 +13,10 @@ def init():
         exit(2)
 
     prompt = lookup_prompt()
-    # fixture_repository = prompt.fixture_repository()
+    fixture_repository = prompt.fixture_repository()
     #
     # available_manifests: List[str] = list_manifests()
     # manifest = prompt.choice(available_manifests)
-    #
-    #
     # settings = Settings.default_settings_for_init(manifest, fixture_repository)
     # create_fixture_repository(settings)
     # write_settings(settings)
