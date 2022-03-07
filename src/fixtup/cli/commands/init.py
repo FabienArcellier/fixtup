@@ -1,9 +1,11 @@
 import click
 
+from fixtup.entity.settings import Settings
 from fixtup.exceptions import FixtupSettingsMissing, PythonManifestMissing, FixtupException
 from fixtup.prompt.factory import lookup_prompt
+from fixtup.scaffold.base import scaffold_fixture_repository
 from fixtup.settings import read_settings
-from fixtup.settings.base import list_project_manifests
+from fixtup.settings.base import list_project_manifests, write_settings
 
 
 @click.command(help="Init fixtup for a python project")
@@ -16,12 +18,13 @@ def init():
         prompt = lookup_prompt()
         available_manifests = list_project_manifests()
         fixture_repository = prompt.fixture_repository()
-        manifest = prompt.choice(f"Python manifest {available_manifests} ?", available_manifests)
+        manifest_choice = prompt.choice(f"Python manifest {available_manifests.prompt_choices()} ?",
+                                        available_manifests.prompt_choices())
 
-        # manifest_path = manifest_path(manifest)
-        # settings = Settings.default_settings_for_init(manifest_path, fixture_repository)
-        # create_fixture_repository(settings)
-        # write_settings(settings)
+        picked_manifest = available_manifests.get(manifest_choice)
+        settings = Settings.default_settings_for_init(picked_manifest, fixture_repository)
+        scaffold_fixture_repository(settings)
+        write_settings(settings)
     except FixtupException as exception:
         click.echo(exception.msg)
         exit(1)

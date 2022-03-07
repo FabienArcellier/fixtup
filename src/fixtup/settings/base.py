@@ -1,9 +1,12 @@
 import os
 from typing import Optional, List
 
+from fixtup.entity.project_manifest import ProjectManifests
 from fixtup.entity.settings import Settings
-from fixtup.exceptions import PythonManifestMissing, FixtupSettingsMissing
+from fixtup.exceptions import PythonManifestMissing, FixtupSettingsMissing, FixtupSettingsAlreadyPresent
 from fixtup.settings.factory import lookup_parsers
+
+RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resources'))
 
 
 class SettingsParser:
@@ -25,11 +28,11 @@ class SettingsParser:
     def read_settings(self, path: str) -> Settings:
         raise NotImplementedError
 
-    def append_settings(self, path: str, settings: Settings):
+    def append_settings(self, settings: Settings) -> None:
         raise NotImplementedError
 
 
-def list_project_manifests() -> List[str]:
+def list_project_manifests() -> ProjectManifests:
     """
     browses the current folder then the parent folders to identify the
     python manifests in which fixtup can register
@@ -45,17 +48,18 @@ def list_project_manifests() -> List[str]:
     while is_python_project is False and os.path.dirname(path) != path:
         for parser in parsers:
             if parser.has_manifest(path):
-                is_python_project = True
                 if parser.manifest is not None:
-                    manifests.append(parser.manifest)
+                    manifests.append(os.path.join(path, parser.manifest))
 
         path = os.path.dirname(path)
 
-    if is_python_project is False:
+    project_manifests = ProjectManifests.create_from_path(manifests)
+
+    if project_manifests.missing():
         raise PythonManifestMissing(
             "not a python project (or any of the parent directories): setup.cfg or pyproject.toml missing")
 
-    return manifests
+    return project_manifests
 
 
 def read_settings() -> Settings:
@@ -82,6 +86,7 @@ def read_settings() -> Settings:
 
     raise FixtupSettingsMissing("fixtup not configured in this project, you should run fixtup init")
 
+
 def write_settings(settings: Settings):
     """
     Write the settings to the existing project manifest
@@ -92,4 +97,13 @@ def write_settings(settings: Settings):
     :param settings: the default settings
     :return:
     """
-    raise NotImplementedError()
+    parsers = lookup_parsers()
+    for parser in parsers:
+        if settings.manifest_identifier == parser.manifest:
+            if settings.configuration_dir is not None and parser.contains_settings(settings.configuration_dir):
+                raise FixtupSettingsAlreadyPresent(f"fail to write settings because it already exists in {settings.manifest_path}")
+
+            parser.append_settings(settings)
+            return
+
+    raise NotImplementedError(f"fail to append those settings")

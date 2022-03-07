@@ -43,11 +43,11 @@ class ModuleSettings(SettingsParser):
         self._assert_settings_configured()
         return thread_store.settings
 
-    def append_settings(self, path: str, settings: Settings):
+    def append_settings(self, settings: Settings):
         """
         not used
         """
-        pass
+        raise NotImplementedError("can not be implemented or used")
 
     def _assert_settings_configured(self):
         assert thread_store.settings is not None, \

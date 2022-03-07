@@ -16,7 +16,7 @@ class TestBase(unittest.TestCase):
             _available_manifests = list_project_manifests()
 
             # Assert
-            self.assertEqual(['setup.cfg', 'pyproject.toml'], _available_manifests)
+            self.assertEqual(['setup.cfg', 'pyproject.toml'], _available_manifests.prompt_choices())
 
     def test_list_project_manifests_should_raise_exception_if_no_manifest_exists(self):
         # Arrange

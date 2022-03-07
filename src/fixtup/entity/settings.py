@@ -1,7 +1,10 @@
+import copy
 import os.path
 from typing import Optional, Dict, Any, List
 
 import attr
+
+from fixtup.entity.project_manifest import ProjectManifest
 
 
 @attr.s
@@ -13,7 +16,7 @@ class Settings:
     """
     The file of path that contains the configuration of fixtup
     """
-    configuration_path: Optional[str] = attr.ib()
+    manifest: Optional[ProjectManifest] = attr.ib()
 
     """
     The path to the repository that contains the fixtures
@@ -39,7 +42,7 @@ class Settings:
         :param settings: key / value with settings specify by the user
         :return:
         """
-        _settings: Dict[str, Any] = {'configuration_path': None}
+        _settings: Dict[str, Any] = {'manifest': None}
         fields = [field.name for field in attr.fields(cls)]
         for key, value in settings.items():
             if key in fields:
@@ -59,7 +62,7 @@ class Settings:
         :param settings: key / value with settings extract from manifest
         """
 
-        _settings: dict = {'configuration_path': manifest_path}
+        _settings: Dict[str, Any] = {'manifest': ProjectManifest.create_from_path(manifest_path)}
         fields = [field.name for field in attr.fields(cls)]
         for key, value in settings.items():
             if key in fields:
@@ -68,22 +71,22 @@ class Settings:
         return Settings(**_settings)
 
     @classmethod
-    def default_settings_for_init(cls, configuration_path: str, fixtures: str) -> 'Settings':
+    def default_settings_for_init(cls, manifest: ProjectManifest, fixture_repository: str) -> 'Settings':
         """
         create default settings to write as fixtup configuration when a user
         initialize its python project with the command ``fixtup init``
 
         >>> from fixtup.settings.base import write_settings
         >>>
-        >>> settings = Settings.default_settings_for_init("/home/xxx/my_project/setup.cfg", "tests/fixtures")
+        >>> project_manifest = ProjectManifest.create_from_path("/home/xxx/my_project/setup.cfg")
+        >>> settings = Settings.default_settings_for_init(project_manifest, "tests/fixtures")
         >>> write_settings(settings)
 
-        :param manifest_path: the path of the manifest that describes the python project (pyproject.toml, ...)
         :param settings: key / value with settings extract from manifest
         """
         return Settings(
-            configuration_path=configuration_path,
-            fixtures=fixtures,
+            manifest=copy.deepcopy(manifest),
+            fixtures=fixture_repository,
             plugins=[
                 "fixtup.plugins.docker",
                 "fixtup.plugins.dotenv"
@@ -92,10 +95,24 @@ class Settings:
 
     @property
     def configuration_dir(self) -> Optional[str]:
-        if self.configuration_path is None:
+        if self.manifest is None:
             return None
 
-        return os.path.dirname(self.configuration_path)
+        return os.path.dirname(self.manifest.path)
+
+    @property
+    def manifest_path(self) -> Optional[str]:
+        if self.manifest is not None:
+            return self.manifest.path
+
+        return None
+
+    @property
+    def manifest_identifier(self) -> Optional[str]:
+        if self.manifest is not None:
+            return self.manifest.identifier
+
+        return None
 
     @property
     def fixtures_dir(self):

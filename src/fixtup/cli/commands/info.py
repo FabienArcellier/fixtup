@@ -9,7 +9,7 @@ from fixtup.settings.base import read_settings
 def info():
     try:
         settings = read_settings()
-        click.echo(f"Configuration: {settings.configuration_path}")
+        click.echo(f"Configuration: {settings.manifest_path}")
         click.echo(f"Fixtures: {settings.fixtures_dir}")
         click.echo(f"Plugins:")
         for plugin in settings.plugins:

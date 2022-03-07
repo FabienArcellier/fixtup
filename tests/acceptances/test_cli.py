@@ -43,8 +43,6 @@ class TestCli(unittest.TestCase):
             self.assertIn("Fixtures", result.output)
 
     def test_init_should_configure_a_project_to_use_fixtup(self):
-        self.skipTest("not implemented")
-
         # Arrange
         send_text("tests/fixture")
         send_text("setup.cfg")
@@ -59,6 +57,32 @@ class TestCli(unittest.TestCase):
             settings = read_settings()
             self.assertEqual("tests/fixture", settings.fixtures)
             self.assertIn("fixtup.plugins.docker", settings.plugins)
+
+    def test_init_should_configure_a_project_with_setup_cfg_valid_with_info(self):
+        # Arrange
+        send_text("tests/fixture")
+        send_text("setup.cfg")
+
+        with fixtup.up('python_project'):
+            # Acts
+            self._runner.invoke(cli, ['init'])
+            result = self._runner.invoke(cli, ['info'])
+
+            # Assert
+            self.assertEqual(0, result.exit_code)
+
+    def test_init_should_configure_a_project_with_pyproject_toml_valid_with_info(self):
+        # Arrange
+        send_text("tests/fixture")
+        send_text("pyproject.toml")
+
+        with fixtup.up('python_project'):
+            # Acts
+            self._runner.invoke(cli, ['init'])
+            result = self._runner.invoke(cli, ['info'])
+
+            # Assert
+            self.assertEqual(0, result.exit_code, result.output)
 
     def test_init_should_ignore_a_project_already_configured(self):
         # Arrange

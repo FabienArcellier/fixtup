@@ -1,10 +1,11 @@
+import io
 import os
 
 import configparser
 
 from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
-from fixtup.settings.base import SettingsParser
+from fixtup.settings.base import SettingsParser, RESOURCE_DIR
 
 
 logger = get_logger()
@@ -59,8 +60,21 @@ class SetupCfg(SettingsParser):
 
         return Settings.from_manifest(manifest_expected_path, _settings)
 
-    def append_settings(self, path: str, settings: Settings):
-        pass
+    def append_settings(self, settings: Settings):
+        """
+        write the settings at the end of the manifest
+        """
+        manifest_expected_path = self._manifest_expected_path(settings.configuration_dir)
+        self._assert_manifest_exists(manifest_expected_path)
+
+        with io.open(os.path.join(RESOURCE_DIR, 'setup_cfg_settings.in')) as file_pointer:
+            setup_cfg_content = file_pointer.read()
+
+        setup_cfg_content = setup_cfg_content\
+            .replace("{{ fixtures }}", settings.fixtures)
+
+        with io.open(manifest_expected_path, mode="a") as file_pointer:
+            file_pointer.write(setup_cfg_content)
 
     def _assert_manifest_exists(self, manifest_expected_path):
         assert os.path.isfile(manifest_expected_path), \

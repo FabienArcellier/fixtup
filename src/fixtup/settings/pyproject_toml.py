@@ -5,11 +5,9 @@ import toml
 
 from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
-from fixtup.settings.base import SettingsParser
+from fixtup.settings.base import SettingsParser, RESOURCE_DIR
 
 logger = get_logger()
-
-RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resources'))
 
 
 class PyprojectToml(SettingsParser):
@@ -58,11 +56,11 @@ class PyprojectToml(SettingsParser):
             settings = global_settings["tools"]["fixtup"]
             return Settings.from_manifest(manifest_expected_path, settings)
 
-    def append_settings(self, path: str, settings: Settings):
+    def append_settings(self, settings: Settings):
         """
         write the settings at the end of the manifres
         """
-        manifest_expected_path = self._manifest_expected_path(path)
+        manifest_expected_path = self._manifest_expected_path(settings.configuration_dir)
         self._assert_manifest_exists(manifest_expected_path)
 
         with io.open(os.path.join(RESOURCE_DIR, 'pyproject_toml_settings.in')) as file_pointer:

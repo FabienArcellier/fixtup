@@ -1,6 +1,7 @@
+
 [tools.fixtup]
-fixtures={{ fixtures }}
-plugins=[
+fixtures = "{{ fixtures }}"
+plugins = [
     "fixtup.plugins.docker",
     "fixtup.plugins.dotenv"
 ]

@@ -6,9 +6,24 @@ from jinja2 import Environment
 import yaml
 
 from fixtup.entity.fixture import Fixture
+from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
 
 RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resource'))
+
+
+def scaffold_fixture_repository(settings: Settings):
+    """
+
+    >>> settings = Settings.from_manifest("/home/far/hello/setup.cfg", {})
+    >>> scaffold_fixture_repository(settings)
+
+    :param settings:
+    :return:
+    """
+    logger = get_logger()
+    logger.debug(f'scaffold fixture repository: {settings.fixtures_dir}')
+    os.makedirs(settings.fixtures_dir)
 
 
 def scaffold_new_fixture(fixture: Fixture):

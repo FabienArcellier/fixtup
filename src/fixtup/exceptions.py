@@ -20,5 +20,9 @@ class FixtupSettingsMissing(FixtupException):
     pass
 
 
+class FixtupSettingsAlreadyPresent(FixtupException):
+    pass
+
+
 class FixtureNotFound(FixtupException):
     pass

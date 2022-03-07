@@ -51,6 +51,7 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
     :param fixture: the identifier of the fixture, it's the name of the directory that define the fixture
     :param keep_mounted_fixture: don't remove the directory of mounted fixture at the end of the context
     """
+
     settings = read_settings()
     fixtures_path = settings.fixtures_dir
 
@@ -61,15 +62,16 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
     shutil.copytree(fixture_template, mounted_fixture)
     logger.debug(f'fixture template: {fixture_template}')
     logger.debug(f'mount fixture directory: {mounted_fixture}')
-
     current_working_dir = os.getcwd()
     os.chdir(mounted_fixture)
-    yield
 
-    os.chdir(current_working_dir)
-    if os.path.isdir(mounted_fixture) and not keep_mounted_fixture:
-        logger.debug(f'remove mounted fixture directory : {mounted_fixture}')
-        shutil.rmtree(mounted_fixture)
+    try:
+        yield
+    finally:
+        os.chdir(current_working_dir)
+        if os.path.isdir(mounted_fixture) and not keep_mounted_fixture:
+            logger.debug(f'remove mounted fixture directory : {mounted_fixture}')
+            shutil.rmtree(mounted_fixture)
 
 
 def _fixture_template_path(fixtures_path, fixture):

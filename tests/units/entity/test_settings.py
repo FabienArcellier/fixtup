@@ -10,10 +10,10 @@ class TestSettings(unittest.TestCase):
 
     def test_configuration_dir_should_return_the_directory_of_the_manifest(self):
         # Arrange
-        settings = Settings(configuration_path="hello/world/setup.cfg", fixtures="test/fixtures")
+        settings = Settings.from_manifest("hello/world/setup.cfg", {'fixtures': "test/fixtures"})
 
         # Acts & Assert
-        self.assertEqual("hello/world", settings.configuration_dir)
+        self.assertIn("hello/world", settings.configuration_dir)
 
     def test_from_manifest_should_extract_fixture(self):
         # Arrange
