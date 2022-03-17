@@ -8,3 +8,12 @@ This part of the documentation lists the full API reference of all public classe
 .. autofunction:: up
 
 .. autofunction:: configure
+
+Helper
+******
+
+.. module:: fixtup.helper
+
+.. autofunction:: wait_port
+
+.. autofunction:: wait_readiness
