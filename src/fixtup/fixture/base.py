@@ -1,32 +1,55 @@
-import io
 import os
 import shutil
 import tempfile
-import threading
+from typing import Any
 
-import yaml
+import attr
 
 from fixtup.entity.fixtup_process import FixtupProcess
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
-from fixtup.exceptions import FixtureNotFound
-from fixtup.logger import get_logger
-from fixtup.settings import read_settings
 
 
-"""
-une variable de module va référencer les états des différentes fixtures qui ont été montés
-"""
-store = threading.local()
-store.state = FixtupProcess()
+@attr.s
+class FixtureEngine:
+    hook_engine: Any = attr.ib()
+    plugin_engine: Any = attr.ib()
+    store: FixtupProcess = attr.ib(init=False)
 
+    def __attrs_post_init__(self):
+        self.store = FixtupProcess()
 
-def fixture_template(identifier: str) -> FixtureTemplate:
-    settings = read_settings()
-    fixtures_path = settings.fixtures_dir
-    fixture_template = _fixture_template_path(fixtures_path, identifier)
-    config = _read_fixture_yml(fixture_template)
-    return FixtureTemplate.create_from_fixture_template(fixture_template, config)
+    def mount(self, fixture_template: FixtureTemplate, fixture: Fixture) -> None:
+        assert fixture_template.identifier == fixture.template_identifier
+
+        os.rmdir(fixture.directory)
+        shutil.copytree(fixture_template.directory, fixture.directory)
+        self.plugin_engine.run('MOUNTED', fixture)
+        self.hook_engine.run('MOUNTED', fixture)
+        self.store.fixture_mounted(fixture)
+
+    def new_fixture(self, fixture_template) -> Fixture:
+        tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
+        fixture_directory = tempfile.mkdtemp(prefix=tmp_prefix)
+
+        return Fixture.create_from_template(fixture_template, fixture_directory)
+
+    def start(self, fixture: Fixture) -> None:
+        self.plugin_engine.run('STARTED', fixture)
+        self.hook_engine.run('STARTED', fixture)
+        self.store.fixture_started(fixture)
+
+    def stop(self, fixture: Fixture) -> None:
+        self.plugin_engine.run('STOPPED', fixture)
+        self.hook_engine.run('STOPPED', fixture)
+        self.store.fixture_stopped(fixture)
+
+    def unmount(self, fixture: Fixture) -> None:
+        self.plugin_engine.run('UNMOUNTED', fixture)
+        self.hook_engine.run('UNMOUNTED', fixture)
+
+        shutil.rmtree(fixture.directory, True)
+        self.store.fixture_unmounted(fixture)
 
 
 def mount(template: 'FixtureTemplate') -> None:
@@ -34,8 +57,6 @@ def mount(template: 'FixtureTemplate') -> None:
     mounted_fixture = tempfile.mktemp(prefix=tmp_prefix)
     fixture = Fixture.create_from_template(template, mounted_fixture)
     shutil.copytree(template.directory, mounted_fixture)
-
-    store.state.mounted(fixture)
 
 
 def start(template: 'FixtureTemplate') -> None:
@@ -56,33 +77,3 @@ def is_mounted(template: 'FixtureTemplate') -> None:
 
 def termination_handler() -> None:
     raise NotImplementedError()
-
-
-def _read_fixture_yml(fixture_template: str) -> dict:
-    """
-    lit le fichier de configuration fixture.yml dans le template de la
-    fixture
-
-    >>> config = _read_fixture_yml("/home/far/hello/fixtup/fixture/my_simple_env")
-    :param fixture_template: le dossier du template de la fixture
-    """
-    logger = get_logger()
-    fixture_yml = os.path.join(fixture_template, 'fixture.yml')
-    try:
-        if os.path.isfile(fixture_yml):
-            with io.open(fixture_yml) as filepointer:
-                config = yaml.load(filepointer, Loader=yaml.SafeLoader)
-            return config
-    except Exception as exception:
-        logger.exception(f"fail to load & parse {fixture_yml} - {exception}")
-
-    return {}
-
-
-def _fixture_template_path(fixtures_path, fixture):
-    fixture_template = os.path.join(fixtures_path, fixture)
-    if not os.path.isdir(fixture_template):
-        fixtures_list = [d for d in os.listdir(fixtures_path) if
-                         os.path.isdir(os.path.join(fixtures_path, d))]
-        raise FixtureNotFound('the fixture {0} does not exists in fixtures : {1}'.format(fixture, fixtures_list))
-    return fixture_template

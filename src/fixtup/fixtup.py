@@ -6,7 +6,8 @@ from typing import Generator
 
 from fixtup.entity.settings import Settings
 from fixtup.exceptions import FixtureNotFound
-from fixtup.fixture.base import is_mounted, mount, start, stop, unmount, fixture_template
+from fixtup.fixture.factory import lookup_fixture_engine
+from fixtup.fixture_template.base import fixture_template
 from fixtup.logger import get_logger
 from fixtup.settings.base import read_settings
 from fixtup.settings.module import configure_from_code
@@ -25,8 +26,8 @@ def configure(settings: dict) -> None:
     >>>
     >>> import fixtup
     >>>
-    >>> SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
-    >>> fixtup.configure({"fixtures": os.path.join(SCRIPT_DIR, "../fixtures")})
+    >>> SCRIPT_DIR = os.directory.realpath(os.directory.join(__file__, '..'))
+    >>> fixtup.configure({"fixtures": os.directory.join(SCRIPT_DIR, "../fixtures")})
 
     :param settings: a key value dictionary that specify the settings of fixtup
     """
@@ -53,39 +54,24 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
     :param keep_mounted_fixture: don't remove the directory of mounted fixture at the end of the context
     """
 
-    # fixture_definition = fixture(_fixture)
-    # if not is_mounted(fixture_definition):
-    #     mount(fixture_definition)
-    #
-    # try:
-    #     start(fixture_definition)
-    #     yield
-    #     stop(fixture_definition)
-    # finally:
-    #     if not fixture_definition.is_shared and \
-    #        not keep_mounted_fixture:
-    #         unmount(_fixture)
+    fixture_engine = lookup_fixture_engine()
 
-    settings = read_settings()
-    fixtures_path = settings.fixtures_dir
+    template = fixture_template(_fixture)
+    fixture = fixture_engine.new_fixture(template)
+    fixture_engine.mount(template, fixture)
 
-    tmp_prefix = '{0}_{1}'.format(_fixture, '_')
-    fixture_template = _fixture_template_path(fixtures_path, _fixture)
-    mounted_fixture = tempfile.mktemp(prefix=tmp_prefix)
-
-    shutil.copytree(fixture_template, mounted_fixture)
-    logger.debug(f'fixture template: {fixture_template}')
-    logger.debug(f'mount fixture directory: {mounted_fixture}')
+    logger.debug(f'mount fixture directory: {fixture.directory}')
     current_working_dir = os.getcwd()
-    os.chdir(mounted_fixture)
+    os.chdir(fixture.directory)
 
     try:
         yield
     finally:
         os.chdir(current_working_dir)
-        if os.path.isdir(mounted_fixture) and not keep_mounted_fixture:
-            logger.debug(f'remove mounted fixture directory : {mounted_fixture}')
-            shutil.rmtree(mounted_fixture)
+        if os.path.isdir(fixture.directory) and not keep_mounted_fixture:
+            logger.debug(f'remove mounted fixture directory : {fixture.directory}')
+            if not keep_mounted_fixture:
+                fixture_engine.unmount(fixture)
 
 
 def _fixture_template_path(fixtures_path, fixture):

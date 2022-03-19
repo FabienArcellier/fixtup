@@ -1,10 +1,10 @@
 import unittest
 
-import fixtup
-from fixtup.fixture.base import fixture_template
+from fixtup import fixtup
+from fixtup.fixture_template.base import fixture_template
 
 
-class TestFixture(unittest.TestCase):
+class TestFixtureTemplate(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -24,7 +24,3 @@ class TestFixture(unittest.TestCase):
             result = fixture_template("my_fixture_2")
             # Assert
             self.assertTrue(result.shared)
-
-
-if __name__ == '__main__':
-    unittest.main()

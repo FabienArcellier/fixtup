@@ -18,7 +18,8 @@ class FixtureTemplate():
     @classmethod
     def create_from_fixture_template(cls, path: str, fixture_yml: dict) -> 'FixtureTemplate':
         is_shared = fixture_yml.get('shared', False)
-        return FixtureTemplate('', path, is_shared, config=fixture_yml)
+        identifier = os.path.basename(path)
+        return FixtureTemplate(identifier, path, is_shared, config=fixture_yml)
 
     @classmethod
     def fake(cls, **kwargs):

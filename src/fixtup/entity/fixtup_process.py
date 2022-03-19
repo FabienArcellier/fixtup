@@ -17,13 +17,30 @@ class FixtupProcess:
 
     * a list of active fixtures - fixtures that has been mounted
     """
-    active_fixtures: List[Fixture] = attr.ib(factory=dict)
+    active_fixtures: List[Fixture] = attr.ib(factory=list)
 
-    def mounted(self, fixture: Fixture):
+    def fixture_mounted(self, fixture: Fixture):
         self.active_fixtures.append(fixture)
+        fixture.mounted()
 
         # Post-conditions
         assert unique(self.active_fixtures, lambda f: f.identifier)
 
-    def started(self, fixture: Fixture):
+    def fixture_started(self, fixture: Fixture):
         active_fixture = first(self.active_fixtures, lambda f: f.identifier == fixture.identifier)
+        assert active_fixture is not None
+
+        active_fixture.started()
+
+    def fixture_stopped(self, fixture: Fixture):
+        active_fixture = first(self.active_fixtures, lambda f: f.identifier == fixture.identifier)
+        assert active_fixture is not None
+
+        active_fixture.stopped()
+
+    def fixture_unmounted(self, fixture: Fixture):
+        active_fixture = first(self.active_fixtures, lambda f: f.identifier == fixture.identifier)
+        assert active_fixture is not None
+
+        active_fixture.unmounted()
+

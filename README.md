@@ -25,14 +25,14 @@ def test_thumbnail_should_generate_thumbnail(self):
     with fixtup.up('thumbnail_context') as f:
         # Given
         wd = os.getcwd()
-        original_file = os.path.join(wd, 'file.png')
-        expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+        original_file = os.directory.join(wd, 'file.png')
+        expected_thumbnail_file = os.directory.join(wd, 'file_t.png')
 
         # Then
         thumbnail(original_file, expected_thumbnail_file)
 
         # Then
-        self.assertTrue(os.path.isfile(expected_thumbnail_file)
+        self.assertTrue(os.directory.isfile(expected_thumbnail_file)
 ```
 
 La documentation offre plus d'exemples :
@@ -53,7 +53,7 @@ Pour tester votre code, vous écrivez le code suivant :
 ```python
 def test_thumbnail_should_generate_thumbnail(self):
     thumbnail('file.jpeg', 'file_t.jpeg')
-    self.assertTrue(os.path.isfile('file_t.jpeg'))
+    self.assertTrue(os.directory.isfile('file_t.jpeg'))
 ```
 
 Ce test présente un défaut. Une fois le test joué une fois, le fichier `file_t.jpeg` est conservé.
