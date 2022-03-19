@@ -75,17 +75,30 @@ Mount a fixture once for several tests
 Implement your own processing on a fixture event
 ************************************************
 
-Vous pouvez avoir besoin d'exécuter votre propre traitement à certains moments clés.
-Par exemple, charger un jeu de données dans une base qui vient d'etre crée avant d'exécuter
-le test.
+Un environnement décrit par une fixture peut prendre du temps à être opérationnel.
+Fixtup permet grâce à des hooks d'exécuter du code à vous pour attendre qu'un socket soit ouvert, pour charger des données,
+ou attendre que la sonde de readiness d'un container docker soit prête ...
 
-Vous pouvez écrire vos propres fonctions
+Les hooks s'implémentent dans des modules python. Vous allez les écrire dans le dossier
+``.hooks`` à l'intérieur de chacune de vos fixtures. Les hooks sont optionnels.
 
-off
-mounted
-started
-stopped
-unmounted
+L'exemple qui suit attends que le port 5432 réponde sur une base postgresql. L'appel à ``fixtup.helper.wait_port`` est
+bloquant. Tant que le port 5432 ne réponds pas, votre test ne démarrera pas. En cas de timeout, votre test échoue.
+
+.. code-block:: python
+    :caption: tests/fixtures/simple_postgresql/.hooks/hook_started.py
+
+    import fixtup
+
+    fixtup.helper.wait_port(5432, timeout=2000)
+
+Fixtup propose 4 hooks.
+
+* ``hook_mounted.py`` : exécuté lorsque la fixture est montée, c'est à dire que le dossier de la fixture est copié
+* ``hook_started.py`` : exécuté lorsque la fixture est démarrée, par exemple après que docker-compose se soit exécuté et après le chargement
+    des variables d'environnement
+* ``hook_stopped.py`` : exécuté lorsque la fixture est arrêtée
+* ``hook_unmounted.py`` : exécuté lorsque le dossier qui contient la fixture est effacée
 
 Use Fixtup with other test frameworks
 *************************************

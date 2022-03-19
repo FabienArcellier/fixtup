@@ -2,8 +2,7 @@ import os
 
 import click
 
-from fixtup.entity.fixture import Fixture
-from fixtup.logger import get_logger
+from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.plugin import event
 from fixtup.plugin.factory import lookup_plugin
 from fixtup.prompt.factory import lookup_prompt
@@ -23,7 +22,7 @@ def new() -> None:
     shared_fixture = prompt.confirm('Is this fixture is shared between all the tests ? ')
 
     # output
-    fixture = Fixture.create_from_cli(fixture_id, settings.fixtures_dir, shared_fixture)
+    fixture = FixtureTemplate.create_from_cli(fixture_id, settings.fixtures_dir, shared_fixture)
 
     plugin = lookup_plugin()
     plugin.invoke(event.BEFORE_SCAFFOLD_NEW_FIXTURE, fixture=fixture)

@@ -1,1 +1,1 @@
-from fixtup.fixture import configure, up
+from fixtup.fixtup import configure, up

@@ -5,7 +5,7 @@ import unittest
 import yaml
 
 import fixtup
-from fixtup.entity.fixture import Fixture
+from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.factory import reset_runtime_context, RuntimeContext
 from fixtup.scaffold.base import scaffold_new_fixture
 
@@ -19,7 +19,7 @@ class TestScaffold(unittest.TestCase):
         with fixtup.up('fixtup_project'):
 
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = Fixture.create_from_cli("hello world", fixture_repository, shared=True)
+            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, shared=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -32,7 +32,7 @@ class TestScaffold(unittest.TestCase):
         # Arrange
         with fixtup.up('fixtup_project'):
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = Fixture.create_from_cli("hello world", fixture_repository, shared=True)
+            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, shared=True)
 
             # Acts
             scaffold_new_fixture(fixture)

@@ -5,7 +5,7 @@ import shutil
 from jinja2 import Environment
 import yaml
 
-from fixtup.entity.fixture import Fixture
+from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
 
@@ -26,7 +26,7 @@ def scaffold_fixture_repository(settings: Settings):
     os.makedirs(settings.fixtures_dir)
 
 
-def scaffold_new_fixture(fixture: Fixture):
+def scaffold_new_fixture(fixture: FixtureTemplate):
     """
     :param fixture: the fixture definition
     :return:
@@ -39,13 +39,13 @@ def scaffold_new_fixture(fixture: Fixture):
     _generate_hooks_directory(fixture)
 
 
-def _generate_hooks_directory(fixture: Fixture):
+def _generate_hooks_directory(fixture: FixtureTemplate):
     template = os.path.join(RESOURCE_DIR, 'hooks')
     target = os.path.join(fixture.directory, '.hooks')
     shutil.copytree(template, target)
 
 
-def _generate_fixtup_manifest(fixture: Fixture):
+def _generate_fixtup_manifest(fixture: FixtureTemplate):
     template = os.path.join(RESOURCE_DIR, 'fixtup.yml.j2')
     target = os.path.join(fixture.directory, 'fixtup.yml')
     with io.open(template) as file_pointer:

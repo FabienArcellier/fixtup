@@ -6,6 +6,7 @@ from typing import Generator
 
 from fixtup.entity.settings import Settings
 from fixtup.exceptions import FixtureNotFound
+from fixtup.fixture.base import is_mounted, mount, start, stop, unmount, fixture_template
 from fixtup.logger import get_logger
 from fixtup.settings.base import read_settings
 from fixtup.settings.module import configure_from_code
@@ -34,7 +35,7 @@ def configure(settings: dict) -> None:
 
 
 @contextmanager
-def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
+def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
     """
     Mount a fixture to use it in a test.
 
@@ -48,15 +49,28 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
     >>>     os.chdir(wd)
     >>>     # do something ...
 
-    :param fixture: the identifier of the fixture, it's the name of the directory that define the fixture
+    :param _fixture: the identifier of the fixture, it's the name of the directory that define the fixture
     :param keep_mounted_fixture: don't remove the directory of mounted fixture at the end of the context
     """
+
+    # fixture_definition = fixture(_fixture)
+    # if not is_mounted(fixture_definition):
+    #     mount(fixture_definition)
+    #
+    # try:
+    #     start(fixture_definition)
+    #     yield
+    #     stop(fixture_definition)
+    # finally:
+    #     if not fixture_definition.is_shared and \
+    #        not keep_mounted_fixture:
+    #         unmount(_fixture)
 
     settings = read_settings()
     fixtures_path = settings.fixtures_dir
 
-    tmp_prefix = '{0}_{1}'.format(fixture, '_')
-    fixture_template = _fixture_template_path(fixtures_path, fixture)
+    tmp_prefix = '{0}_{1}'.format(_fixture, '_')
+    fixture_template = _fixture_template_path(fixtures_path, _fixture)
     mounted_fixture = tempfile.mktemp(prefix=tmp_prefix)
 
     shutil.copytree(fixture_template, mounted_fixture)

@@ -5,7 +5,7 @@ from fixtup.exceptions import PythonManifestMissing
 from fixtup.settings.base import list_project_manifests
 
 
-class TestBase(unittest.TestCase):
+class TestSettings(unittest.TestCase):
     def setUp(self):
         pass
 
@@ -28,8 +28,6 @@ class TestBase(unittest.TestCase):
             # Assert
             except PythonManifestMissing as exception:
                 pass
-
-
 
 
 if __name__ == '__main__':
