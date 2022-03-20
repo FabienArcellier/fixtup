@@ -41,6 +41,15 @@ class Fixture:
             state=State.Reserved
         )
 
+    @classmethod
+    def fake(cls, **kwargs):
+        return Fixture(
+            identifier=kwargs.get('identifier', 'fixture_1234'),
+            directory=kwargs.get('directory', '/tmp/fixture_1234'),
+            template_identifier=kwargs.get('template_identifier', 'fixture'),
+            state=kwargs.get('state', State.Reserved),
+        )
+
     def mounted(self):
         assert self.state == State.Reserved
         self.state = State.Mounted

@@ -48,7 +48,7 @@ class TestFixtureEngine(unittest.TestCase):
             # Acts
             fixture = self.tested.new_fixture(template)
             self.tested.mount(template, fixture)
-            self.tested.unmount(fixture)
+            self.tested.unmount(template, fixture)
 
             # Assert
             self.assertEqual(State.Unmounted, fixture.state)

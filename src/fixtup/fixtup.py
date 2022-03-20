@@ -71,7 +71,7 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
         if os.path.isdir(fixture.directory) and not keep_mounted_fixture:
             logger.debug(f'remove mounted fixture directory : {fixture.directory}')
             if not keep_mounted_fixture:
-                fixture_engine.unmount(fixture)
+                fixture_engine.unmount(template, fixture)
 
 
 def _fixture_template_path(fixtures_path, fixture):

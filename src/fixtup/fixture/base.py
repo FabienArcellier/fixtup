@@ -8,11 +8,12 @@ import attr
 from fixtup.entity.fixtup_process import FixtupProcess
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
+from fixtup.hook.base import HookEngine, HookEvent
 
 
 @attr.s
 class FixtureEngine:
-    hook_engine: Any = attr.ib()
+    hook_engine: HookEngine = attr.ib()
     plugin_engine: Any = attr.ib()
     store: FixtupProcess = attr.ib(init=False)
 
@@ -25,28 +26,28 @@ class FixtureEngine:
         os.rmdir(fixture.directory)
         shutil.copytree(fixture_template.directory, fixture.directory)
         self.plugin_engine.run('MOUNTED', fixture)
-        self.hook_engine.run('MOUNTED', fixture)
+        self.hook_engine.run(HookEvent.mounted, fixture_template)
         self.store.fixture_mounted(fixture)
 
-    def new_fixture(self, fixture_template) -> Fixture:
+    def new_fixture(self, fixture_template: FixtureTemplate) -> Fixture:
         tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
         fixture_directory = tempfile.mkdtemp(prefix=tmp_prefix)
 
         return Fixture.create_from_template(fixture_template, fixture_directory)
 
-    def start(self, fixture: Fixture) -> None:
+    def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
         self.plugin_engine.run('STARTED', fixture)
-        self.hook_engine.run('STARTED', fixture)
+        self.hook_engine.run(HookEvent.started, template)
         self.store.fixture_started(fixture)
 
-    def stop(self, fixture: Fixture) -> None:
+    def stop(self, template: FixtureTemplate, fixture: Fixture) -> None:
         self.plugin_engine.run('STOPPED', fixture)
-        self.hook_engine.run('STOPPED', fixture)
+        self.hook_engine.run(HookEvent.stopped, template)
         self.store.fixture_stopped(fixture)
 
-    def unmount(self, fixture: Fixture) -> None:
+    def unmount(self, template: FixtureTemplate, fixture: Fixture) -> None:
         self.plugin_engine.run('UNMOUNTED', fixture)
-        self.hook_engine.run('UNMOUNTED', fixture)
+        self.hook_engine.run(HookEvent.unmounted, template)
 
         shutil.rmtree(fixture.directory, True)
         self.store.fixture_unmounted(fixture)
