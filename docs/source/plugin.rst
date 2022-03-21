@@ -66,8 +66,10 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
     import io
     import os
 
-    from fixtup.entity import Fixture
-    from fixtup import prompt
+    from fixtup.prompt.factory import lookup_prompt
+    from fixtup.entity.fixture import Fixture
+    from fixtup.entity.fixture_template import FixtureTemplate
+
 
     def on_new_fixture(template: FixtureTemplate):
         """
@@ -76,10 +78,12 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
 
         For example, the plugin can create a terraform.tf file if the developer plans to use terraform.
         """
+        prompt = lookup_prompt()
         is_terraform = prompt.confirm('Is this fixture use terraform declaration ?')
         if is_terraform:
             with io.open(os.path.join(template.directory, 'terraform.tf'), 'w') as fp:
                 pass
+
 
     def on_mounting(fixture: Fixture):
         """
@@ -88,11 +92,13 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
         """
         pass
 
+
     def on_starting(fixture: Fixture):
         """
         this function is called by fixtup every time it need to start a test that requires the fixture.
         """
         pass
+
 
     def on_stopping(fixture: Fixture):
         """
@@ -100,12 +106,14 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
         """
         pass
 
+
     def on_unmounting(fixture: Fixture):
         """
         this function is called by fixtup every time the fixture folder is removed. It's the only case where
         the code of fixtup is invoked after the invocation of plugin and hook
         """
         pass
+
 
 In the configuration file, you must add the module of your plugin.
 
