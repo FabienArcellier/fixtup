@@ -12,6 +12,8 @@ The installation of ``Fixtup`` is done with ``pip``.
     If you manage your dependencies through ``setup.py``, ``setup.cfg``, ``pyproject.toml``, ``pipenv`` or ``poetry``,
     you should declare and install ``fixtup`` as a dev dependencies.
 
+.. _ConfigureFixtup:
+
 Configure fixtup
 ****************
 

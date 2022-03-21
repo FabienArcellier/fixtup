@@ -21,6 +21,7 @@ Fixtup les instancie au moment où votre test en a besoin. A la fin du test, ``F
     getting_started
     installation
     handbook
+    plugin
     limits
     support
     command_line
