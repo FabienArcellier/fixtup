@@ -2,6 +2,7 @@ import unittest
 
 from fixtup.hook.base import HookEvent
 from fixtup.hook.python import script
+from fixtup.lib.enum import enum_values
 
 
 class TestPython(unittest.TestCase):
@@ -10,7 +11,7 @@ class TestPython(unittest.TestCase):
 
     def test_script_implement_all_the_events(self):
         # Arrange
-        events = HookEvent.values()
+        events = enum_values(HookEvent)
 
         # Acts
         for event in events:

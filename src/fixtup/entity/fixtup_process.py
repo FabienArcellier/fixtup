@@ -4,7 +4,7 @@ import attr
 
 from fixtup.entity.fixture import Fixture
 from fixtup.lib.conditions import unique
-from fixtup.lib.lib import first
+from fixtup.lib.list import first
 
 
 @attr.s

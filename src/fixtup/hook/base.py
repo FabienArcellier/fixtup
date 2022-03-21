@@ -9,10 +9,6 @@ class HookEvent(Enum):
     stopped="stopped"
     unmounted="unmounted"
 
-    @classmethod
-    def values(cls):
-        return [elt for elt in cls]
-
 
 class HookEngine:
 

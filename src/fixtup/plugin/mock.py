@@ -1,7 +1,7 @@
-from fixtup.plugin.base import Plugin
+from fixtup.plugin.base import PluginEngine
 
 
-class Mock(Plugin):
+class Mock(PluginEngine):
 
     def invoke(self, event: str, *args, **kwargs):
         """
