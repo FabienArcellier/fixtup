@@ -2,8 +2,7 @@ import os
 import unittest
 
 import fixtup
-from fixtup.entity.fixture import Fixture, State
-from fixtup.factory import RuntimeContext, reset_runtime_context
+from fixtup.entity.fixture import State
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
 
@@ -11,7 +10,6 @@ from fixtup.fixture_template.base import fixture_template
 class TestFixtureEngine(unittest.TestCase):
 
     def setUp(self) -> None:
-        reset_runtime_context(RuntimeContext(unittest=True))
         self.tested = lookup_fixture_engine()
 
     def test_new_fixture_should_create_an_empty_directory_in_tmp_file(self):

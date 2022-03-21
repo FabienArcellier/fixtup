@@ -12,7 +12,7 @@ from fixtup.scaffold.base import scaffold_new_fixture
 
 class TestScaffold(unittest.TestCase):
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True))
+        pass
 
     def test_scaffold_new_fixture_should_generate_a_fixture_directory(self):
         # Arrange
