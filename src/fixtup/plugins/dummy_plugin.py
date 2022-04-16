@@ -12,7 +12,7 @@ def on_new_fixture(template: FixtureTemplate):
 
 
 def on_mounting(fixture: Fixture):
-    directory = os.getcwd()
+    directory = fixture.directory
     with io.open(os.path.join(directory, 'mounting.txt'), 'w') as file:
         file.write('')
 

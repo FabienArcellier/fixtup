@@ -22,12 +22,13 @@ class TestPythonPluginBase(unittest.TestCase):
         }
 
         self._tested.register_plugin('fixtup.plugins.dummy_plugin')
-        fixture = Fixture.fake()
 
         for event in events:
             with self.subTest(event):
                 with fixtup.up('simple'):
                     # Arrange
+                    fixture = Fixture.fake(directory=os.getcwd())
+
                     # Acts
                     self._tested.run(event, fixture=fixture)
 
@@ -68,8 +69,7 @@ class TestPythonPluginBase(unittest.TestCase):
                 self._tested.run(PluginEvent.mounting, fixture=fixture)
                 self.fail("this test should raise PluginRuntimeError")
             except PluginRuntimeError as exception:
-                import traceback
-                traceback.print_exc(limit=0)
+                pass
 
 
 if __name__ == '__main__':

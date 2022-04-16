@@ -1,20 +1,26 @@
-from enum import Enum
-
-class PluginEvent(Enum):
-    new_fixture = "new_fixture"
-    mounting = "mounting"
-    starting = "starting"
-    stopping = "stopping"
-    unmounting = "unmounting"
+from fixtup.entity.plugin import PluginEvent
+from fixtup.logger import get_logger
 
 
 class PluginEngine:
 
-    def run(self, event: PluginEvent, *args, **kwargs):
+    def run(self, event: PluginEvent, *args, **kwargs) -> None:
         raise NotImplementedError()
 
-    def register_plugin(self, module: str):
+    def register_plugin(self, module: str) -> None:
         raise NotImplementedError()
+
+    def release(self, event: PluginEvent, *args, **kwargs) -> None:
+        """
+        This method try to release resource instanciate through a plugin. We run the event
+         in degraded mode. If it raise an error, it will ignore it.
+        """
+        logger = get_logger()
+        logger.warn(f"release plugin resource due to internal error with event {event}")
+        try:
+            self.run(event, *args, **kwargs)
+        except:
+            pass
 
 
 def event_to_function(event: PluginEvent) -> str:
