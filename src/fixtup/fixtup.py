@@ -1,6 +1,4 @@
 import os
-import shutil
-import tempfile
 from contextlib import contextmanager
 from typing import Generator
 
@@ -9,7 +7,6 @@ from fixtup.exceptions import FixtureNotFound
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
 from fixtup.logger import get_logger
-from fixtup.settings.base import read_settings
 from fixtup.settings.module import configure_from_code
 
 logger = get_logger()
@@ -55,23 +52,25 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
     """
 
     fixture_engine = lookup_fixture_engine()
-
     template = fixture_template(_fixture)
     fixture = fixture_engine.new_fixture(template)
     fixture_engine.mount(template, fixture)
-
     logger.debug(f'mount fixture directory: {fixture.directory}')
+
     current_working_dir = os.getcwd()
     os.chdir(fixture.directory)
+    fixture_engine.start(template, fixture)
+    logger.debug(f'start fixture: {fixture.directory}')
 
     try:
         yield
     finally:
         os.chdir(current_working_dir)
-        if os.path.isdir(fixture.directory) and not keep_mounted_fixture:
+        logger.debug(f'stop fixture : {fixture.directory}')
+        fixture_engine.stop(template, fixture)
+        if not keep_mounted_fixture:
             logger.debug(f'remove mounted fixture directory : {fixture.directory}')
-            if not keep_mounted_fixture:
-                fixture_engine.unmount(template, fixture)
+            fixture_engine.unmount(template, fixture)
 
 
 def _fixture_template_path(fixtures_path, fixture):

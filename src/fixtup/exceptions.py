@@ -1,3 +1,5 @@
+from fixtup.entity.plugin import Plugin
+
 
 class FixtupException(Exception):
 
@@ -26,3 +28,10 @@ class FixtupSettingsAlreadyPresent(FixtupException):
 
 class FixtureNotFound(FixtupException):
     pass
+
+
+class PluginRuntimeError(FixtupException):
+
+    def __init__(self, msg: str, plugin: Plugin):
+        msg = f'{msg} - plugin: {plugin.module_name}'
+        super().__init__(msg)

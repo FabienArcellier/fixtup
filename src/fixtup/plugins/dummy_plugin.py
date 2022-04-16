@@ -1,22 +1,35 @@
+import io
+import os
+
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
 
 
 def on_new_fixture(template: FixtureTemplate):
-    print("on_new_fixture")
+    directory = os.getcwd()
+    with io.open(os.path.join(directory, 'new_fixture.txt'), 'w') as file:
+        file.write('')
 
 
 def on_mounting(fixture: Fixture):
-    print("on_mounting")
+    directory = fixture.directory
+    with io.open(os.path.join(directory, 'mounting.txt'), 'w') as file:
+        file.write('')
 
 
 def on_starting(fixture: Fixture):
-    print("on_starting")
+    directory = os.getcwd()
+    with io.open(os.path.join(directory, 'starting.txt'), 'w') as file:
+        file.write('')
 
 
 def on_stopping(fixture: Fixture):
-    print("on_stopping")
+    directory = os.getcwd()
+    with io.open(os.path.join(directory, 'stopping.txt'), 'w') as file:
+        file.write('')
 
 
 def on_unmounting(fixture: Fixture):
-    print("on_unmounting")
+    directory = os.getcwd()
+    with io.open(os.path.join(directory, 'unmounting.txt'), 'w') as file:
+        file.write('')

@@ -8,6 +8,7 @@ import attr
 from fixtup.entity.fixtup_process import FixtupProcess
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
+from fixtup.exceptions import PluginRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
 from fixtup.plugin.base import PluginEngine, PluginEvent
 
@@ -25,10 +26,18 @@ class FixtureEngine:
         assert fixture_template.identifier == fixture.template_identifier
 
         os.rmdir(fixture.directory)
-        shutil.copytree(fixture_template.directory, fixture.directory)
-        self.plugin_engine.run(PluginEvent.mounted, fixture)
-        self.hook_engine.run(HookEvent.mounted, fixture_template)
-        self.store.fixture_mounted(fixture)
+
+        try:
+            shutil.copytree(fixture_template.directory, fixture.directory)
+            self.plugin_engine.run(PluginEvent.mounting, fixture)
+            self.hook_engine.run(HookEvent.mounted, fixture_template)
+            self.store.fixture_mounted(fixture)
+        except PluginRuntimeError:
+            self.plugin_engine.release(PluginEvent.unmounting, fixture)
+            if os.path.isdir(fixture.directory):
+                shutil.rmtree(fixture.directory, True)
+
+            raise
 
     def new_fixture(self, fixture_template: FixtureTemplate) -> Fixture:
         tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
@@ -37,17 +46,32 @@ class FixtureEngine:
         return Fixture.create_from_template(fixture_template, fixture_directory)
 
     def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        self.plugin_engine.run(PluginEvent.started, fixture)
-        self.hook_engine.run(HookEvent.started, template)
-        self.store.fixture_started(fixture)
+        try:
+            self.plugin_engine.run(PluginEvent.starting, fixture)
+            self.hook_engine.run(HookEvent.started, template)
+            self.store.fixture_started(fixture)
+        except PluginRuntimeError:
+            self.plugin_engine.release(PluginEvent.stopping, fixture)
+            self.plugin_engine.release(PluginEvent.unmounting, fixture)
+            if os.path.isdir(fixture.directory):
+                shutil.rmtree(fixture.directory, True)
+
+            raise
 
     def stop(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        self.plugin_engine.run(PluginEvent.stopped, fixture)
-        self.hook_engine.run(HookEvent.stopped, template)
-        self.store.fixture_stopped(fixture)
+        try:
+            self.plugin_engine.run(PluginEvent.stopping, fixture)
+            self.hook_engine.run(HookEvent.stopped, template)
+            self.store.fixture_stopped(fixture)
+        except PluginRuntimeError:
+            self.plugin_engine.release(PluginEvent.unmounting, fixture)
+            if os.path.isdir(fixture.directory):
+                shutil.rmtree(fixture.directory, True)
+
+            raise
 
     def unmount(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        self.plugin_engine.run(PluginEvent.unmounted, fixture)
+        self.plugin_engine.run(PluginEvent.unmounting, fixture)
         self.hook_engine.run(HookEvent.unmounted, template)
 
         shutil.rmtree(fixture.directory, True)

@@ -73,6 +73,21 @@ class TestFixtup(unittest.TestCase):
             self.assertTrue(os.path.isfile(os.path.join(cwd, 'hello.txt')))
 
 
+    def test_configure_should_override_manifest_settings(self):
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        fixtup.configure({"fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"), 'plugins': [
+            'fixtup.plugins.dummy_plugin_error'
+        ]})
+
+        # Assert
+        with fixtup.up('simple'):
+            cwd = os.getcwd()
+            self.assertTrue(os.path.isdir(cwd))
+            self.assertTrue(os.path.isfile(os.path.join(cwd, 'hello.txt')))
+
+
 
 
 if __name__ == '__main__':

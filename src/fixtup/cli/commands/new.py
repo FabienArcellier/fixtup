@@ -26,4 +26,4 @@ def new() -> None:
     fixture = FixtureTemplate.create_from_cli(fixture_id, settings.fixtures_dir, shared_fixture)
 
     scaffold_new_fixture(fixture)
-    plugin.run(PluginEvent.fixture_generated, fixture)
+    plugin.run(PluginEvent.new_fixture, fixture)
