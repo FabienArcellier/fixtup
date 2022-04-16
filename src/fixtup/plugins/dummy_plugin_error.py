@@ -6,9 +6,7 @@ from fixtup.entity.fixture_template import FixtureTemplate
 
 
 def on_new_fixture(template: FixtureTemplate):
-    directory = os.getcwd()
-    with io.open(os.path.join(directory, 'new_fixture.txt'), 'w') as file:
-        file.write('')
+    pass
 
 
 def on_mounting(fixture: Fixture):
@@ -17,21 +15,15 @@ def on_mounting(fixture: Fixture):
 
 
 def on_starting(fixture: Fixture):
-    directory = os.getcwd()
-    with io.open(os.path.join(directory, 'starting.txt'), 'w') as file:
-        file.write('')
+    pass
 
 
 def on_stopping(fixture: Fixture):
-    directory = os.getcwd()
-    with io.open(os.path.join(directory, 'stopping.txt'), 'w') as file:
-        file.write('')
+    pass
 
 
 def on_unmounting(fixture: Fixture):
-    directory = os.getcwd()
-    with io.open(os.path.join(directory, 'unmounting.txt'), 'w') as file:
-        file.write('')
+    pass
 
 
 def _call_error():

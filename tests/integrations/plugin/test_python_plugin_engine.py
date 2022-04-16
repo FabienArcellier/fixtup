@@ -4,6 +4,7 @@ import unittest
 import fixtup
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
+from fixtup.exceptions import PluginRuntimeError
 from fixtup.plugin.base import PluginEvent
 from fixtup.plugin.python import PythonPluginEngine
 
@@ -54,6 +55,21 @@ class TestPythonPluginBase(unittest.TestCase):
                     file_to_check = events[event]
                     file_is_present = os.path.isfile(os.path.join(os.getcwd(), file_to_check))
                     self.assertTrue(file_is_present, f'{file_to_check} must be present in {os.getcwd()}')
+
+
+    def test_run_should_raise_plugin_exception_error(self):
+        self._tested.register_plugin('fixtup.plugins.dummy_plugin_error')
+
+        with fixtup.up('simple'):
+            # Arrange
+            fixture = Fixture.fake()
+            # Acts
+            try:
+                self._tested.run(PluginEvent.mounting, fixture=fixture)
+                self.fail("this test should raise PluginRuntimeError")
+            except PluginRuntimeError as exception:
+                import traceback
+                traceback.print_exc(limit=0)
 
 
 if __name__ == '__main__':

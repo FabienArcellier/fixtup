@@ -5,6 +5,7 @@ from typing import List
 
 import attr
 
+from fixtup.exceptions import PluginRuntimeError
 from fixtup.logger import get_logger
 from fixtup.plugin.base import PluginEngine, PluginEvent, event_to_function
 
@@ -18,7 +19,10 @@ class PythonPluginEngine(PluginEngine):
         for plugin in self.plugins:
             function = getattr(plugin, function_name, None)
             if function is not None:
-                function(*args, **kwargs)
+                try:
+                    function(*args, **kwargs)
+                except Exception as exception:
+                    raise PluginRuntimeError(str(exception), plugin.__name__) from exception
 
     def register_plugin(self, module: str):
         logger = get_logger()

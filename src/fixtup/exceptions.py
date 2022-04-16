@@ -26,3 +26,10 @@ class FixtupSettingsAlreadyPresent(FixtupException):
 
 class FixtureNotFound(FixtupException):
     pass
+
+
+class PluginRuntimeError(FixtupException):
+
+    def __init__(self, msg: str, plugin: str):
+        msg = f'{msg} - plugin: {plugin}'
+        super().__init__(msg)
