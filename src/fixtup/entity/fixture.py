@@ -42,7 +42,12 @@ class Fixture:
         )
 
     @classmethod
-    def fake(cls, **kwargs):
+    def fake(cls, **kwargs) -> 'Fixture':
+        """
+        Return a fake entity that is usable for automated testing.
+
+        Any args may be override
+        """
         return Fixture(
             identifier=kwargs.get('identifier', 'fixture_1234'),
             directory=kwargs.get('directory', '/tmp/fixture_1234'),

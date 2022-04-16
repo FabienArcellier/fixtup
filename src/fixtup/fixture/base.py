@@ -26,7 +26,7 @@ class FixtureEngine:
 
         os.rmdir(fixture.directory)
         shutil.copytree(fixture_template.directory, fixture.directory)
-        self.plugin_engine.run(PluginEvent.mounted, fixture)
+        self.plugin_engine.run(PluginEvent.mounting, fixture)
         self.hook_engine.run(HookEvent.mounted, fixture_template)
         self.store.fixture_mounted(fixture)
 
@@ -37,17 +37,17 @@ class FixtureEngine:
         return Fixture.create_from_template(fixture_template, fixture_directory)
 
     def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        self.plugin_engine.run(PluginEvent.started, fixture)
+        self.plugin_engine.run(PluginEvent.starting, fixture)
         self.hook_engine.run(HookEvent.started, template)
         self.store.fixture_started(fixture)
 
     def stop(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        self.plugin_engine.run(PluginEvent.stopped, fixture)
+        self.plugin_engine.run(PluginEvent.stopping, fixture)
         self.hook_engine.run(HookEvent.stopped, template)
         self.store.fixture_stopped(fixture)
 
     def unmount(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        self.plugin_engine.run(PluginEvent.unmounted, fixture)
+        self.plugin_engine.run(PluginEvent.unmounting, fixture)
         self.hook_engine.run(HookEvent.unmounted, template)
 
         shutil.rmtree(fixture.directory, True)
