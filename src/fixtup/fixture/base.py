@@ -29,6 +29,9 @@ class FixtureEngine:
 
         try:
             shutil.copytree(fixture_template.directory, fixture.directory)
+            # restore the directory after having removing the old one
+            os.chdir(fixture.directory)
+
             self.plugin_engine.run(PluginEvent.mounting, fixture)
             self.hook_engine.run(HookEvent.mounted, fixture_template)
             self.store.fixture_mounted(fixture)

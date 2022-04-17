@@ -1,10 +1,17 @@
-import io
 import os
+import warnings
+
+import plumbum
 import shutil
 
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.prompt.factory import lookup_prompt
+
+
+# I have no idea how to remove the warning message except by
+# removing them when loading the module
+warnings.simplefilter("ignore", ResourceWarning)
 
 
 def on_new_fixture(template: FixtureTemplate):
@@ -16,16 +23,42 @@ def on_new_fixture(template: FixtureTemplate):
 
 
 def on_mounting(fixture: Fixture):
-    pass
+    if _is_docker_compose_absent(fixture):
+        return
+
+    docker_compose = plumbum.local['docker-compose']
+    cmd = docker_compose['up', '--no-start', '--remove-orphans']
+    exit_code, stdout, stderr = cmd.run()
+    if exit_code != 0:
+        raise OSError(stderr)
 
 
 def on_starting(fixture: Fixture):
-    pass
+    if _is_docker_compose_absent(fixture):
+        return
+
+    docker_compose = plumbum.local['docker-compose']
+    cmd = docker_compose['up', '--detach']
+    cmd()
 
 
 def on_stopping(fixture: Fixture):
-    pass
+    if _is_docker_compose_absent(fixture):
+        return
+
+    docker_compose = plumbum.local['docker-compose']
+    cmd = docker_compose['stop']
+    cmd()
 
 
 def on_unmounting(fixture: Fixture):
-    pass
+    if _is_docker_compose_absent(fixture):
+        return
+
+    docker_compose = plumbum.local['docker-compose']
+    cmd = docker_compose['down']
+    cmd()
+
+
+def _is_docker_compose_absent(fixture: Fixture):
+    return not os.path.isfile(os.path.join(fixture.directory, 'docker-compose.yml'))

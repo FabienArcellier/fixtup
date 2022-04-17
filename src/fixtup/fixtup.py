@@ -54,11 +54,13 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
     fixture_engine = lookup_fixture_engine()
     template = fixture_template(_fixture)
     fixture = fixture_engine.new_fixture(template)
-    fixture_engine.mount(template, fixture)
-    logger.debug(f'mount fixture directory: {fixture.directory}')
 
     current_working_dir = os.getcwd()
     os.chdir(fixture.directory)
+
+    fixture_engine.mount(template, fixture)
+    logger.debug(f'mount fixture directory: {fixture.directory}')
+
     fixture_engine.start(template, fixture)
     logger.debug(f'start fixture: {fixture.directory}')
 
