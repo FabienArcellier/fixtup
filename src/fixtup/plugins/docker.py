@@ -50,6 +50,13 @@ def on_stopping(fixture: Fixture):
     cmd = docker_compose['stop']
     cmd()
 
+    # I would prefer to run the docker-compose logs in a separate thread
+    # to view the log of the container during debug. I will think about
+    # a way to do that.
+    if os.getenv('FIXTUP_DOCKER_VERBOSE', None) is not None:
+        cmd = docker_compose['logs', '--timestamps']
+        cmd & plumbum.FG
+
 
 def on_unmounting(fixture: Fixture):
     if _is_docker_compose_absent(fixture):
