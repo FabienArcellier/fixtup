@@ -56,29 +56,11 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
     fixture = fixture_engine.new_fixture(template)
 
     current_working_dir = os.getcwd()
-    os.chdir(fixture.directory)
-
-    fixture_engine.mount(template, fixture)
-    logger.debug(f'mount fixture directory: {fixture.directory}')
-
-    fixture_engine.start(template, fixture)
-    logger.debug(f'start fixture: {fixture.directory}')
 
     try:
-        yield
+        os.chdir(fixture.directory)
+        with fixture_engine.use(template, keep_mounted_fixture=keep_mounted_fixture) as fixture:
+            with fixture_engine.run(template, fixture):
+                yield
     finally:
         os.chdir(current_working_dir)
-        logger.debug(f'stop fixture : {fixture.directory}')
-        fixture_engine.stop(template, fixture)
-        if not keep_mounted_fixture:
-            logger.debug(f'remove mounted fixture directory : {fixture.directory}')
-            fixture_engine.unmount(template, fixture)
-
-
-def _fixture_template_path(fixtures_path, fixture):
-    fixture_template = os.path.join(fixtures_path, fixture)
-    if not os.path.isdir(fixture_template):
-        fixtures_list = [d for d in os.listdir(fixtures_path) if
-                         os.path.isdir(os.path.join(fixtures_path, d))]
-        raise FixtureNotFound('the fixture {0} does not exists in fixtures : {1}'.format(fixture, fixtures_list))
-    return fixture_template
