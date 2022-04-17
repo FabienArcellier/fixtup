@@ -6,8 +6,10 @@ from jinja2 import Environment
 import yaml
 
 from fixtup.entity.fixture_template import FixtureTemplate
+from fixtup.entity.plugin import PluginEvent
 from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
+from fixtup.plugin.factory import lookup_plugin_engine
 
 RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resource'))
 
@@ -37,6 +39,9 @@ def scaffold_new_fixture(fixture: FixtureTemplate):
 
     _generate_fixtup_manifest(fixture)
     _generate_hooks_directory(fixture)
+
+    plugin = lookup_plugin_engine()
+    plugin.run(PluginEvent.new_fixture, template = fixture)
 
 
 def _generate_hooks_directory(fixture: FixtureTemplate):

@@ -23,7 +23,6 @@ def new() -> None:
     shared_fixture = prompt.confirm('Is this fixture is shared between all the tests ? ')
 
     # output
-    fixture = FixtureTemplate.create_from_cli(fixture_id, settings.fixtures_dir, shared_fixture)
+    template = FixtureTemplate.create_from_cli(fixture_id, settings.fixtures_dir, shared_fixture)
 
-    scaffold_new_fixture(fixture)
-    plugin.run(PluginEvent.new_fixture, fixture)
+    scaffold_new_fixture(template)

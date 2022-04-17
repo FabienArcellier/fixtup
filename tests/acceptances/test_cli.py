@@ -1,4 +1,3 @@
-import io
 import os
 import unittest
 
@@ -9,6 +8,7 @@ from fixtup.cli.base import cli
 from fixtup.factory import RuntimeContext, reset_runtime_context
 from fixtup.prompt.mock import send_text, reset_input
 from fixtup.settings import read_settings
+from fixtup.tests.settings import override_fixtup_settings
 
 
 class TestCli(unittest.TestCase):
@@ -118,6 +118,67 @@ class TestCli(unittest.TestCase):
 
             fixtup_manifest = os.path.join(fixture_path, 'fixtup.yml')
             self.assertTrue(os.path.isfile(fixtup_manifest))
+
+    def test_new_should_ask_for_docker_template(self):
+        # Arrange
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+
+        send_text("hello world")
+        send_text("y")
+        send_text("y")
+
+        with fixtup.up('fixtup_project'):
+            with override_fixtup_settings({
+                "fixtures": os.getcwd(),
+                'plugins': [
+                    'fixtup.plugins.docker'
+                ]
+            }):
+
+                # Acts
+                settings = read_settings()
+
+                result = self._runner.invoke(cli, ['new'])
+
+                # Assert
+                self.assertEqual(0, result.exit_code)
+
+                fixture_path = os.path.join(settings.fixtures_dir, "hello world")
+                self.assertTrue(os.path.isdir(fixture_path), f"fixture does not exists {fixture_path}")
+
+                docker_compose_path = os.path.join(fixture_path, 'docker-compose.yml')
+                self.assertTrue(os.path.isfile(docker_compose_path))
+
+
+    def test_new_should_ask_for_docker_template_and_not_create_the_template_when_the_user_refuse(self):
+        # Arrange
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+
+        send_text("hello world")
+        send_text("y")
+        send_text("n")
+
+        with fixtup.up('fixtup_project'):
+            with override_fixtup_settings({
+                "fixtures": os.getcwd(),
+                'plugins': [
+                    'fixtup.plugins.docker'
+                ]
+            }):
+
+                # Acts
+                settings = read_settings()
+
+                result = self._runner.invoke(cli, ['new'])
+
+                # Assert
+                self.assertEqual(0, result.exit_code)
+
+                fixture_path = os.path.join(settings.fixtures_dir, "hello world")
+                self.assertTrue(os.path.isdir(fixture_path), f"fixture does not exists {fixture_path}")
+
+                docker_compose_path = os.path.join(fixture_path, 'docker-compose.yml')
+                self.assertFalse(os.path.isfile(docker_compose_path))
 
 if __name__ == '__main__':
     unittest.main()
