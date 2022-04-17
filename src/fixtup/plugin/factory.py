@@ -8,10 +8,10 @@ from fixtup.settings import read_settings
 @factory
 def lookup_plugin_engine(context: RuntimeContext) -> PluginEngine:
     plugin_engine: PluginEngine
-    if context.unittest:
-        plugin_engine = MockPluginEngine()
-    else:
+    if context.enable_plugins:
         plugin_engine = PythonPluginEngine()
+    else:
+        plugin_engine = MockPluginEngine()
 
     settings = read_settings()
     for plugin in settings.plugins:

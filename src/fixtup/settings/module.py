@@ -14,6 +14,10 @@ def configure_from_code(settings: Settings):
     thread_store.settings = settings
 
 
+def reset_settings():
+    thread_store.settings = None
+
+
 class ModuleSettings(SettingsParser):
     manifest = None
 

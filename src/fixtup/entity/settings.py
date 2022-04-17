@@ -39,6 +39,14 @@ class Settings:
         load the settings from a simple dictionary with key value configure
         through `fixtup.configure`
 
+        >>> settings_def = {
+        >>>    "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+        >>>    'plugins': [
+        >>>        'fixtup.plugins.dummy_plugin_error'
+        >>>    ]
+        >>> }
+        >>> settings = Settings.from_configuration(settings)
+
         :param settings: key / value with settings specify by the user
         :return:
         """

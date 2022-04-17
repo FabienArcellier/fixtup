@@ -24,6 +24,14 @@ class RuntimeContext:
     """
     unittest = attr.ib(default=False)
 
+    """
+    The plugins are ignored when enable_plugins is False.
+
+    They are not loaded, neither executed. The plugin engine is doing
+    pass-through
+    """
+    enable_plugins = attr.ib(default=True)
+
 
 """
 Using threading store allow to perform dependency injection in

@@ -16,7 +16,7 @@ class PluginEngine:
          in degraded mode. If it raise an error, it will ignore it.
         """
         logger = get_logger()
-        logger.warn(f"release plugin resource due to internal error with event {event}")
+        logger.warning(f"release plugin resource due to internal error with event {event}")
         try:
             self.run(event, *args, **kwargs)
         except:

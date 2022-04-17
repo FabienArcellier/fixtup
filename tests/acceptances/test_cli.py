@@ -12,10 +12,14 @@ from fixtup.settings import read_settings
 
 
 class TestCli(unittest.TestCase):
+
     def setUp(self):
         reset_input()
-        reset_runtime_context(RuntimeContext(unittest=True))
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False))
         self._runner = CliRunner()
+
+    def tearDown(self) -> None:
+        reset_runtime_context()
 
     def test_invoke_should_show_a_list_of_command(self):
         # Arrange
