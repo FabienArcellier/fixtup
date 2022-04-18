@@ -1,3 +1,4 @@
+import contextlib
 import os
 import shutil
 import tempfile
@@ -10,6 +11,7 @@ from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.exceptions import PluginRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
+from fixtup.logger import get_logger
 from fixtup.plugin.base import PluginEngine, PluginEvent
 
 
@@ -29,6 +31,9 @@ class FixtureEngine:
 
         try:
             shutil.copytree(fixture_template.directory, fixture.directory)
+            # restore the directory after having removing the old one
+            os.chdir(fixture.directory)
+
             self.plugin_engine.run(PluginEvent.mounting, fixture)
             self.hook_engine.run(HookEvent.mounted, fixture_template)
             self.store.fixture_mounted(fixture)
@@ -58,6 +63,18 @@ class FixtureEngine:
 
             raise
 
+    @contextlib.contextmanager
+    def run(self, template: FixtureTemplate, fixture: Fixture):
+        logger = get_logger()
+        try:
+            self.start(template, fixture)
+            logger.debug(f'start fixture: {fixture.directory}')
+            yield
+
+        finally:
+            logger.debug(f'stop fixture : {fixture.directory}')
+            self.stop(template, fixture)
+
     def stop(self, template: FixtureTemplate, fixture: Fixture) -> None:
         try:
             self.plugin_engine.run(PluginEvent.stopping, fixture)
@@ -77,6 +94,19 @@ class FixtureEngine:
         shutil.rmtree(fixture.directory, True)
         self.store.fixture_unmounted(fixture)
 
+    @contextlib.contextmanager
+    def use(self, template: FixtureTemplate, keep_mounted_fixture: bool = False):
+        logger = get_logger()
+        fixture = self.new_fixture(template)
+        try:
+            self.mount(template, fixture)
+            logger.debug(f'mount fixture directory: {fixture.directory}')
+            yield fixture
+
+        finally:
+            if not keep_mounted_fixture:
+                logger.debug(f'remove mounted fixture directory : {fixture.directory}')
+                self.unmount(template, fixture)
 
 def mount(template: 'FixtureTemplate') -> None:
     tmp_prefix = '{0}_{1}'.format(template.identifier, '_')

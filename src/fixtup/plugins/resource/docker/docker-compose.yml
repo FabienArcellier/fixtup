@@ -1,0 +1,21 @@
+version: "3.9"
+services: {}
+#    # postgresql image ready to use
+#    #
+#    postgresql:
+#        image: postgres
+#        ports:
+#            - "5432:5432"
+#        environment:
+#            - POSTGRES_PASSWORD=1234
+#        volumes:
+#            - /var/lib/postgresql
+
+#    # redis container
+#    redis:
+#        image: redis
+#        ports:
+#            - "6379:6379"
+#        environment: []
+#        volumes:
+#            - /data

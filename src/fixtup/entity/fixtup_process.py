@@ -5,6 +5,7 @@ import attr
 from fixtup.entity.fixture import Fixture
 from fixtup.lib.conditions import unique
 from fixtup.lib.list import first
+from fixtup.logger import get_logger
 
 
 @attr.s
@@ -40,7 +41,6 @@ class FixtupProcess:
 
     def fixture_unmounted(self, fixture: Fixture):
         active_fixture = first(self.active_fixtures, lambda f: f.identifier == fixture.identifier)
-        assert active_fixture is not None
-
-        active_fixture.unmounted()
+        if active_fixture is not None:
+            active_fixture.unmounted()
 
