@@ -27,8 +27,8 @@ plugins is declared in ``plugins`` section:
     [fixtup]
     fixtures=tests/fixtures
     plugins=
-        fixtup.plugins.docker
         fixtup.plugins.dotenv
+        fixtup.plugins.docker
 
 
 More information on the configuration in the section :ref:`ConfigureFixtup`
@@ -42,9 +42,15 @@ More information on the configuration in the section :ref:`ConfigureFixtup`
 Native plug-ins
 ***************
 
+.. toctree::
+   :glob:
+   :hidden:
+
+   plugins/*
+
 Fixtup implements several plug-ins. They are installed when you install ``fixtup``.
 
-* ``fixtup.plugins.docker``: run containers declared in `docker-compose.yml`
+* `fixtup.plugins.docker <plugins/docker.html>`_: run containers declared in `docker-compose.yml`
 * ``fixtup.plugins.dotenv``: load environment variables for a fixture from a ``.env`` file
 
 Community plugins
