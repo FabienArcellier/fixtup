@@ -65,8 +65,8 @@ In the next step you need to configure `Fixtup` in your project manifest
     [fixtup]
     fixtures=tests/fixtures
     plugins=
-        fixtup.plugins.docker
         fixtup.plugins.dotenv
+        fixtup.plugins.docker
 
 Before writing your first fixture, you will implement the function thumbnail in ``lib/utils.py``.
 To run the function thumbnail, you need to setup pillow in your python environment ``pip install Pillow``.

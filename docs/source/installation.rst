@@ -36,8 +36,8 @@ in the ``setup.cfg`` manifest of your python project.
     [fixtup]
     fixtures=tests/fixtures
     plugins=
-        fixtup.plugins.docker
         fixtup.plugins.dotenv
+        fixtup.plugins.docker
 
 .. note::
 
@@ -56,8 +56,8 @@ the ``pyproject.toml`` manifest of your python project.
     [tools.fixtup]
     fixtures=tests/fixtures
     plugins=[
-        "fixtup.plugins.docker",
-        "fixtup.plugins.dotenv"
+        "fixtup.plugins.dotenv",
+        "fixtup.plugins.docker"
     ]
 
 
