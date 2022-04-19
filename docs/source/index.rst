@@ -3,13 +3,38 @@ Fixtup
 
 You will love writing integration tests in python with ``Fixtup``.
 
-Certains de vos tests ont besoin d'une base de donnée, d'un dossier de travail, de variables d'environnement spécifiques,
-``Fixtup`` provisionne tout ça pour vous. Même pas la peine de vous occuper du nettoyage,
-il libère de lui même les ressources qu'il a provisionné.
+Some of your tests need a database, a folder with data, dedicated environment variables,
+``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning,
+it releases by itself the resources that it has provisioned.
 
-``Fixtup`` rends simple l'utilisation de dépendances externes dans vos tests. Il s'intègre
-à votre framework de test préféré, que ce soit pytest, unitest ou meme des plateformes BDD comme robot framework
-ou behave.
+``Fixtup`` makes it easy to use external dependencies in your tests. It integrates
+to your favorite test framework like pytest, unitest or even BDD framework like robot framework
+or behave.
+
+.. figure:: _static/principle_diagram.png
+    :align: center
+
+You want to try ?
+
+.. code-block:: python
+
+    import unittest
+    import os
+    import fixtup
+
+    class UtilsTest(unittest.TestCase)
+        def test_thumbnail_should_generate_thumbnail(self):
+            with fixtup.up('thumbnail_context'):
+                # Given
+                wd = os.getcwd()
+                original_file = os.path.join(wd, 'file.png')
+                expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+
+                # When
+                thumbnail(original_file, expected_thumbnail_file)
+
+                # Then
+                self.assertTrue(os.path.isfile(expected_thumbnail_file)
 
 .. toctree::
     :maxdepth: 2
