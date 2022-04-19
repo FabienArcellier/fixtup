@@ -1,18 +1,15 @@
 Fixtup
 ######
 
-``Fixtup`` facilite l'écriture de tests automatiques en python qui s'appuie un environnement complexe.
+You will love writing integration tests in python with ``Fixtup``.
 
-Une ressource externe peut etre aussi simple qu'un dossier de travail ou un service plus complexe comme
-une base de donnée postgresql, un broker de message rabbitmq, ou un service cloud comme AWS S3, ...
+Certains de vos tests ont besoin d'une base de donnée, d'un dossier de travail, de variables d'environnement spécifiques,
+``Fixtup`` provisionne tout ça pour vous. Même pas la peine de vous occuper du nettoyage,
+il libère de lui même les ressources qu'il a provisionné.
 
-Sans ``Fixtup``, vous aurez à écrire du boilerplate dans vos tests pour gérer le contenu de ces ressources externes.
-Si vos tests produisent des effets de bord, comme la création de fichier, la modification d'un fichier existant,
-de l'ajout d'un enregistrement dans une base de donnée ce code peut devenir plus important que le test lui même.
-
-Avec ``Fixtup``, vous spécifiez des ``fixtures`` qui décrivent les ressources à créer.
-Fixtup les instancie au moment où votre test en a besoin. A la fin du test, ``Fixtup`` gère la destruction des ressources.
-
+``Fixtup`` rends simple l'utilisation de dépendances externes dans vos tests. Il s'intègre
+à votre framework de test préféré, que ce soit pytest, unitest ou meme des plateformes BDD comme robot framework
+ou behave.
 
 .. toctree::
     :maxdepth: 2
