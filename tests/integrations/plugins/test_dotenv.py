@@ -47,6 +47,25 @@ class TestDotenv(unittest.TestCase):
                 # Assert
                 self.assertIsNone(os.getenv('FIXTUP_HELLO'))
 
+    def test_on_stopping_should_restore_environments_variables_modified_after_starting(self):
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../../fixtures/fixtup"),
+            'plugins': []
+        }):
+            with fixtup.up('simple_fixture_dotenv'):
+                # Arrange
+                fixture = Fixture.fake(directory=os.getcwd())
+                dotenv.on_starting(fixture)
+                os.environ['HELLO'] = 'test'
+
+                # Acts
+                dotenv.on_stopping(fixture)
+
+                # Assert
+                self.assertIsNone(os.getenv('FIXTUP_HELLO'))
+                self.assertIsNone(os.getenv('HELLO'))
+
 
 if __name__ == '__main__':
     unittest.main()
