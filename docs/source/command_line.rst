@@ -63,6 +63,7 @@ le repository qui contient les templates de fixture.
     Configuration: /home/far/documents/project/setup.cfg
     Fixtures: /home/far/documents/project/tests/fixtures/fixtup
     Plugins:
-        * fixtup.plugins.docker
         * fixtup.plugins.dotenv
+        * fixtup.plugins.docker
+
 

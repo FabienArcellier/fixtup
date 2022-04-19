@@ -96,8 +96,8 @@ class Settings:
             manifest=copy.deepcopy(manifest),
             fixtures=fixture_repository,
             plugins=[
-                "fixtup.plugins.docker",
-                "fixtup.plugins.dotenv"
+                "fixtup.plugins.dotenv",
+                "fixtup.plugins.docker"
             ]
         )
 

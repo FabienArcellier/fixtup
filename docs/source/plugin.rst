@@ -129,6 +129,6 @@ In the configuration file, you must add the module of your plugin.
     [fixtup]
     fixtures=tests/fixtures
     plugins=
-        fixtup.plugins.docker
         fixtup.plugins.dotenv
+        fixtup.plugins.docker
         fixtup_terraform.plugin
