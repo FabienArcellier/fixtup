@@ -1,18 +1,40 @@
 Fixtup
 ######
 
-``Fixtup`` facilite l'écriture de tests automatiques en python qui s'appuie un environnement complexe.
+You will love writing integration tests in python with ``Fixtup``.
 
-Une ressource externe peut etre aussi simple qu'un dossier de travail ou un service plus complexe comme
-une base de donnée postgresql, un broker de message rabbitmq, ou un service cloud comme AWS S3, ...
+Some of your tests need a database, a folder with data, dedicated environment variables,
+``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning,
+it releases by itself the resources that it has provisioned.
 
-Sans ``Fixtup``, vous aurez à écrire du boilerplate dans vos tests pour gérer le contenu de ces ressources externes.
-Si vos tests produisent des effets de bord, comme la création de fichier, la modification d'un fichier existant,
-de l'ajout d'un enregistrement dans une base de donnée ce code peut devenir plus important que le test lui même.
+``Fixtup`` makes it easy to use external dependencies in your tests. It integrates
+to your favorite test framework like pytest, unitest or even BDD framework like robot framework
+or behave.
 
-Avec ``Fixtup``, vous spécifiez des ``fixtures`` qui décrivent les ressources à créer.
-Fixtup les instancie au moment où votre test en a besoin. A la fin du test, ``Fixtup`` gère la destruction des ressources.
+.. figure:: _static/principle_diagram.png
+    :align: center
 
+You want to try ?
+
+.. code-block:: python
+
+    import unittest
+    import os
+    import fixtup
+
+    class UtilsTest(unittest.TestCase)
+        def test_thumbnail_should_generate_thumbnail(self):
+            with fixtup.up('thumbnail_context'):
+                # Given
+                wd = os.getcwd()
+                original_file = os.path.join(wd, 'file.png')
+                expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+
+                # When
+                thumbnail(original_file, expected_thumbnail_file)
+
+                # Then
+                self.assertTrue(os.path.isfile(expected_thumbnail_file)
 
 .. toctree::
     :maxdepth: 2

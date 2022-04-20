@@ -1,24 +1,17 @@
 # Fixtup
 
-Fixtup facilite l'écriture de tests automatiques en python
-qui s'appuie sur des ressources externes. Une ressource externe
-peut etre aussi simple qu'un dossier de travail ou être une base de donnée
-postgresql, un broker de message rabbitmq, ou un service cloud comme AWS S3 ...
+You will love writing integration tests in python with ``Fixtup``.
 
-Sans Fixtup, vous aurez à écrire du boilerplate dans vos tests
-qui s'appuie sur des ressources externes. Encore plus si vos tests induisent des effets de bord.
-Si un test crée un fichier, modifier un fichier existant, ajoute un enregistrement
-dans une base de donnée, le code que avez à écrire dans le teardown de votre test composera la
-majorité de votre test.
+Some of your tests need a database, a folder with data, dedicated environment variables, ``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning, it releases by itself the resources that it has provisioned.
 
-Avec Fixtup, vous spécifiez les ressources à créer. Fixtup les instancie avec le niveau d'isolation
-que vous avez spécifié au moment où votre test en a besoin. Les ressources vivent le temps du test.
+``Fixtup`` makes it easy to use external dependencies in your tests. It integrates
+to your favorite test framework like pytest, unitest or even BDD framework like robot framework or behave.
 
-## Getting started with Fixtup
+![outline schematic from fixtup](docs/source/_static/principle_diagram.png)
 
-```
-pip install fixtup
-```
+## Getting started
+
+Take 10 minutes to get all the key to start with fixtup in [Getting started]().
 
 ```python
 def test_thumbnail_should_generate_thumbnail(self):
@@ -42,23 +35,6 @@ La documentation offre plus d'exemples :
 * instancier une base de donnée redis avec fixtup
 * spécifier des variables d'environnement à utiliser avec fixtup
 * ...
-
-##
-
-## Des effets de bords difficile à maitriser
-
-Par exemple, votre code génère une miniature à partir d'une image uploadée par l'utilisateur.
-Pour tester votre code, vous écrivez le code suivant :
-
-```python
-def test_thumbnail_should_generate_thumbnail(self):
-    thumbnail('file.jpeg', 'file_t.jpeg')
-    self.assertTrue(os.directory.isfile('file_t.jpeg'))
-```
-
-Ce test présente un défaut. Une fois le test joué une fois, le fichier `file_t.jpeg` est conservé.
-Vous devez penser à l'effacer. Vous avez aussi une chance de vous retrouver à un moment avec
-le fichier `file_t.jpeg` dans votre repository de code.
 
 ## Contributing
 
