@@ -18,13 +18,16 @@ from fixtup.plugin.base import PluginEngine, PluginEvent
 class FixtureEngine:
     hook_engine: HookEngine = attr.ib()
     plugin_engine: PluginEngine = attr.ib()
-    store: FixtupProcess = attr.ib(init=False)
-
-    def __attrs_post_init__(self):
-        self.store = FixtupProcess()
+    store: FixtupProcess = attr.ib()
 
     def mount(self, fixture_template: FixtureTemplate, fixture: Fixture) -> None:
         assert fixture_template.identifier == fixture.template_identifier
+
+        # Quand une fixture est partagée et qu'elle est déjà montée
+        # alors on change seulement le chemin du working directory
+        if self.store.is_mounted(fixture_template):
+            os.chdir(fixture.directory)
+            return
 
         try:
             shutil.copytree(fixture_template.directory, fixture.directory)
@@ -42,6 +45,12 @@ class FixtureEngine:
             raise
 
     def new_fixture(self, fixture_template: FixtureTemplate) -> Fixture:
+        if self.store.is_mounted(fixture_template):
+            fixture = self.store.fixture(fixture_template)
+
+            assert fixture_template.shared is True, f"fixture {fixture.identifier} is mounted but should not, the template does not use shared policy"
+            return fixture
+
         tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
         fixture_directory = tempfile.mkdtemp(prefix=tmp_prefix)
         os.rmdir(fixture_directory)
@@ -86,6 +95,9 @@ class FixtureEngine:
             raise
 
     def unmount(self, template: FixtureTemplate, fixture: Fixture) -> None:
+        if template.shared is True:
+            return
+
         self.plugin_engine.run(PluginEvent.unmounting, fixture)
         self.hook_engine.run(HookEvent.unmounting, template)
 

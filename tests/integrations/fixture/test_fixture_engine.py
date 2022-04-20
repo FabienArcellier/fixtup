@@ -3,6 +3,7 @@ import unittest
 
 import fixtup
 from fixtup.entity.fixture import State
+from fixtup.factory import RuntimeContext, reset_runtime_context
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
 
@@ -10,6 +11,7 @@ from fixtup.fixture_template.base import fixture_template
 class TestFixtureEngine(unittest.TestCase):
 
     def setUp(self) -> None:
+        reset_runtime_context(RuntimeContext(emulate_new_process=True))
         self.tested = lookup_fixture_engine()
 
     def test_new_fixture_should_create_an_empty_directory_in_tmp_file(self):
@@ -23,6 +25,35 @@ class TestFixtureEngine(unittest.TestCase):
             # Assert
             self.assertEqual(State.Unmounted, fixture.state)
             self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
+
+    def test_new_fixture_from_template_with_shared_policy_reuse_existing_fixture_if_it_is_already_mounted(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('shared')
+
+            # Acts
+            fixture1 = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture1)
+
+            fixture2 = self.tested.new_fixture(template)
+
+            # Assert
+            self.assertIs(fixture1, fixture2)
+
+    def test_new_fixture_from_template_keep_the_fixture_mounted(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('shared')
+
+            # Acts
+            fixture1 = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture1)
+            self.tested.unmount(template, fixture1)
+
+            fixture2 = self.tested.new_fixture(template)
+
+            # Assert
+            self.assertIs(fixture1, fixture2)
 
     def test_mount_should_copy_the_content_of_template_into_tmp_directory(self):
         # Arrange

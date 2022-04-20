@@ -35,7 +35,7 @@ def _read_fixture_yml(fixture_template: str) -> dict:
     :param fixture_template: le dossier du template de la fixture
     """
     logger = get_logger()
-    fixture_yml = os.path.join(fixture_template, 'fixture.yml')
+    fixture_yml = os.path.join(fixture_template, 'fixtup.yml')
     try:
         if os.path.isfile(fixture_yml):
             with io.open(fixture_yml) as filepointer:

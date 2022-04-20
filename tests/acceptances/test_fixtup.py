@@ -13,7 +13,7 @@ from fixtup.tests.settings import override_fixtup_settings
 class TestFixtup(unittest.TestCase):
 
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False))
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False, emulate_new_process=True))
 
     def tearDown(self) -> None:
         reset_runtime_context()
@@ -101,9 +101,9 @@ class TestFixtup(unittest.TestCase):
                     self.assertIn('plugin: fixtup.plugins.dummy_plugin_error', exception.msg)
 
     def test_up_on_fixture_with_shared_policy_should_keep_the_same_fixture_environment(self):
-        self.skipTest("not implemented yet")
+        # self.skipTest("not implemented yet")
 
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+        reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -122,7 +122,6 @@ class TestFixtup(unittest.TestCase):
             self.assertEqual(fixture1, fixture2)
 
     def test_up_on_fixture_without_shared_policy_should_create_a_new_fixture_environment(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
