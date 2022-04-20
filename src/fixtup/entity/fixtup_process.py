@@ -28,19 +28,19 @@ class FixtupProcess:
         assert unique(self.mounted_fixtures, lambda f: f.identifier)
 
     def fixture_started(self, fixture: Fixture):
-        fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
-        assert fixture is not None
+        _fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
+        assert _fixture is not None
 
-        fixture.started()
+        _fixture.started()
 
     def fixture_stopped(self, fixture: Fixture):
-        fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
-        assert fixture is not None
+        _fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
+        assert _fixture is not None
 
-        fixture.stopped()
+        _fixture.stopped()
 
     def fixture_unmounted(self, fixture: Fixture):
-        fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
-        if fixture is not None:
-            fixture.unmounted()
+        _fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
+        if _fixture is not None:
+            _fixture.unmounted()
 

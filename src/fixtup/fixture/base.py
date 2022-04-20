@@ -105,29 +105,3 @@ class FixtureEngine:
             if not keep_mounted_fixture:
                 logger.debug(f'remove mounted fixture directory : {fixture.directory}')
                 self.unmount(template, fixture)
-
-def mount(template: 'FixtureTemplate') -> None:
-    tmp_prefix = '{0}_{1}'.format(template.identifier, '_')
-    mounted_fixture = tempfile.mktemp(prefix=tmp_prefix)
-    fixture = Fixture.create_from_template(template, mounted_fixture)
-    shutil.copytree(template.directory, mounted_fixture)
-
-
-def start(template: 'FixtureTemplate') -> None:
-    raise NotImplementedError()
-
-
-def stop(template: 'FixtureTemplate') -> None:
-    raise NotImplementedError()
-
-
-def unmount(template: 'FixtureTemplate', force: bool = False) -> None:
-    raise NotImplementedError()
-
-
-def is_mounted(template: 'FixtureTemplate') -> None:
-    raise NotImplementedError()
-
-
-def termination_handler() -> None:
-    raise NotImplementedError()
