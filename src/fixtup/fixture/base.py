@@ -2,7 +2,6 @@ import contextlib
 import os
 import shutil
 import tempfile
-from typing import Any
 
 import attr
 
@@ -27,15 +26,13 @@ class FixtureEngine:
     def mount(self, fixture_template: FixtureTemplate, fixture: Fixture) -> None:
         assert fixture_template.identifier == fixture.template_identifier
 
-        os.rmdir(fixture.directory)
-
         try:
             shutil.copytree(fixture_template.directory, fixture.directory)
             # restore the directory after having removing the old one
             os.chdir(fixture.directory)
 
             self.plugin_engine.run(PluginEvent.mounting, fixture)
-            self.hook_engine.run(HookEvent.mounted, fixture_template)
+            self.hook_engine.run(HookEvent.mounting, fixture_template)
             self.store.fixture_mounted(fixture)
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
@@ -47,13 +44,14 @@ class FixtureEngine:
     def new_fixture(self, fixture_template: FixtureTemplate) -> Fixture:
         tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
         fixture_directory = tempfile.mkdtemp(prefix=tmp_prefix)
+        os.rmdir(fixture_directory)
 
         return Fixture.create_from_template(fixture_template, fixture_directory)
 
     def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
         try:
             self.plugin_engine.run(PluginEvent.starting, fixture)
-            self.hook_engine.run(HookEvent.started, template)
+            self.hook_engine.run(HookEvent.starting, template)
             self.store.fixture_started(fixture)
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.stopping, fixture)
@@ -78,7 +76,7 @@ class FixtureEngine:
     def stop(self, template: FixtureTemplate, fixture: Fixture) -> None:
         try:
             self.plugin_engine.run(PluginEvent.stopping, fixture)
-            self.hook_engine.run(HookEvent.stopped, template)
+            self.hook_engine.run(HookEvent.stopping, template)
             self.store.fixture_stopped(fixture)
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
@@ -89,7 +87,7 @@ class FixtureEngine:
 
     def unmount(self, template: FixtureTemplate, fixture: Fixture) -> None:
         self.plugin_engine.run(PluginEvent.unmounting, fixture)
-        self.hook_engine.run(HookEvent.unmounted, template)
+        self.hook_engine.run(HookEvent.unmounting, template)
 
         shutil.rmtree(fixture.directory, True)
         self.store.fixture_unmounted(fixture)

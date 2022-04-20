@@ -19,7 +19,7 @@ class TestPythonHookEngine(unittest.TestCase):
             )
 
             # Acts
-            self._tested.run(HookEvent.mounted, template)
+            self._tested.run(HookEvent.mounting, template)
 
             # Assert
             fake_mounted_file_existing = os.path.join(os.getcwd(), 'mounted')

@@ -58,7 +58,6 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
     current_working_dir = os.getcwd()
 
     try:
-        os.chdir(fixture.directory)
         with fixture_engine.use(template, keep_mounted_fixture=keep_mounted_fixture) as fixture:
             with fixture_engine.run(template, fixture):
                 yield

@@ -4,10 +4,10 @@ from fixtup.entity.fixture_template import FixtureTemplate
 
 
 class HookEvent(Enum):
-    mounted="mounted"
-    started="started"
-    stopped="stopped"
-    unmounted="unmounted"
+    mounting = "mounting"
+    starting = "starting"
+    stopping = "stopping"
+    unmounting = "unmounting"
 
 
 class HookEngine:

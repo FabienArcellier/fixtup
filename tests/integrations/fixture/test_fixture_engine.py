@@ -21,8 +21,8 @@ class TestFixtureEngine(unittest.TestCase):
             fixture = self.tested.new_fixture(template)
 
             # Assert
-            self.assertEqual(State.Reserved, fixture.state)
-            self.assertTrue(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
+            self.assertEqual(State.Unmounted, fixture.state)
+            self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
 
     def test_mount_should_copy_the_content_of_template_into_tmp_directory(self):
         # Arrange
