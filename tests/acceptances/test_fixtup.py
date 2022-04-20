@@ -100,6 +100,45 @@ class TestFixtup(unittest.TestCase):
                 except PluginRuntimeError as exception:
                     self.assertIn('plugin: fixtup.plugins.dummy_plugin_error', exception.msg)
 
+    def test_up_on_fixture_with_shared_policy_should_keep_the_same_fixture_environment(self):
+        self.skipTest("not implemented yet")
+
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+            'plugins': []
+        }):
+            # Acts
+            with fixtup.up('simple_fixture_shared'):
+                fixture1 = os.getcwd()
+
+            with fixtup.up('simple_fixture_shared'):
+                fixture2 = os.getcwd()
+
+            # Assert
+            self.assertEqual(fixture1, fixture2)
+
+    def test_up_on_fixture_without_shared_policy_should_create_a_new_fixture_environment(self):
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+            'plugins': []
+        }):
+            # Acts
+            with fixtup.up('simple_fixture_shared'):
+                fixture1 = os.getcwd()
+
+            with fixtup.up('simple_fixture_shared'):
+                fixture2 = os.getcwd()
+
+            # Assert
+            self.assertNotEqual(fixture1, fixture2)
 
 
 if __name__ == '__main__':
