@@ -14,4 +14,5 @@ def dist():
     """
     python = alfred.sh("python", "python should be present")
     os.chdir(ROOT_DIR)
-    alfred.run(python, ['setup.py', 'bdist_wheel', 'sdist'])
+    alfred.run(python, ['-m', 'build', '--no-isolation', '--wheel', '--sdist', '--outdir', 'dist'])
+
