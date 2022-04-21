@@ -1,5 +1,6 @@
 import os
 
+from click import UsageError
 import alfred
 
 import fixtup
@@ -20,13 +21,37 @@ def publish():
     alfred.run(git, ['push', 'origin', fixtup.__version__])
 
 
-@alfred.command("publish:dist", help="build distribution packages")
+@alfred.command("publish:pypi", help="workflow to release fixtup to pypi")
 def publish__dist():
     """
-    build distribution packages
+    workflow to release fixtup current version to pypi
 
-    >>> $ alfred publish:dist
+    >>> $ alfred publish:pypi
     """
-    python = alfred.sh("python", "python should be present")
+    alfred.invoke_command('dist')
+    alfred.invoke_command('publish:twine')
+
+
+@alfred.command("publish:twine", help="push fixtup to pypi")
+def publish__twine():
+    """
+    push fixtup to pypi
+
+    This operation requires you set a pypi publication token as env var
+
+    * TWINE_USERNAME
+    * TWINE_PASSWORD
+
+    >>> $ alfred publish:twine
+    """
+    username = os.getenv('TWINE_USERNAME', None)
+    password = os.getenv('TWINE_PASSWORD', None)
+    if username is None:
+        os.environ['TWINE_USERNAME'] = '__token__'
+
+    if password is None:
+        raise UsageError('TWINE_PASSWORD should contains your pypi token to publish fixtup : https://pypi.org/help/#apitoken')
+
+    twine = alfred.sh("twine")
     os.chdir(ROOT_DIR)
-    alfred.run(python, ['setup.py', 'bdist_wheel', 'sdist'])
+    alfred.run(twine, ['upload', '--non-interactive', 'dist/*'])
