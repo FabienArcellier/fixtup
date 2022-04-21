@@ -13,7 +13,7 @@ from fixtup.tests.settings import override_fixtup_settings
 class TestFixtup(unittest.TestCase):
 
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False))
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False, emulate_new_process=True))
 
     def tearDown(self) -> None:
         reset_runtime_context()
@@ -81,7 +81,7 @@ class TestFixtup(unittest.TestCase):
             self.assertTrue(os.path.isfile(os.path.join(cwd, 'hello.txt')))
 
     def test_up_should_show_error_message_when_error_happens_in_plugins(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True, emulate_new_process=True))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -100,6 +100,44 @@ class TestFixtup(unittest.TestCase):
                 except PluginRuntimeError as exception:
                     self.assertIn('plugin: fixtup.plugins.dummy_plugin_error', exception.msg)
 
+    def test_up_on_fixture_with_shared_policy_should_keep_the_same_fixture_environment(self):
+        # self.skipTest("not implemented yet")
+
+        reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+            'plugins': []
+        }):
+            # Acts
+            with fixtup.up('simple_fixture_shared'):
+                fixture1 = os.getcwd()
+
+            with fixtup.up('simple_fixture_shared'):
+                fixture2 = os.getcwd()
+
+            # Assert
+            self.assertEqual(fixture1, fixture2)
+
+    def test_up_on_fixture_without_shared_policy_should_create_a_new_fixture_environment(self):
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+            'plugins': []
+        }):
+            # Acts
+            with fixtup.up('simple_fixture_shared'):
+                fixture1 = os.getcwd()
+
+            with fixtup.up('simple_fixture_shared'):
+                fixture2 = os.getcwd()
+
+            # Assert
+            self.assertNotEqual(fixture1, fixture2)
 
 
 if __name__ == '__main__':

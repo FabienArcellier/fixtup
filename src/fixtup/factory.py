@@ -32,6 +32,12 @@ class RuntimeContext:
     """
     enable_plugins = attr.ib(default=True)
 
+    """
+    This will emulate a new process every time the factory is called. It will initialize
+    entity Fixtup Process
+    """
+    emulate_new_process = attr.ib(default=False)
+
 
 """
 Using threading store allow to perform dependency injection in

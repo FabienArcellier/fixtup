@@ -44,10 +44,10 @@ class PythonHookEngine(HookEngine):
 
 def script(event: 'HookEvent') -> Optional[str]:
     files = {
-        HookEvent.mounted: os.path.join(".hooks", "hook_mounted.py"),
-        HookEvent.started: os.path.join(".hooks", "hook_started.py"),
-        HookEvent.stopped: os.path.join(".hooks", "hook_stopped.py"),
-        HookEvent.unmounted: os.path.join(".hooks", "hook_unmounted.py")
+        HookEvent.mounting: os.path.join(".hooks", "hook_mounted.py"),
+        HookEvent.starting: os.path.join(".hooks", "hook_started.py"),
+        HookEvent.stopping: os.path.join(".hooks", "hook_stopped.py"),
+        HookEvent.unmounting: os.path.join(".hooks", "hook_unmounted.py")
     }
 
     return files.get(event, None)

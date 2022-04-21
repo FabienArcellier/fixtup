@@ -45,6 +45,7 @@ You want to try ?
     handbook
     plugin
     limits
+    concepts
     support
     command_line
     api

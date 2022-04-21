@@ -69,8 +69,24 @@ seront chargées au moment où la fixture démarre.
 C'est le bon endroit pour passer une ressource partagée pour les tests automatique, par exemple l'adresse d'un bucket S3
 qui stocke des fichiers temporaires que manipule votre application.
 
-Mount a fixture once for several tests
-**************************************
+Mount a fixture once and reuse it for all the tests
+***************************************************
+
+When the `shared` policy is active on a fixture, it is mounted only once at the first test that use this fixture,
+then reused by each test. Between each test the fixture is starting and stopping. For exemple, with the docker
+plugin, network is mounted only once. Containers start and stop between every tests.
+
+.. warning:: If you persist information in your test, like create a file or add record in a database, they will be
+    present when fixtup will be running the next test that use this fixture.
+
+When the test runtime stop or when the user interrupts the tests, the fixture is unmounted.
+
+To enable the `shared` policy, edit `fixtup.yml` in a fixture template
+
+.. code-block:: yaml
+    :caption: tests/fixtures/fixtup/simple_fixture/fixtup.yml
+
+    shared: true
 
 Implement your own processing on a fixture event
 ************************************************

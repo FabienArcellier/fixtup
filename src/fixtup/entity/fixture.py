@@ -11,10 +11,8 @@ class State(Enum):
     This state means a directory for the fixture already exists
     and is ready to use
     """
-    Reserved = "reserved"
     Mounted = "mounted"
     Started = "started"
-    Stopped = "stopped"
     Unmounted = "unmounted"
 
 
@@ -38,7 +36,7 @@ class Fixture:
             identifier=identifier,
             directory=fixture_path,
             template_identifier=fixture_template.identifier,
-            state=State.Reserved
+            state=State.Unmounted
         )
 
     @classmethod
@@ -52,21 +50,21 @@ class Fixture:
             identifier=kwargs.get('identifier', 'fixture_1234'),
             directory=kwargs.get('directory', '/tmp/fixture_1234'),
             template_identifier=kwargs.get('template_identifier', 'fixture'),
-            state=kwargs.get('state', State.Reserved),
+            state=kwargs.get('state', State.Unmounted),
         )
 
     def mounted(self):
-        assert self.state == State.Reserved
+        assert self.state == State.Unmounted
         self.state = State.Mounted
 
     def started(self):
-        assert self.state == State.Mounted or self.state == State.Stopped
+        assert self.state == State.Mounted
         self.state = State.Started
 
     def stopped(self):
         assert self.state == State.Started
-        self.state = State.Stopped
+        self.state = State.Mounted
 
     def unmounted(self):
-        assert self.state == State.Stopped or self.state == State.Mounted
+        assert self.state == State.Mounted
         self.state = State.Unmounted
