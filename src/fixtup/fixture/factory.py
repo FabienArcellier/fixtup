@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fixtup.entity.fixtup_process import fixtup_process, FixtupProcess
 from fixtup.factory import factory, RuntimeContext
 from fixtup.fixture.base import FixtureEngine
@@ -5,11 +7,20 @@ from fixtup.hook.mock import MockHookEngine
 from fixtup.hook.python import PythonHookEngine
 from fixtup.plugin.factory import lookup_plugin_engine
 
+fixture_engine: Optional[FixtureEngine] = None
+
+
 @factory
 def lookup_fixture_engine(context: RuntimeContext) -> FixtureEngine:
     """
     """
-    from fixtup.fixture.base import FixtureEngine
+    global fixture_engine
+    if fixture_engine is not None and not context.emulate_new_process:
+        return fixture_engine
+    elif fixture_engine is not None and context.emulate_new_process:
+        fixture_engine.unregister_process_teardown()
+        fixture_engine.process_teardown_exit()
+        fixture_engine = None
 
     plugin_engine = lookup_plugin_engine()
 
@@ -26,6 +37,8 @@ def lookup_fixture_engine(context: RuntimeContext) -> FixtureEngine:
         _fixtup_process = fixtup_process
 
     if context.unittest:
-        return FixtureEngine(MockHookEngine(), plugin_engine, _fixtup_process)
+        fixture_engine = FixtureEngine(MockHookEngine(), plugin_engine, _fixtup_process)
     else:
-        return FixtureEngine(PythonHookEngine(), plugin_engine, _fixtup_process)
+        fixture_engine = FixtureEngine(PythonHookEngine(), plugin_engine, _fixtup_process)
+
+    return fixture_engine

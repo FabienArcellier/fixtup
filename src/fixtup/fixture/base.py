@@ -1,15 +1,19 @@
+import atexit
 import contextlib
 import os
 import shutil
+import signal
 import tempfile
+from typing import List, Optional, Any
 
 import attr
 
 from fixtup.entity.fixtup_process import FixtupProcess
-from fixtup.entity.fixture import Fixture
+from fixtup.entity.fixture import Fixture, State
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.exceptions import PluginRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
+from fixtup.lib.signal import register_signal_handler, unregister_signal_handler
 from fixtup.logger import get_logger
 from fixtup.plugin.base import PluginEngine, PluginEvent
 
@@ -20,11 +24,14 @@ class FixtureEngine:
     plugin_engine: PluginEngine = attr.ib()
     store: FixtupProcess = attr.ib()
 
+    def __attrs_post_init__(self):
+        self.register_process_teardown()
+
     def mount(self, fixture_template: FixtureTemplate, fixture: Fixture) -> None:
         assert fixture_template.identifier == fixture.template_identifier
 
-        # Quand une fixture est partagée et qu'elle est déjà montée
-        # alors on change seulement le chemin du working directory
+        # When a fixture is shared and already mounted
+        # then we only change the working directory path
         if self.store.is_mounted(fixture_template):
             os.chdir(fixture.directory)
             return
@@ -36,7 +43,7 @@ class FixtureEngine:
 
             self.plugin_engine.run(PluginEvent.mounting, fixture)
             self.hook_engine.run(HookEvent.mounting, fixture_template)
-            self.store.fixture_mounted(fixture)
+            self.store.fixture_mounted(fixture_template, fixture)
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
             if os.path.isdir(fixture.directory):
@@ -56,6 +63,20 @@ class FixtureEngine:
         os.rmdir(fixture_directory)
 
         return Fixture.create_from_template(fixture_template, fixture_directory)
+
+    def process_teardown_exit(self):
+        self._teardown()
+
+    def process_teardown_signal(self, code: int, frame: Any):
+        logger = get_logger()
+        logger.info(f'user interruption through os signal {code}, tear down mounted fixtures')
+        self._teardown()
+
+    def _teardown(self):
+        for template, fixture in self.store.mounted_fixtures():
+            if fixture.state == State.Started:
+                self.stop(template, fixture, teardown=True)
+            self.unmount(template, fixture, teardown=True)
 
     def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
         try:
@@ -82,7 +103,11 @@ class FixtureEngine:
             logger.debug(f'stop fixture : {fixture.directory}')
             self.stop(template, fixture)
 
-    def stop(self, template: FixtureTemplate, fixture: Fixture) -> None:
+    def stop(self, template: FixtureTemplate, fixture: Fixture, teardown: bool = False) -> None:
+        """
+
+        :param teardown: true when the fixture engine is tear downed at the end of the process usually
+        """
         try:
             self.plugin_engine.run(PluginEvent.stopping, fixture)
             self.hook_engine.run(HookEvent.stopping, template)
@@ -94,8 +119,12 @@ class FixtureEngine:
 
             raise
 
-    def unmount(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        if template.shared is True:
+    def unmount(self, template: FixtureTemplate, fixture: Fixture, teardown: bool = False) -> None:
+        """
+
+        :param teardown: true when the fixture engine is tear downed at the end of the process usually
+        """
+        if template.shared is True and not teardown:
             return
 
         self.plugin_engine.run(PluginEvent.unmounting, fixture)
@@ -117,3 +146,25 @@ class FixtureEngine:
             if not keep_mounted_fixture:
                 logger.debug(f'remove mounted fixture directory : {fixture.directory}')
                 self.unmount(template, fixture)
+
+    def register_process_teardown(self):
+        """
+        register cleanup callbacks to unmount fixtures always mounted
+        at the end of the test runtime execution
+
+        Mounted fixtures are usually :
+
+        * fixture with shared policy
+        """
+        atexit.register(self.process_teardown_exit)
+        register_signal_handler(signal.SIGTERM, self.process_teardown_signal)
+        register_signal_handler(signal.SIGQUIT, self.process_teardown_signal)
+
+    def unregister_process_teardown(self):
+        """
+        unregister cleanup callbacks if cleanup was triggered
+        manually
+        """
+        atexit.unregister(self.process_teardown_exit)
+        unregister_signal_handler(signal.SIGTERM, self.process_teardown_signal)
+        unregister_signal_handler(signal.SIGQUIT, self.process_teardown_signal)

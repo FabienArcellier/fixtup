@@ -1,4 +1,5 @@
-from typing import List, Optional
+import copy
+from typing import List, Optional, Tuple
 
 import attr
 
@@ -16,47 +17,53 @@ class FixtupProcess:
 
     The information will be :
 
-    * a list of active fixtures - fixtures that has been mounted
+    * a list of mounted fixtures - fixtures that has been mounted
     """
-    mounted_fixtures: List[Fixture] = attr.ib(factory=list)
+    _mounted_fixtures_detailled: List[Tuple[FixtureTemplate, Fixture]] = attr.ib(factory=list)
+    _mounted_fixtures: List[Fixture] = attr.ib(factory=list)
 
-    def fixture_mounted(self, fixture: Fixture):
-        self.mounted_fixtures.append(fixture)
+    def fixture_mounted(self, template:FixtureTemplate ,fixture: Fixture):
+        self._mounted_fixtures.append(fixture)
+        self._mounted_fixtures_detailled.append((template, fixture))
         fixture.mounted()
 
         # Post-conditions
-        assert unique(self.mounted_fixtures, lambda f: f.identifier)
+        assert unique(self._mounted_fixtures, lambda f: f.identifier)
 
     def fixture_started(self, fixture: Fixture):
-        _fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
+        _fixture = first(self._mounted_fixtures, lambda f: f.identifier == fixture.identifier)
         assert _fixture is not None
 
         _fixture.started()
 
     def fixture_stopped(self, fixture: Fixture):
-        _fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
+        _fixture = first(self._mounted_fixtures, lambda f: f.identifier == fixture.identifier)
         assert _fixture is not None
 
         _fixture.stopped()
 
     def fixture_unmounted(self, fixture: Fixture):
-        _fixture = first(self.mounted_fixtures, lambda f: f.identifier == fixture.identifier)
-        if _fixture is not None:
-            _fixture.unmounted()
-            self.mounted_fixtures.remove(_fixture)
+        for index, (template, _fixture) in enumerate(copy.copy(self._mounted_fixtures_detailled)):
+            if _fixture.identifier == fixture.identifier:
+                _fixture.unmounted()
+                del self._mounted_fixtures_detailled[index]
+                del self._mounted_fixtures[index]
 
-        assert unique(self.mounted_fixtures, lambda f: f.identifier)
+        assert unique(self._mounted_fixtures, lambda f: f.identifier)
 
     def is_mounted(self, fixture_template: FixtureTemplate) -> bool:
-        _fixture = first(self.mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
+        _fixture = first(self._mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
         return _fixture is not None
 
     def fixture(self, fixture_template: FixtureTemplate) -> Fixture:
-        _fixture = first(self.mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
+        _fixture = first(self._mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
         if _fixture is None:
             raise FixtupException('no fixture is mounted for this fixture template, use is_mounted before invoking fixture()')
 
         return _fixture
+
+    def mounted_fixtures(self) -> List[Tuple[FixtureTemplate, Fixture]]:
+        return copy.copy(self._mounted_fixtures_detailled)
 
 
 """

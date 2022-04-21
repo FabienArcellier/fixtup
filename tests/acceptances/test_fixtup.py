@@ -81,7 +81,7 @@ class TestFixtup(unittest.TestCase):
             self.assertTrue(os.path.isfile(os.path.join(cwd, 'hello.txt')))
 
     def test_up_should_show_error_message_when_error_happens_in_plugins(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True, emulate_new_process=True))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts

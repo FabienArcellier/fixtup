@@ -53,7 +53,6 @@ def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, Non
 
     fixture_engine = lookup_fixture_engine()
     template = fixture_template(_fixture)
-    fixture = fixture_engine.new_fixture(template)
 
     current_working_dir = os.getcwd()
 
