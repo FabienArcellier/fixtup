@@ -81,7 +81,26 @@ class TestFixtureEngine(unittest.TestCase):
 
             # Assert
             self.assertEqual(State.Unmounted, fixture.state)
-            self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
+            self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should not be a directory")
+
+    def test_teardown_should_remove_the_fixture_directory_for_fixture_with_shared_policy(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('shared')
+            fixture = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture)
+
+            # this instruction should have no effect
+            self.tested.unmount(template, fixture)
+            self.assertTrue(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
+            self.assertEqual(State.Mounted, fixture.state)
+
+            # Acts
+            self.tested.process_teardown_exit()
+
+            # Assert
+            self.assertEqual(State.Unmounted, fixture.state)
+            self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should not be a directory")
 
 
 if __name__ == '__main__':
