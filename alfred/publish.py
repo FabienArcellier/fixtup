@@ -5,12 +5,12 @@ import alfred
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
 
 
-@alfred.command("dist", help="build distribution packages")
-def dist():
+@alfred.command("publish:dist", help="build distribution packages")
+def publish__dist():
     """
     build distribution packages
 
-    >>> $ alfred dist
+    >>> $ alfred publish:dist
     """
     python = alfred.sh("python", "python should be present")
     os.chdir(ROOT_DIR)

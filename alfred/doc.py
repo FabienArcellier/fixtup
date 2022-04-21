@@ -6,7 +6,7 @@ import click
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
 
 @alfred.command("doc:build", help="build documentation portal")
-def doc_html():
+def doc__build():
     """
     build the documentation portal into docs/build/html
 
@@ -22,7 +22,7 @@ def doc_html():
 
 
 @alfred.command("doc:display", help="display the documentation")
-def doc_display():
+def doc__display():
     """
     Display the local documentation into a browser
 

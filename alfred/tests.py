@@ -19,7 +19,7 @@ def tests():
 
 
 @alfred.command("tests:acceptances", help="execute acceptances tests")
-def tests_acceptances():
+def tests__acceptances():
     """
     execute acceptances tests with unittests
 
@@ -31,7 +31,7 @@ def tests_acceptances():
 
 
 @alfred.command("tests:integrations", help="execute integrations tests")
-def tests_integrations():
+def tests__integrations():
     """
     execute integrations tests with unittests
 
@@ -43,7 +43,7 @@ def tests_integrations():
 
 
 @alfred.command("tests:units", help="execute unit tests")
-def tests_units():
+def tests__units():
     """
     execute unit tests with unittests
 
