@@ -1,4 +1,4 @@
-name: ci
+name: validate examples
 
 on: [push]
 
@@ -8,7 +8,8 @@ jobs:
 
         strategy:
           matrix:
-            python-version: [3.7, 3.8, 3.9]
+            python-version: [3.9]
+            examples: ['unittest']
 
         steps:
             - uses: actions/checkout@v2
@@ -20,10 +21,6 @@ jobs:
 
             - name: update package manager & install python3 environment
               run: |
-                pip install setuptools
-                pip install pipenv
-                pipenv install --dev
-
-            - name: run continuous integration to validate fixtup
-              run: |
-                pipenv run alfred ci
+                cd examples/${{matrix.examples}}
+                pip install .[dev]
+                python3 -m unittest discover tests/integrations
