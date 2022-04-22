@@ -3,6 +3,10 @@ Fixtup
 
 You will love writing integration tests in python with ``Fixtup``.
 
+
+.. figure:: _static/principle_simplified_diagram.png
+    :align: center
+
 Some of your tests need a database, a folder with data, dedicated environment variables,
 ``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning,
 it releases by itself the resources that it has provisioned.
@@ -10,11 +14,6 @@ it releases by itself the resources that it has provisioned.
 ``Fixtup`` makes it easy to use external dependencies in your tests. It integrates
 to your favorite test framework like pytest, unitest or even BDD framework like robot framework
 or behave.
-
-.. figure:: _static/principle_diagram.png
-    :align: center
-
-You want to try ?
 
 .. code-block:: python
 
@@ -24,6 +23,8 @@ You want to try ?
 
     class UtilsTest(unittest.TestCase)
         def test_thumbnail_should_generate_thumbnail(self):
+
+            # Magic happens with the instruction fixtup.up
             with fixtup.up('thumbnail_context'):
                 # Given
                 wd = os.getcwd()
