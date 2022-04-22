@@ -1,6 +1,6 @@
 # Fixtup
 
-[![Build Status][workflow-badge]][workflow-link] [![MIT License][license-badge]](LICENSE.md)
+[![ci](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml/badge.svg)](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml) [![MIT](https://img.shields.io/badge/license-MIT-007EC7.svg)](LICENSE.md)
 
 You will love writing integration tests in python with ``Fixtup``.
 
