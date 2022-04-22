@@ -1,6 +1,6 @@
 # Fixtup
 
-[![ci](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml/badge.svg)](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml) [![MIT](https://img.shields.io/badge/license-MIT-007EC7.svg)](LICENSE.md)
+[![version](https://img.shields.io/pypi/v/fixtup.svg?label=version)](https://pypi.org/project/fixtup/) [![ci](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml/badge.svg)](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml) [![MIT](https://img.shields.io/badge/license-MIT-007EC7.svg)](LICENSE.md)
 
 You will love writing integration tests in python with ``Fixtup``.
 

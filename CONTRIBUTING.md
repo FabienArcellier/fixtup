@@ -44,7 +44,7 @@ Activate the newly created virtualenv
 $ pipenv shell
 ```
 
-It's time to go further. Fixtup use ``alfred-cli`` as a build engine. If you need to perform an operation to build or test artefacts, you should use alfred command.
+It's time to go further. Fixtup use [``alfred-cli``](https://github.com/FabienArcellier/alfred-cli) as a build engine. If you need to perform an operation to build or test artefacts, you should use alfred command.
 
 ### Run the continuous integration process
 
