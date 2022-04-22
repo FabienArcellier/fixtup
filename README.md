@@ -4,7 +4,7 @@
 
 You will love writing integration tests in python with ``Fixtup``.
 
-![outline schematic from fixtup](docs/source/_static/principle_simplified_diagram.png)
+![outline schematic from fixtup](https://github.com/FabienArcellier/fixtup/raw/master/docs/source/_static/principle_simplified_diagram.png)
 
 Some of your tests need a database, a folder with data, dedicated environment variables, ``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning, it releases by itself the resources that it has provisioned.
 
