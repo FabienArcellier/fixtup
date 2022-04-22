@@ -136,37 +136,41 @@ the one defined in ``tests/fixtures/thumbnail_context``.
 When the context is closing, this directory is destroyed. If you want to check what happen inside, you have to
 stop the code execution with a breakpoint on the assertion line and check what is inside.
 
-Use in setUp
-------------
+..
+    The feature ``fixtup.use`` is not implemented yet.
+    I have to write the ticket in github
 
-You can use the same fixture for all the tests in one test case using ``setUp``. The fixture will be destroyed at the
-end of each test. You don't have to write the code for the ``tearDown``.
+    Use in setUp
+    ------------
 
-.. code-block:: python
-    :caption: ./tests/integrations/test_utils.py
+    You can use the same fixture for all the tests in one test case using ``setUp``. The fixture will be destroyed at the
+    end of each test. You don't have to write the code for the ``tearDown``.
 
-    import unittest
-    import os
+    .. code-block:: python
+        :caption: ./tests/integrations/test_utils.py
 
-    import fixtup
+        import unittest
+        import os
 
-    class UtilsTest(unittest.TestCase):
+        import fixtup
 
-        def setUp(self):
-            fixtup.use(self, 'thumbnail_context')
+        class UtilsTest(unittest.TestCase):
 
-        def test_thumbnail_should_generate_thumbnail(self):
-            # Given
-            wd = os.getcwd()
+            def setUp(self):
+                fixtup.use(self, 'thumbnail_context')
 
-            original_file = os.path.join(wd, 'file.png')
-            expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+            def test_thumbnail_should_generate_thumbnail(self):
+                # Given
+                wd = os.getcwd()
 
-            # When
-            thumbnail(original_file, expected_thumbnail_file)
+                original_file = os.path.join(wd, 'file.png')
+                expected_thumbnail_file = os.path.join(wd, 'file_t.png')
 
-            # Then
-            self.assertTrue(os.path.isfile(expected_thumbnail_file)
+                # When
+                thumbnail(original_file, expected_thumbnail_file)
+
+                # Then
+                self.assertTrue(os.path.isfile(expected_thumbnail_file)
 
 Test with pytest
 ================
