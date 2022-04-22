@@ -1,5 +1,7 @@
 # Fixtup
 
+[![Build Status][workflow-badge]][workflow-link] [![MIT License][license-badge]](LICENSE.md)
+
 You will love writing integration tests in python with ``Fixtup``.
 
 ![outline schematic from fixtup](docs/source/_static/principle_simplified_diagram.png)
