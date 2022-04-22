@@ -42,7 +42,7 @@ or behave.
     :caption: Table of content
 
     getting_started
-    installation
+    install
     handbook
     plugin
     limits

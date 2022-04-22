@@ -14,15 +14,35 @@ The installation of ``Fixtup`` is done with ``pip``.
 
 .. _ConfigureFixtup:
 
-Configure fixtup
-****************
+Configure fixtup on your project
+********************************
 
-To be able to use ``Fixtup``, you must initialize and declare a fixture repository. It's a folder
-which will contain all the fixtures for your python project.
+To be able to use ``Fixtup``, you must initialize it in your python project.
+Fixtup can do that for you with the command
 
-.. note::
+.. code-block:: bash
 
-    This step is required to be able to use the command line ``fixtup``
+    fixtup init
+
+.. warning:: If you haven't manifest for your project, you should declare one.
+
+    You will need a `pyproject.toml` which declares you want to use setuptools to package your project.
+
+    .. code-block::
+        :caption: ./pyproject.toml
+
+        [build-system]
+        requires = ["setuptools"]
+        build-backend = "setuptools.build_meta"
+
+    * `more information in setuptools tutorial <https://setuptools.pypa.io/en/latest/userguide/quickstart.html#basic-use>`__
+    * `understanding setup.py, setup.cfg and pyproject.toml in Python <https://ianhopkinson.org.uk/2022/02/understanding-setup-py-setup-cfg-and-pyproject-toml-in-python/>`__
+    * `Alice in python project land <https://vickiboykis.com/2017/09/26/alice-in-python-projectland/>`__
+
+If you want to configure ``Fixtup`` all by yourself, look at the section relative to your project manifest.
+
+.. contents::
+    :local:
 
 Configure fixtup with setup.cfg
 ===============================
@@ -73,7 +93,7 @@ You can also declare the fixtup path in a python module that will be included in
 
 
 .. code-block:: python
-    :caption: ./tests/units/__init__.py
+    :caption: ./tests/units/conftest.py
 
     import os
 
