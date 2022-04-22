@@ -1,9 +1,6 @@
 name: validate examples
 
-on:
-    push:
-        branches:
-            - '*'
+on: [push]
 
 jobs:
     build:
@@ -12,7 +9,7 @@ jobs:
         strategy:
           matrix:
             python-version: [3.9]
-            examples: ['unittests']
+            examples: ['unittest']
 
         steps:
             - uses: actions/checkout@v2
@@ -24,8 +21,6 @@ jobs:
 
             - name: update package manager & install python3 environment
               run: |
-                cd examples/${{example}}
+                cd examples/${{matrix.examples}}
                 pip install .[dev]
                 python3 -m unittest discover tests/integrations
-              with:
-                example: ${{ matric.examples}}
