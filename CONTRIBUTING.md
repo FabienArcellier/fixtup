@@ -17,19 +17,21 @@ Vous avez des questions sur comment utiliser Fixtup, posez vos question sur [Sta
 
 ## Codebase
 
-* code dependencies are managed in `setup.cfg`
+* code dependencies are managed in `./setup.cfg`
+* codebase of fixtup is in ``./src/fixtup``
+* QA tests are in ``./tests``
+* build engine commands are in ``./alfred``
+* continuous integration scripts are in ``./github/workflows``
 
 ## Local Development Environment
-
-Fixtup gère l'environnement de développement avec `pipenv`.
 
 First, clone `fixtup` codebase
 
 ```bash
-$ git clone ...
+$ git clone git@github.com:FabienArcellier/fixtup.git
 ```
 
-Move into the newly created directory, create the venv and install the dependencies
+Move into the newly created directory, create the venv and install the dependencies. Fixtup manages the development environment with `pipenv`.
 
 ```bash
 $ cd fixtup
@@ -42,40 +44,40 @@ Activate the newly created virtualenv
 $ pipenv shell
 ```
 
-It's time to go further. Fixtup use alfred-cli as a build engine. If you need to perform an operation to build or test artefacts, you should use alfred command.
+It's time to go further. Fixtup use ``alfred-cli`` as a build engine. If you need to perform an operation to build or test artefacts, you should use alfred command.
 
 ### Run the continuous integration process
 
-Le process d'integration continue est la base de l'assurance qualité.
+The continuous integration process is the basis of quality assurance.
 
-Dans ce process, plusieurs utilitaires effectuent des vérifications sur la base de code pour évaluer la conformité de la base de code à différentes exigences.
+In this process, several utilities perform checks on the code base to assess the compliance of the code base with different requirements.
 
-Ce process est joué à chaque commit par github actions, la plateforme d'intégration continue. Vous pouvez cependant le jouer en local. C'est le meilleur moyen de  vérifier que votre poste développeur est prêt pour contribuer.
+This process is played at each commit by ``github actions``. You can, however, play it locally. This is the best way to verify that your environment is up and ready to contribute.
 
 ```bash
 $ (fixtup) alfred ci
 ```
 
-Ce process va exécuter des vérifications sur :
+Continuous integration will :
 
-* le typage du code python
-* des tests unitaires
-* des tests integrations pour vérifier le fonctionnement bout en bout de certains composants (comme la lecture des settings)
-* des tests d'acceptances qui vérifie le bon fonctionnement de fixtup
+* check typing consistency on python codebase : ``alfred lint``
+* run the unit tests : ``alfred tests:units``
+* run the integration tests to verify check the behaviors of some components (as reading settings in python manifests) : ``alfred tests:integrations``
+* run the acceptance tests that check the behavior of fixtup api : ``alfred tests:acceptances``
 
-Vous pouvez jouer chaque étape unitairement. Avant d'exécuter une commande alfred
-affiche dans le terminal l'étape en cours. Pour lancer le linter, vous avez à exécuter `alfred lint`.
+You can play each step yourself with `alfred`. Before executing a step in the ``alfred ci`` workflow, ``alfred``
+displays the current step in the terminal. Pour lancer le linter, vous avez à exécuter `alfred lint`.
 
 ```text
 $ alfred lint : check type consistency on source code
 Success: no issues found in 14 source files
 $ alfred tests : workflow to execute all automatic tests
 $ alfred tests:units : execute unit tests
+$ alfred tests:integrations : execute integrations tests
+$ alfred tests:acceptances : execute acceptances tests
 ```
 
 ### Compile and display the documentation
-
-You should be able to build the documentation.
 
 Here is how to build the documentation
 
