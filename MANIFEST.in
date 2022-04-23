@@ -1,1 +1,2 @@
-include src/fixtup/**/resources/**/*
+include src/fixtup/**/resource/*
+include src/fixtup/**/resource/**/*

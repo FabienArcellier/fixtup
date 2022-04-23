@@ -6,7 +6,7 @@ from fixtup.entity.settings import Settings
 from fixtup.exceptions import PythonManifestMissing, FixtupSettingsMissing, FixtupSettingsAlreadyPresent
 from fixtup.settings.factory import lookup_parsers
 
-RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resources'))
+RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resource'))
 
 
 class SettingsParser:
