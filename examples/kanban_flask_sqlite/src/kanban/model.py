@@ -12,6 +12,6 @@ class BoardColumn(Base):
 class WorkItem(Base):
     __tablename__ = 'work_item'
     pid = Column(Integer, primary_key=True)
-    column_pid = Column(Integer, ForeignKey('column.id'))
+    column_pid = Column(Integer, ForeignKey('board_column.pid'))
     title = Column(Text())
     description = Column(Integer)
