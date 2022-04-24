@@ -239,4 +239,4 @@ In `fixtup repository <https://github.com/FabienArcellier/fixtup/tree/master/exa
 
 * `use fixtup to manage test environments with sqlite database on flask <https://github.com/FabienArcellier/fixtup/blob/master/examples/kanban_flask_sqlite/README.md>`__
 
-Your contributions are welcome to add your stack. More information in`CONTRIBUTING.md <https://github.com/FabienArcellier/fixtup/blob/master/CONTRIBUTING.md#compile-and-display-the-documentation>`__
+Your contributions are welcome to add your stack. More information in`CONTRIBUTING.md <https://github.com/FabienArcellier/fixtup/blob/doc/master/CONTRIBUTING.md#implement-a-new-example-for-your-own-stack>`__
