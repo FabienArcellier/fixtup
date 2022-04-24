@@ -77,7 +77,11 @@ def read_settings() -> Settings:
             if parser.has_manifest(path):
                 is_python_project = True
                 if parser.contains_settings(path):
-                    return parser.read_settings(path)
+                    settings = parser.read_settings(path)
+                    if not os.path.isdir(settings.fixtures_dir):
+                        os.makedirs(settings.fixtures_dir)
+
+                    return settings
 
         path = os.path.dirname(path)
 

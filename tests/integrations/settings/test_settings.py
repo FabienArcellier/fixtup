@@ -1,8 +1,10 @@
+import os.path
+
 import unittest
 
 import fixtup
 from fixtup.exceptions import PythonManifestMissing
-from fixtup.settings.base import list_project_manifests
+from fixtup.settings.base import list_project_manifests, read_settings
 
 
 class TestSettings(unittest.TestCase):
@@ -28,6 +30,14 @@ class TestSettings(unittest.TestCase):
             # Assert
             except PythonManifestMissing as exception:
                 pass
+
+    def test_read_settings_should_create_fixture_directory_when_missing(self):
+        # Arrange
+        with fixtup.up('fixtup_project_missing_fixtup_directory'):
+            # Acts
+            settings = read_settings()
+            # Assert
+            self.assertTrue(os.path.isdir(settings.fixtures_dir), f"{settings.fixtures_dir} must exist")
 
 
 if __name__ == '__main__':

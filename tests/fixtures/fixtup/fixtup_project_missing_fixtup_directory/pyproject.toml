@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta:__legacy__"
+
+[tools.fixtup]
+fixtures = "tests/fixtures/fixtup"
+plugins=[
+    "fixtup.plugins.dotenv",
+    "fixtup.plugins.docker"
+]
