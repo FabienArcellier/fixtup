@@ -229,3 +229,14 @@ To write once the initialization code of a fixture of ``Fixtup`` and use it in m
 
         # Then
         self.assertTrue(os.path.isfile(expected_thumbnail_file)
+
+
+
+Start with other technical stacks
+*********************************
+
+In `fixtup repository <https://github.com/FabienArcellier/fixtup/tree/master/examples>`__, you will find examples on how to implement integration tests with fixtup on other stacks.
+
+* `use fixtup to manage test environments with sqlite database on flask <https://github.com/FabienArcellier/fixtup/blob/master/examples/kanban_flask_sqlite/README.md>`__
+
+Your contributions are welcome to add your stack. More information in`CONTRIBUTING.md <https://github.com/FabienArcellier/fixtup/blob/doc/master/CONTRIBUTING.md#implement-a-new-example-for-your-own-stack>`__

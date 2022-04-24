@@ -2,6 +2,15 @@
 
 First of all, thanks for your thinking to help to make Fixtup a better tool.
 
+
+  * [Support](#support)
+  * [Codebase](#codebase)
+  * [Local Development Environment](#local-development-environment)
+    + [Run the continuous integration process](#run-the-continuous-integration-process)
+    + [Compile and display the documentation](#compile-and-display-the-documentation)
+  * [I want to contribute](#i-want-to-contribute)
+    + [Implement a new example for your own stack](#implement-a-new-example-for-your-own-stack)
+
 <!--
 Les ressources importantes :
 
@@ -92,3 +101,19 @@ You may want to display it
 ```bash
 $ (fixtup) alfred doc:display
 ```
+
+## I want to contribute
+
+### Implement a new example for your own stack
+
+An example shows how a developer would use ``fixtup`` on a tech stack. If you are using fixtup in a stack that is not documented, then you can contribute and make another developer's job easier.
+
+Here's how to add an example:
+
+* the example is in fixtup ``./examples/my-awesome-example``
+* the example is published in a PR ``doc/my-awesome-example``
+* l'exemple has a ``README.md`` a user can follow step by step
+* the example is self-contained. It can be copied to another folder without the fixtup code and should still work
+* the example is CI validated from ``.github/workflow/validate_examples.yml``.
+* the section `Start with other technical stacks` in ``getting_started.rst`` link to the readme of the example
+

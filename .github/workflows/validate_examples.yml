@@ -9,7 +9,7 @@ jobs:
         strategy:
           matrix:
             python-version: [3.9]
-            examples: ['unittest']
+            examples: ['kanban_flask_sqlite', 'unittest']
 
         steps:
             - uses: actions/checkout@v2
@@ -23,4 +23,8 @@ jobs:
               run: |
                 cd examples/${{matrix.examples}}
                 pip install .[dev]
-                python3 -m unittest discover tests/integrations
+
+            - name: run the validation tests
+              run:  |
+                cd examples/${{matrix.examples}}
+                bash ci.sh
