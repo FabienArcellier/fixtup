@@ -31,6 +31,7 @@ class PythonPluginEngine(PluginEngine):
             _module = importlib.import_module(module)
             plugin = Plugin.create_from_module(_module)
             self.plugins.append(plugin)
-        except ModuleNotFoundError:
-            logger.error(f'plugin "{module}" is missing, check if the module "{module}" is installed in your python venv')
+        except ModuleNotFoundError as exception:
+            logger.error(f'Error loading plugin "{module}"')
+            logger.debug(exception)
 
