@@ -12,7 +12,7 @@ class Test(unittest.TestCase):
         # Arrange
         with fixtup.up('simple_board'):
             # Acts
-            kanban.database.init_db()
+            kanban.database.db_init()
 
             # Assert
             db_path = os.path.join(os.getcwd(), 'kanban.db')

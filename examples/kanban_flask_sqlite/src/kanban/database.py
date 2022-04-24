@@ -19,12 +19,29 @@ def db_connect():
         Base.query = _db_session.query_property()
 
 
+def db_dispose():
+    """
+    dispose all resources relative to the database. This method
+    should be use if you want to mount a connection to a brand
+    new database. It happens mainly in the tests
+    """
+    global engine, _db_session
+    if _db_session:
+        _db_session.close()
+        Base.query = None
+        _db_session = None
+
+    if engine:
+        engine.dispose()
+        engine = None
+
+
 def db_session():
     db_connect()
     return _db_session
 
 
-def init_db():
+def db_init():
     db_connect()
     # import all modules here that might define models so that
     # they will be registered properly on the metadata.  Otherwise

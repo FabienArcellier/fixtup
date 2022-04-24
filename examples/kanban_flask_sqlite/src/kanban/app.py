@@ -42,9 +42,14 @@ def work_item_id(id: int):
         payload = request.json
         column_pid: Optional[int] = payload.get('column', None)
         if column_pid is not None and column_pid != work_item.column:
-            board_column = BoardColumn.query.filter(BoardColumn.pid == column_pid).first()
+            board_column: BoardColumn = BoardColumn.query.filter(BoardColumn.pid == column_pid).first()
             if board_column is None:
                 abort(Response('board column must exists', 500))
+
+            # check the rule about wip
+            current_wip = WorkItem.query.filter(WorkItem.column == column_pid).count()
+            if current_wip >= board_column.wip_limit:
+                return jsonify({'ok': False})
 
             work_item.column = column_pid
 
