@@ -4,8 +4,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from kanban.app import app
-
 engine = None
 _db_session = None
 Base = declarative_base()
@@ -33,9 +31,3 @@ def init_db():
     # you will have to import them first before calling init_db()
     import kanban.model
     Base.metadata.create_all(bind=engine)
-
-
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    if _db_session is not None:
-        _db_session.remove()
