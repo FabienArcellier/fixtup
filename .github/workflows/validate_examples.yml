@@ -25,4 +25,6 @@ jobs:
                 pip install .[dev]
 
             - name: run the validation tests
-              run:  bash ci.sh
+              run:  |
+                cd examples/${{matrix.examples}}
+                bash ci.sh
