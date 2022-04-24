@@ -235,9 +235,8 @@ To write once the initialization code of a fixture of ``Fixtup`` and use it in m
 Start with other technical stacks
 *********************************
 
-In `fixtup repository <https://github.com/FabienArcellier/fixtup/tree/master/examples>`__, you will find examples on how to implement integration tests with
-fixtup on other stacks.
+In `fixtup repository <https://github.com/FabienArcellier/fixtup/tree/master/examples>`__, you will find examples on how to implement integration tests with fixtup on other stacks.
 
 * `use fixtup to manage test environments with sqlite database on flask <https://github.com/FabienArcellier/fixtup/blob/master/examples/kanban_flask_sqlite/README.md>`__
 
-Vos contributions sont bienvenus pour ajouter votre stack. Plus d'information dans `CONTRIBUTING.md <https://github.com/FabienArcellier/fixtup/blob/master/CONTRIBUTING.md#compile-and-display-the-documentation>`__
+Your contributions are welcome to add your stack. More information in`CONTRIBUTING.md <https://github.com/FabienArcellier/fixtup/blob/master/CONTRIBUTING.md#compile-and-display-the-documentation>`__

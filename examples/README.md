@@ -3,6 +3,7 @@ illustrates how to implement a specific feature in a real world scenario.
 
 ## Exemples
 
-* [Getting started with unittest](unittest) : show how fixtup help you to test with unittest a function that generate a thumbnail from an image
+* [Sandbox : fixtup with unittests](unittest) : show how fixtup help you to test with unittest a function that generate a thumbnail from an image
 
-* [Handbook Postgresql](postgresql) : show how fixtup help you to test code that depends on an empty postgresql (**not implemented**)
+
+* [Sandbox : kanban API with flask and sqlite](kanban_flask_sqlite) : show how to write integration and acceptance tests on a flask application that work with sqlite with the help of fixtup

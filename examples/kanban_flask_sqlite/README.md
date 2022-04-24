@@ -1,4 +1,4 @@
-# Sandbox : Kanban API with flask and sqlite
+# Sandbox : kanban API with flask and sqlite
 
 This minimal example show with unittest how fixtup help you to test a flask application that work with sqlite
 
