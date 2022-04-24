@@ -25,7 +25,21 @@ def column_id(id: int):
 
 @app.route('/work_item', methods=['GET', 'POST'])
 def work_item():
-    pass
+    if request.method == 'POST':
+        dbsession = db_session()
+        payload = request.json
+        work_item = WorkItem(
+            title=payload.get('title', ''),
+            description=payload.get('description', ''),
+            column=payload.get('column', 1)
+        )
+
+        dbsession.add(work_item)
+        dbsession.commit()
+
+        return jsonify({'ok': True, 'data': work_item})
+
+    abort(400)
 
 
 @app.route('/work_item/<id>', methods=['GET', 'PUT', 'DELETE'])

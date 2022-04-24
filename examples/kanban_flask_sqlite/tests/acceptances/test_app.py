@@ -51,6 +51,26 @@ class TestApp(unittest.TestCase):
             json_query = response_query.json
             self.assertEqual(1 , json_query['column'])
 
+    def test_post_work_item_should_add_a_new_work_item(self):
+        with fixtup.up('simple_board'):
+            # Arrange
+
+            # Acts
+            response_mutation: Response = self.client.post("/work_item", json={
+                'column': 3,
+                'title': "implement feature ZZZ",
+                'description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam "
+                               "augue nunc, cursus nec diam eget, pretium iaculis turpis. Sed quis convallis massa.",
+            })
+
+            # Assert
+            self.assertEqual(200, response_mutation.status_code)
+
+            json_mutation = response_mutation.json
+            self.assertTrue(json_mutation['ok'])
+            self.assertEqual('implement feature ZZZ', json_mutation['data']['title'])
+            self.assertIsNotNone(json_mutation['data']['pid'])
+
 
 
 if __name__ == '__main__':
