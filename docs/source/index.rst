@@ -15,27 +15,13 @@ it releases by itself the resources that it has provisioned.
 to your favorite test framework like pytest, unitest or even BDD framework like robot framework
 or behave.
 
-.. code-block:: python
+Benefits
+********
 
-    import unittest
-    import os
-    import fixtup
-
-    class UtilsTest(unittest.TestCase)
-        def test_thumbnail_should_generate_thumbnail(self):
-
-            # Magic happens with the instruction fixtup.up
-            with fixtup.up('thumbnail_context'):
-                # Given
-                wd = os.getcwd()
-                original_file = os.path.join(wd, 'file.png')
-                expected_thumbnail_file = os.path.join(wd, 'file_t.png')
-
-                # When
-                thumbnail(original_file, expected_thumbnail_file)
-
-                # Then
-                self.assertTrue(os.path.isfile(expected_thumbnail_file)
+* You can get up and running with Fixtup **in minutes**, even on legacy project, **no matter what your test framework is**.
+* You will **stop wasting your time on boilerplate code** to create a database, that's all done in one line with Fixtup.
+* Fixtup provides an easy way to **run tests in debug in your favorite IDE, pycharm and vscode**.
+* Fixtup is cross-platform which makes it easy to use it on Linux, Mac and Windows.
 
 .. toctree::
     :maxdepth: 2

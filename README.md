@@ -11,9 +11,22 @@ Some of your tests need a database, a folder with data, dedicated environment va
 ``Fixtup`` makes it easy to use external dependencies in your tests. It integrates
 to your favorite test framework like pytest, unitest or even BDD framework like robot framework or behave.
 
+## Benefits
+
+* You can get up and running with Fixtup **in minutes**, even on legacy project, **no matter what your test framework is**.
+* You will **stop wasting your time on boilerplate code** to create a database, that's all done in one line with Fixtup.
+* Fixtup provides an easy way to **run tests in debug in your favorite IDE, pycharm and vscode**.
+* Fixtup is cross-platform which makes it easy to use it on Linux, Mac and Windows.
+
 ## Getting started
 
-Take 10 minutes to get all the key to start with fixtup in [Getting started]().
+Take 10 minutes to get all the key to start with fixtup in [Getting started](https://fixtup.readthedocs.io/en/latest/getting_started.html).
+
+```bash
+pip install fixtup
+```
+
+Here is an example that shows how fixtup makes it easier to **test a function that generate a thumbnail**.
 
 ```python
 def test_thumbnail_should_generate_thumbnail(self):
@@ -32,13 +45,7 @@ def test_thumbnail_should_generate_thumbnail(self):
         self.assertTrue(os.directory.isfile(expected_thumbnail_file)
 ```
 
-La documentation offre plus d'exemples :
-
-* mutualiser les fixtures dans le setup et teardown
-* utiliser fixtup avec le plugin pytest
-* instancier une base de donnée redis avec fixtup
-* spécifier des variables d'environnement à utiliser avec fixtup
-* ...
+[The complete example is available in the repo](./examples/unittest)
 
 ## Contributing
 
