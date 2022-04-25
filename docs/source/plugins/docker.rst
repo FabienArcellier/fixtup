@@ -1,3 +1,5 @@
+.. _plugins_docker:
+
 fixtup.plugins.docker
 #####################
 

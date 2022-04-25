@@ -1,3 +1,5 @@
+.. _plugins_dotenv:
+
 fixtup.plugins.dotenv
 #####################
 

@@ -1,3 +1,5 @@
+.. _plugin:
+
 Plugin
 ######
 
@@ -50,8 +52,8 @@ Native plug-ins
 
 Fixtup implements several plug-ins. They are installed when you install ``fixtup``.
 
-* `fixtup.plugins.docker <plugins/docker.html>`_: run containers declared in `docker-compose.yml`
-* `fixtup.plugins.dotenv <plugins/dotenv.html>`_: load environment variables for a fixture from a ``.env`` file
+* :ref:`fixtup.plugins.docker <plugins_docker>`: run containers declared in `docker-compose.yml`
+* :ref:`fixtup.plugins.dotenv <plugins_dotenv>`: load environment variables for a fixture from a ``.env`` file
 
 Community plugins
 *****************

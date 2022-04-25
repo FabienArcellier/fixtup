@@ -27,5 +27,5 @@ to better understand the advanced features.
         The fixtup plugins rely on a definition file present in the fixture template. For example, `.env` for
         `fixtup.plugins.dotenv` plugin or `docker-compose.yml` for `fixtup.plugins.docker`.
 
-        `more about plugin <plugin.html>`__
+        :ref:`more about plugin <plugin>`
 
