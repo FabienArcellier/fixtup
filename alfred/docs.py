@@ -40,3 +40,17 @@ def docs__display():
     """
     browse = alfred.sh(["xdg-open", "open"], "the command open or xdg-open does not exists in your environment to open a url")
     alfred.run(browse, [portal_index])
+
+
+@alfred.command("docs:check", help="check the documentation of fixtup (links, ...)")
+def docs__check():
+    """
+    Display the local documentation into a browser
+
+    >>> $ alfred docs:check
+    """
+    doc_directory = os.path.join(ROOT_DIR, 'docs')
+
+    make = alfred.sh("make", "make should be present")
+    os.chdir(doc_directory)
+    alfred.run(make, ['linkcheck'])
