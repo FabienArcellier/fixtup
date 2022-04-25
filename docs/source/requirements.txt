@@ -1,9 +1,0 @@
-# this requirement file is required by readthedocs platform
-# It describes the dependencies needed to compile
-# the documentation on the readthedocs platform
-# more information in ../../.readthedocs.yaml
-#
-# this file is not used locally. To run build in local with alfred docs:build,
-# you have to declare sphinx dependencies in the project manifest ../../setup.cfg
-#
-sphinx_rtd_theme
