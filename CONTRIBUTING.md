@@ -91,7 +91,7 @@ $ alfred tests:acceptances : execute acceptances tests
 Here is how to build the documentation
 
 ```
-$ (fixtup) alfred doc:build
+$ (fixtup) alfred docs:build
 ```
 
 The built documentation can then be found in `docs/_build/html/`.
@@ -99,7 +99,7 @@ The built documentation can then be found in `docs/_build/html/`.
 You may want to display it
 
 ```bash
-$ (fixtup) alfred doc:display
+$ (fixtup) alfred docs:display
 ```
 
 ## I want to contribute

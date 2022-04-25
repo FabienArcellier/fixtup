@@ -5,12 +5,12 @@ import click
 
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
 
-@alfred.command("doc:build", help="build documentation portal")
-def doc__build():
+@alfred.command("docs:build", help="build documentation portal")
+def docs__build():
     """
     build the documentation portal into docs/build/html
 
-    >>> $ alfred doc:build
+    >>> $ alfred docs:build
     """
     doc_directory = os.path.join(ROOT_DIR, 'docs')
 
@@ -21,12 +21,12 @@ def doc__build():
     click.echo("to display the documentation: alfred doc:display")
 
 
-@alfred.command("doc:display", help="display the documentation")
-def doc__display():
+@alfred.command("docs:display", help="display the documentation")
+def docs__display():
     """
     Display the local documentation into a browser
 
-    >>> $ alfred doc:display
+    >>> $ alfred docs:display
     """
     portal_index = os.path.join(ROOT_DIR, 'docs', "build", "html", "index.html")
 
