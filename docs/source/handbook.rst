@@ -52,7 +52,7 @@ test, ``Fixtup`` gives you a way to implement a hook called on the fixture has b
 This hook allow you to wait the availability of the port 5432, the port of the postgresql database.
 
 .. code-block:: python
-    :caption: tests/fixtures/database_context/.hooks/started.py
+    :caption: tests/fixtures/database_context/.hooks/hook_started.py
 
     import fixtup
 
@@ -72,7 +72,7 @@ qui stocke des fichiers temporaires que manipule votre application.
 Mount a fixture once and reuse it for all the tests
 ***************************************************
 
-When the `shared` policy is active on a fixture, it is mounted only once at the first test that use this fixture,
+When the `keep_mounted` policy is active on a fixture, it is mounted only once at the first test that use this fixture,
 then reused by each test. Between each test the fixture is starting and stopping. For exemple, with the docker
 plugin, network is mounted only once. Containers start and stop between every tests.
 
@@ -81,12 +81,36 @@ plugin, network is mounted only once. Containers start and stop between every te
 
 When the test runtime stop or when the user interrupts the tests, the fixture is unmounted.
 
-To enable the `shared` policy, edit `fixtup.yml` in a fixture template
+To enable the `keep_mounted` policy, edit `fixtup.yml` in a fixture template
 
 .. code-block:: yaml
     :caption: tests/fixtures/fixtup/simple_fixture/fixtup.yml
 
-    shared: true
+    keep_mounted: true
+
+Keep a fixture running for all the tests
+****************************************
+
+Sometimes, the fixture is slow to start and stop. In that case, you want to keep the fixture mounted and running
+during all your tests. You want to avoid the fixture to start and stop on every test.
+
+The ``keep_running`` policy allows you to do this. Once the fixture is mounted, it will remain up during all tests.
+For example, if your fixture mounts a postgresql database, the database will stay up and running between all your
+tests.
+
+.. code-block:: yaml
+    :caption: ./tests/fixtures/postgres_datastore/fixtup.yml
+
+    keep_running: true
+
+.. warning:: You cannot use 2 postgresql databases on the same port in 2 different fixtures
+    if you are using a fixture with the ``keep_running`` policy.
+
+
+.. warning:: There is no hook yet in fixtup for execute a code and load / clean data for example between 2 tests on a
+    fixture with ``keep_running`` policy.
+
+more about :term:`fixture livecycle`
 
 Implement your own processing on a fixture event
 ************************************************
