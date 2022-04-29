@@ -48,11 +48,32 @@ class TestFixtureEngine(unittest.TestCase):
             # Acts
             fixture1 = self.tested.new_fixture(template)
             self.tested.mount(template, fixture1)
+            self.tested.start(template, fixture1)
+            self.tested.stop(template, fixture1)
             self.tested.unmount(template, fixture1)
 
             fixture2 = self.tested.new_fixture(template)
 
             # Assert
+            self.assertEqual(State.Mounted, fixture1.state)
+            self.assertIs(fixture1, fixture2)
+
+    def test_new_fixture_from_template_keep_the_fixture_running(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('running')
+
+            # Acts
+            fixture1 = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture1)
+            self.tested.start(template, fixture1)
+            self.tested.stop(template, fixture1)
+            self.tested.unmount(template, fixture1)
+
+            fixture2 = self.tested.new_fixture(template)
+
+            # Assert
+            self.assertEqual(State.Started, fixture1.state)
             self.assertIs(fixture1, fixture2)
 
     def test_mount_should_copy_the_content_of_template_into_tmp_directory(self):
@@ -94,6 +115,28 @@ class TestFixtureEngine(unittest.TestCase):
             self.tested.unmount(template, fixture)
             self.assertTrue(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
             self.assertEqual(State.Mounted, fixture.state)
+
+            # Acts
+            self.tested.process_teardown_exit()
+
+            # Assert
+            self.assertEqual(State.Unmounted, fixture.state)
+            self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should not be a directory")
+
+    def test_teardown_should_remove_the_fixture_directory_for_fixture_with_keep_running_policy(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('running')
+            fixture = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture)
+            self.tested.start(template, fixture)
+
+            # this instruction should have no effect
+            self.tested.stop(template, fixture)
+            self.tested.unmount(template, fixture)
+
+            self.assertEqual(State.Started, fixture.state)
+            self.assertTrue(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
 
             # Acts
             self.tested.process_teardown_exit()

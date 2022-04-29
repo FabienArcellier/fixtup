@@ -115,7 +115,7 @@ class TestCompleter(unittest.TestCase):
             completer = directory_completer(fixture_repository)
 
             # Assert
-            self.assertEqual(['hello', 'shared'], completer.words)
+            self.assertEqual(['hello', 'running', 'shared'], completer.words)
 
     def test_recursive_directory_completer_should_expose_all_subdirectories(self):
         # Arrange
