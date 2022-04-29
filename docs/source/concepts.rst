@@ -10,6 +10,25 @@ to better understand the advanced features.
         A fixture represent an isolated environment mount from a fixture template. A fixture usually live the time
         of the test. It's behavior can be tune by policies
 
+    fixture hook
+        hooks allow you to execute your own code when starting or stopping a fixture. There is a hook
+        for each change of state in :term:`fixture livecycle`. A hook is a python module inside
+        of a fixture template. They are optional.
+
+        hook usecases :
+
+        * :ref:`HookWaitAvailability`
+        * :ref:`HookLoadData`
+        * clean-up data from sqlite or postgres database
+        * ...
+
+        fixtup propose 4 hooks.
+
+            * ``hook_mounted.py`` : executed when the fixture is mounted, i.e. the fixture's template folder is copied
+            * ``hook_started.py`` : executed when the fixture is started and every plugin has been runned, for example after docker-compose has run and after environment variables have been loaded
+            * ``hook_stopping.py`` : executed when the fixture stops
+            * ``hook_unmounting.py`` : executed before the folder containing the fixture is deleted
+
     fixture livecycle
         A fixture has a livecycle. Unmounted fixture does not have physical existence. When
         a fixture is mounted, a space is created on disk to hold fixture content and environment. When it's started,

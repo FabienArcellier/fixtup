@@ -56,7 +56,7 @@ def _generate_fixtup_manifest(fixture: FixtureTemplate):
     with io.open(template) as file_pointer:
         fixtup_manifest_tpl = file_pointer.read()
 
-    fixtup_manifest = _render(fixtup_manifest_tpl, {"shared": fixture.shared})
+    fixtup_manifest = _render(fixtup_manifest_tpl, fixture.variables())
     with io.open(target, 'w') as file_pointer:
         file_pointer.write(fixtup_manifest)
 

@@ -15,7 +15,8 @@ class TestPythonHookEngine(unittest.TestCase):
         with fixtup.up("fixtup_hook"):
             # Arrange
             template = FixtureTemplate.fake(
-                directory=os.path.join(os.getcwd(), 'fixtup', 'hello')
+                identifier='hello',
+                directory=os.path.join(os.getcwd(), 'fixtup')
             )
 
             # Acts

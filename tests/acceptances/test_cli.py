@@ -104,7 +104,6 @@ class TestCli(unittest.TestCase):
     def test_new_should_generate_a_new_fixture(self):
         # Arrange
         send_text("hello world")
-        send_text("y")
 
         with fixtup.up('fixtup_project'):
             # Acts
@@ -154,7 +153,6 @@ class TestCli(unittest.TestCase):
         reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
 
         send_text("hello world")
-        send_text("y")
         send_text("n")
 
         with fixtup.up('fixtup_project'):
@@ -214,7 +212,6 @@ class TestCli(unittest.TestCase):
         reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
 
         send_text("hello world")
-        send_text("y")
         send_text("n")
 
         with fixtup.up('fixtup_project'):

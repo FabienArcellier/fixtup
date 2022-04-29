@@ -6,6 +6,7 @@ to run your tests and improve your Quality Assurance process.
 
 .. contents::
   :backlinks: top
+  :local:
 
 Build a postgresql database in a fixture
 ****************************************
@@ -52,7 +53,7 @@ test, ``Fixtup`` gives you a way to implement a hook called on the fixture has b
 This hook allow you to wait the availability of the port 5432, the port of the postgresql database.
 
 .. code-block:: python
-    :caption: tests/fixtures/database_context/.hooks/started.py
+    :caption: tests/fixtures/database_context/.hooks/hook_started.py
 
     import fixtup
 
@@ -69,10 +70,10 @@ seront chargées au moment où la fixture démarre.
 C'est le bon endroit pour passer une ressource partagée pour les tests automatique, par exemple l'adresse d'un bucket S3
 qui stocke des fichiers temporaires que manipule votre application.
 
-Mount a fixture once and reuse it for all the tests
-***************************************************
+Mount a fixture once and keep it mounted for all the tests
+**********************************************************
 
-When the `shared` policy is active on a fixture, it is mounted only once at the first test that use this fixture,
+When the `keep_mounted` policy is active on a fixture, it is mounted only once at the first test that use this fixture,
 then reused by each test. Between each test the fixture is starting and stopping. For exemple, with the docker
 plugin, network is mounted only once. Containers start and stop between every tests.
 
@@ -81,25 +82,45 @@ plugin, network is mounted only once. Containers start and stop between every te
 
 When the test runtime stop or when the user interrupts the tests, the fixture is unmounted.
 
-To enable the `shared` policy, edit `fixtup.yml` in a fixture template
+To enable the `keep_mounted` policy, edit `fixtup.yml` in a fixture template
 
 .. code-block:: yaml
     :caption: tests/fixtures/fixtup/simple_fixture/fixtup.yml
 
-    shared: true
+    keep_mounted: true
 
-Implement your own processing on a fixture event
-************************************************
+Keep a fixture running for all the tests
+****************************************
 
-Un environnement décrit par une fixture peut prendre du temps à être opérationnel.
-Fixtup permet grâce à des hooks d'exécuter du code à vous pour attendre qu'un socket soit ouvert, pour charger des données,
-ou attendre que la sonde de readiness d'un container docker soit prête ...
+Sometimes, the fixture is slow to start and stop. In that case, you want to keep the fixture mounted and running
+during all your tests. You want to avoid the fixture to start and stop on every test.
 
-Les hooks s'implémentent dans des modules python. Vous allez les écrire dans le dossier
-``.hooks`` à l'intérieur de chacune de vos fixtures. Les hooks sont optionnels.
+The ``keep_running`` policy allows you to do this. Once the fixture is mounted, it will remain up during all tests.
+For example, if your fixture mounts a postgresql database, the database will stay up and running between all your
+tests.
 
-L'exemple qui suit attends que le port 5432 réponde sur une base postgresql. L'appel à ``fixtup.helper.wait_port`` est
-bloquant. Tant que le port 5432 ne réponds pas, votre test ne démarrera pas. En cas de timeout, votre test échoue.
+.. code-block:: yaml
+    :caption: ./tests/fixtures/postgres_datastore/fixtup.yml
+
+    keep_running: true
+
+.. warning:: You cannot use 2 postgresql databases on the same port in 2 different fixtures
+    if you are using a fixture with the ``keep_running`` policy.
+
+
+.. warning:: There is no hook yet in fixtup for execute a code and load / clean data for example between 2 tests on a
+    fixture with ``keep_running`` policy.
+
+more about :term:`fixture livecycle`
+
+.. _HookWaitAvailability:
+
+Wait for the availability of a service in a fixture
+***************************************************
+
+The following example waits for port 5432 to respond on a postgresql dtabase. It uses the ``hook_started.py`` hook.
+The call to ``fixtup.helper.wait_port`` is blocking. As long as port 5432 does not respond,
+your test will not start. If a timeout occurs, your test fails.
 
 .. code-block:: python
     :caption: tests/fixtures/simple_postgresql/.hooks/hook_started.py
@@ -108,13 +129,40 @@ bloquant. Tant que le port 5432 ne réponds pas, votre test ne démarrera pas. E
 
     fixtup.helper.wait_port(5432, timeout=2000)
 
-Fixtup propose 4 hooks.
+more about :term:`fixture hook`
 
-* ``hook_mounted.py`` : exécuté lorsque la fixture est montée, c'est à dire que le dossier de la fixture est copié
-* ``hook_started.py`` : exécuté lorsque la fixture est démarrée, par exemple après que docker-compose se soit exécuté et après le chargement
-    des variables d'environnement
-* ``hook_stopped.py`` : exécuté lorsque la fixture est arrêtée
-* ``hook_unmounted.py`` : exécuté lorsque le dossier qui contient la fixture est effacée
+.. _HookLoadData:
+
+Load data when starting a fixture
+*********************************
+
+You can use ``sqlalchemy`` in a hook to bootstrap the schema of sqlalchemy and mount
+data inside a ``sqlalchemy`` managed database as ``sqlite`` and ``postgres``.
+
+.. code-block:: python
+    :caption: tests/fixtures/simple_board/.hooks/hook_started.py
+
+    import kanban.database
+    from kanban.model import BoardColumn, WorkItem
+
+    kanban.database.db_init()
+    dbsession = kanban.database.db_session()
+
+    dbsession.add(BoardColumn(pid=1, step_name="TODO", wip_limit=None))
+    dbsession.add(BoardColumn(pid=2, step_name="DOING", wip_limit=4))
+    dbsession.add(BoardColumn(pid=3, step_name="DONE", wip_limit=None))
+    dbsession.commit()
+
+    dbsession.add(WorkItem(pid=1, title='implement feature AAA', column=1, description='xxxxxxxxxxxxxxxxxxxx'))
+    dbsession.add(WorkItem(pid=2, title='implement feature BBB', column=1, description='xxxxxxxxxxxxxxxxxxxx'))
+    dbsession.add(WorkItem(pid=3, title='implement feature CCC', column=3, description='xxxxxxxxxxxxxxxxxxxx'))
+    dbsession.add(WorkItem(pid=12, title='implement feature XXX', column=1, description='xxxxxxxxxxxxxxxxxxxx'))
+    dbsession.commit()
+
+
+`A working example is present in fixtup repository <https://github.com/FabienArcellier/fixtup/tree/master/examples/kanban_flask_sqlite>`__.
+
+more about :term:`fixture hook`
 
 Use Fixtup with other test frameworks
 *************************************
