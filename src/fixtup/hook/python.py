@@ -46,8 +46,8 @@ def script(event: 'HookEvent') -> Optional[str]:
     files = {
         HookEvent.mounting: os.path.join(".hooks", "hook_mounted.py"),
         HookEvent.starting: os.path.join(".hooks", "hook_started.py"),
-        HookEvent.stopping: os.path.join(".hooks", "hook_stopped.py"),
-        HookEvent.unmounting: os.path.join(".hooks", "hook_unmounted.py")
+        HookEvent.stopping: os.path.join(".hooks", "hook_stopping.py"),
+        HookEvent.unmounting: os.path.join(".hooks", "hook_unmounting.py")
     }
 
     return files.get(event, None)

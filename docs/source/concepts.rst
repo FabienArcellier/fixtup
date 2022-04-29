@@ -26,8 +26,8 @@ to better understand the advanced features.
 
             * ``hook_mounted.py`` : executed when the fixture is mounted, i.e. the fixture's template folder is copied
             * ``hook_started.py`` : executed when the fixture is started and every plugin has been runned, for example after docker-compose has run and after environment variables have been loaded
-            * ``hook_stopped.py`` : executed when the fixture stops
-            * ``hook_unmounted.py`` : executed when the folder containing the fixture is deleted
+            * ``hook_stopping.py`` : executed when the fixture stops
+            * ``hook_unmounting.py`` : executed before the folder containing the fixture is deleted
 
     fixture livecycle
         A fixture has a livecycle. Unmounted fixture does not have physical existence. When
