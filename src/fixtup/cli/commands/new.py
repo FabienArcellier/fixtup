@@ -16,13 +16,12 @@ def new() -> None:
     scaffolding command that will generate a new fixture
     """
     settings = read_settings()
-    plugin = lookup_plugin_engine()
     prompt = lookup_prompt()
 
     fixture_id = prompt.new_fixture(settings.fixtures_dir)
-    shared_fixture = prompt.confirm('Is this fixture is shared between all the tests ? ')
+    keep_mounted_policy = prompt.confirm('Is the fixture kept mounted between all the tests ? ')
 
     # output
-    template = FixtureTemplate.create_from_cli(fixture_id, settings.fixtures_dir, shared_fixture)
+    template = FixtureTemplate.create_from_cli(fixture_id, settings.fixtures_dir, keep_mounted_policy)
 
     scaffold_new_fixture(template)
