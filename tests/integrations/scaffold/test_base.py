@@ -23,7 +23,7 @@ class TestScaffold(unittest.TestCase):
         with fixtup.up('fixtup_project'):
 
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, keep_mounted=True)
+            fixture = FixtureTemplate.fake(identifier='hello world', directory=fixture_repository)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -36,7 +36,7 @@ class TestScaffold(unittest.TestCase):
         # Arrange
         with fixtup.up('fixtup_project'):
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, keep_mounted=True)
+            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_mounted=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -52,7 +52,7 @@ class TestScaffold(unittest.TestCase):
         # Arrange
         with fixtup.up('fixtup_project'):
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, keep_mounted=True)
+            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_mounted=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -64,6 +64,25 @@ class TestScaffold(unittest.TestCase):
                 manifest = yaml.load(file_pointer, yaml.SafeLoader)
                 template = FixtureTemplate.create_from_fixture_template(fixture.directory, manifest)
                 self.assertTrue(template.keep_mounted)
+                self.assertFalse(template.keep_running)
+
+    def test_scaffold_new_fixture_generate_a_manifest_with_keep_running_policy(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            fixture_repository = os.path.join(os.getcwd(), "fixtup")
+            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_running=True)
+
+            # Acts
+            scaffold_new_fixture(fixture)
+
+            fixtup_manifest = os.path.join(fixture.directory, 'fixtup.yml')
+            self.assertTrue(os.path.isfile(fixtup_manifest))
+
+            with io.open(fixtup_manifest) as file_pointer:
+                manifest = yaml.load(file_pointer, yaml.SafeLoader)
+                template = FixtureTemplate.create_from_fixture_template(fixture.directory, manifest)
+                self.assertFalse(template.keep_mounted)
+                self.assertTrue(template.keep_running)
 
 
 if __name__ == '__main__':
