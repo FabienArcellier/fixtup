@@ -55,7 +55,7 @@ class FixtureEngine:
         if self.store.is_mounted(fixture_template):
             fixture = self.store.fixture(fixture_template)
 
-            assert fixture_template.shared is True, f"fixture {fixture.identifier} is mounted but should not, the template does not use shared policy"
+            assert fixture_template.keep_mounted is True, f"fixture {fixture.identifier} is mounted but should not, the template does not use shared policy"
             return fixture
 
         tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
@@ -124,7 +124,7 @@ class FixtureEngine:
 
         :param teardown: true when the fixture engine is tear downed at the end of the process usually
         """
-        if template.shared is True and not teardown:
+        if template.keep_mounted is True and not teardown:
             return
 
         self.plugin_engine.run(PluginEvent.unmounting, fixture)

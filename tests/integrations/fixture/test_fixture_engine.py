@@ -26,7 +26,7 @@ class TestFixtureEngine(unittest.TestCase):
             self.assertEqual(State.Unmounted, fixture.state)
             self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should be a directory")
 
-    def test_new_fixture_from_template_with_shared_policy_reuse_existing_fixture_if_it_is_already_mounted(self):
+    def test_new_fixture_from_template_with_keep_mounted_policy_reuse_existing_fixture_if_it_is_already_mounted(self):
         # Arrange
         with fixtup.up('fixtup_project'):
             template = fixture_template('shared')
@@ -83,7 +83,7 @@ class TestFixtureEngine(unittest.TestCase):
             self.assertEqual(State.Unmounted, fixture.state)
             self.assertFalse(os.path.isdir(fixture.directory), f"{fixture.directory} should not be a directory")
 
-    def test_teardown_should_remove_the_fixture_directory_for_fixture_with_shared_policy(self):
+    def test_teardown_should_remove_the_fixture_directory_for_fixture_with_keep_mounted_policy(self):
         # Arrange
         with fixtup.up('fixtup_project'):
             template = fixture_template('shared')

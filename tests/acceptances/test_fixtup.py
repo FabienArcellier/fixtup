@@ -100,7 +100,7 @@ class TestFixtup(unittest.TestCase):
                 except PluginRuntimeError as exception:
                     self.assertIn('plugin: fixtup.plugins.dummy_plugin_error', exception.msg)
 
-    def test_up_on_fixture_with_shared_policy_should_keep_the_same_fixture_environment(self):
+    def test_up_on_fixture_with_keep_mounted_policy_should_keep_the_same_fixture_environment(self):
         # self.skipTest("not implemented yet")
 
         reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
@@ -112,16 +112,16 @@ class TestFixtup(unittest.TestCase):
             'plugins': []
         }):
             # Acts
-            with fixtup.up('simple_fixture_shared'):
+            with fixtup.up('simple_fixture_keep_mounted'):
                 fixture1 = os.getcwd()
 
-            with fixtup.up('simple_fixture_shared'):
+            with fixtup.up('simple_fixture_keep_mounted'):
                 fixture2 = os.getcwd()
 
             # Assert
             self.assertEqual(fixture1, fixture2)
 
-    def test_up_on_fixture_without_shared_policy_should_create_a_new_fixture_environment(self):
+    def test_up_on_fixture_without_policies_should_create_a_new_fixture_environment(self):
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -130,10 +130,10 @@ class TestFixtup(unittest.TestCase):
             'plugins': []
         }):
             # Acts
-            with fixtup.up('simple_fixture_shared'):
+            with fixtup.up('simple_fixture_keep_mounted'):
                 fixture1 = os.getcwd()
 
-            with fixtup.up('simple_fixture_shared'):
+            with fixtup.up('simple_fixture_keep_mounted'):
                 fixture2 = os.getcwd()
 
             # Assert

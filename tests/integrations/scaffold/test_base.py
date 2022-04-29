@@ -23,7 +23,7 @@ class TestScaffold(unittest.TestCase):
         with fixtup.up('fixtup_project'):
 
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, shared=True)
+            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, keep_mounted=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -36,7 +36,7 @@ class TestScaffold(unittest.TestCase):
         # Arrange
         with fixtup.up('fixtup_project'):
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, shared=True)
+            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, keep_mounted=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -46,7 +46,24 @@ class TestScaffold(unittest.TestCase):
 
             with io.open(fixtup_manifest) as file_pointer:
                 manifest = yaml.load(file_pointer, yaml.SafeLoader)
-                self.assertTrue(manifest["shared"], f"invalid manifest {manifest}")
+                self.assertTrue(manifest["keep_mounted"], f"invalid manifest {manifest}")
+
+    def test_scaffold_new_fixture_generate_a_manifest_with_keep_mounted_policy(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            fixture_repository = os.path.join(os.getcwd(), "fixtup")
+            fixture = FixtureTemplate.create_from_cli("hello world", fixture_repository, keep_mounted=True)
+
+            # Acts
+            scaffold_new_fixture(fixture)
+
+            fixtup_manifest = os.path.join(fixture.directory, 'fixtup.yml')
+            self.assertTrue(os.path.isfile(fixtup_manifest))
+
+            with io.open(fixtup_manifest) as file_pointer:
+                manifest = yaml.load(file_pointer, yaml.SafeLoader)
+                template = FixtureTemplate.create_from_fixture_template(fixture.directory, manifest)
+                self.assertTrue(template.keep_mounted)
 
 
 if __name__ == '__main__':
