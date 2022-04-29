@@ -26,4 +26,4 @@ jobs:
 
             - name: run continuous integration to validate fixtup
               run: |
-                pipenv run alfred ci
+                pipenv run alfred ci --no-docs
