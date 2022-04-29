@@ -80,6 +80,9 @@ class FixtureEngine:
             self.unmount(template, fixture, teardown=True)
 
     def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
+        if self.store.is_running(template):
+            return
+
         try:
             self.plugin_engine.run(PluginEvent.starting, fixture)
             self.hook_engine.run(HookEvent.starting, template)
