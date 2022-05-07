@@ -7,8 +7,12 @@ The ``fixtup`` command line tool is an assistant to configure your python projec
 You can invoke it in your shell, once you have activated the virtual environment in
 which you installed fixtup.
 
-Activate fixtup in a python project
-***********************************
+.. contents::
+    :backlinks: top
+    :local:
+
+``fixtup init`` - install fixtup in a python project
+****************************************************
 
 
 The ``fixtup init`` command initiates your fixture repository and configures the python manifest.
@@ -20,8 +24,8 @@ The ``fixtup init`` command initiates your fixture repository and configures the
     Fixture repository ? tests/fixtures/fixtup
     Manifest ? pyproject.toml
 
-Generate a new fixture
-**********************
+``fixtup new`` - generate a new fixture
+***************************************
 
 The ``fixtup new`` command generates a new fixture in your fixture repository.
 This command creates the folder for you, instantiates hooks, initiates artifacts
@@ -45,18 +49,18 @@ The result will take this form in ``tests/fixture/fixtup/simple``
 
     .
     ├── docker-compose.yml
+    ├── fixtup.yml
     └── .hooks
         ├── hook_mounted.py.sample
         ├── hook_started.py.sample
         ├── hook_stopped.py.sample
         └── hook_unmounted.py.sample
 
-Afficher les informations relatives à la configuration
-******************************************************
+``fixtup info`` - view configuration information
+************************************************
 
-La commande `fixtup info` vous permet d'avoir une vue de la configuration active. Elle affiche
-une synthèse des paramètres importants comme le fichier qui contient la configuration de fixtup ou
-le repository qui contient les templates de fixture.
+The `fixtup info` command displays a summary of important parameters such as
+the file that contains the fixtup configuration or the repository that contains the fixture templates.
 
 .. code-block:: bash
 

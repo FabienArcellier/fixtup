@@ -10,7 +10,7 @@ about your usage, ideas you want to share, ...
 Ask for help
 ============
 
-You should post your questions on stackoverflow with the tag ``python-fixtup``.
+You should `post your questions on stackoverflow <https://stackoverflow.com/questions/ask?tags=python-fixtup>`__ with the tag ``python-fixtup``.
 
 Testing strategies | QA Architecture
 ====================================
