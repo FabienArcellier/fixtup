@@ -11,8 +11,8 @@ The infrastructure describe in ``docker-compose.yml`` is built when a fixture is
 just after when the fixture start. They will be running till the fixture is stopped. All traces of containers and networks
 are clean-up when the fixture is unmounted.
 
-Usage
-*****
+Configuration
+*************
 
 .. code-block::
     :caption: ./setup.cfg
@@ -26,6 +26,7 @@ Common options
 
 You can tune the behavior of ``fixtup.plugins.docker`` plugin through environment variables.
 
-* ``FIXTUP_DOCKER_VERBOSE`` : It will show in terminal the logs from containers when a fixture is ``stopped``
 
-    * value : any value will trigger the behavior
+.. option:: FIXTUP_DOCKER_VERBOSE=1
+
+    It will show the logs from containers in terminal when a fixture is ``stopped``

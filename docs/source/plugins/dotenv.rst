@@ -22,8 +22,8 @@ are restored to their original values.
         print(os.getenv('HELLO'))
 
 
-Usage
-*****
+Configuration
+*************
 
 .. code-block::
     :caption: ./setup.cfg
