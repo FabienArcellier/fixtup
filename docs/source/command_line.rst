@@ -1,3 +1,5 @@
+.. _CommandLine:
+
 Command line
 ############
 
