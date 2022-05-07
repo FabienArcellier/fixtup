@@ -1,60 +1,45 @@
 Getting Started
 ###############
 
+Let's discover in 10 minutes how fixtup will simplify the writing of your integration tests.
+
+In this tutorial, we are going to write 2 tests that validate a miniature manufacturing utility.
+Fixtup will help us build an environment that contains 2 images to miniaturize.
+
 .. contents::
     :backlinks: top
+    :local:
 
-On this page, you will start a new project to show how to use ``Fixtup``.
-You should have ten minutes to follow this tutorial.
+Clone the getting started project
+*********************************
 
-In this tutorial, we'll test some code that makes a thumbnail.
+.. code-block:: bash
 
-The goal is to run automatic tests on code that write
-on the file system without having to manage by hand
-cleaning up files that were generated like the thumbnail.
+    git clone https://github.com/FabienArcellier/fixtup-getting-started.git
+    cd fixtup-getting-started
+    pip install .
 
-First, you have to install fixtup in your python environment.
+pip install the library Pillow used to miniaturize images.
+
+Install and configure fixtup
+****************************
 
 .. code-block:: bash
 
     pip install fixtup
 
-Expected result
-***************
-
-In this example, we will use this organisation for our code repository. We will create those elements
-one by one. Vous retrouverez cet exemple complet dans le repository de code de ``Fixtup`` dans
-``examples/unittests``.
-
-.. code-block:: text
-
-    .
-    ├── lib
-    │   ├── __init__.py
-    │   └── utils.py
-    ├── pyproject.toml
-    ├── setup.cfg
-    └── tests
-        ├── fixtures
-        │   └── thumbnail_context
-        |       ├── fixtup.yml
-        │       └── file.png
-        └── integrations
-            ├── __init__.py
-            └── test_utils.py
-
-
-La première chose à faire est de configurer `Fixtup`. le cli est la pour vous rendre la vie plus facile.
-Avec la commande ``fixtup init``, vous allez configurer votre projet
-
-Starting step by step
-*********************
+The first thing to do is to configure `fixtup`. the cli is here to make your life easier.
+With the ``fixtup init`` command.
 
 .. code-block:: bash
 
     $ fixtup init
     Fixtures repository ? tests/fixtures
     Python manifest ? setup.cfg
+
+.. note::
+
+    more about :ref:`CommandLine`
 
 In the next step you need to configure `Fixtup` in your project manifest
 ``setup.cfg``. You will declare a directory that will contains your fixtures.
@@ -68,22 +53,8 @@ In the next step you need to configure `Fixtup` in your project manifest
         fixtup.plugins.dotenv
         fixtup.plugins.docker
 
-Before writing your first fixture, you will implement the function thumbnail in ``lib/utils.py``.
-To run the function thumbnail, you need to setup pillow in your python environment ``pip install Pillow``.
-
-.. code-block:: python
-    :caption: lib/utils.py
-
-    from PIL import Image
-
-    def thumbnail(image: str, thumbnail: str) -> None:
-        resize = (128, 128)
-        img = Image.open(image)
-        img = img.resize(resize, Image.ANTIALIAS)
-        img.save(thumbnail)
-
-This function work on a file, build a new file. To test it, we need a file and a working directory.
-``Fixtup`` will give you both.
+Scaffold your first fixture
+***************************
 
 .. code-block:: bash
 
@@ -91,10 +62,26 @@ This function work on a file, build a new file. To test it, we need a file and a
     Fixture identifier ? thumbnail_context
     Is this fixture is shared between all the tests ? no
 
-This command initializes a new fixture. It's a folder with fixtup.yml that contains fixtup settings for this fixture.
-It is stored in ``tests/fixtures/thumbnail_context``. We will add the ``file.png`` image to this folder.
+This command scaffold a new :term:`fixture template`. It is generated in ``tests/fixtures/thumbnail_context``.
 
-.. image:: _static/file.png
+You will add those 3 files inside this directory:
+
+* `img1.png <_static/img1.png>`__
+* `img2.png <_static/img2.png>`__
+* `img3.png <_static/img3.png>`__
+
+.. code-block:: bash
+
+    cd tests/fixtures/thumbnail_context
+    wget https://fixtup.readthedocs.io/en/latest/_static/img1.png
+    wget https://fixtup.readthedocs.io/en/latest/_static/img2.png
+    wget https://fixtup.readthedocs.io/en/latest/_static/img3.png
+
+.. note::
+
+    A fixture template contains several files that depend on which plugins are active. By default there is
+    a manifest `fixtup.yml` and a folder `.hooks` that contains the different :term:`fixture hook`
+    you can use to load data, download files, ...
 
 Test with unittest
 ==================
@@ -116,8 +103,8 @@ It's time to test the function ``thumbnail`` with ``unittest``. We will call our
                 # Given
                 wd = os.getcwd()
 
-                original_file = os.path.join(wd, 'file.png')
-                expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+                original_file = os.path.join(wd, 'img1.png')
+                expected_thumbnail_file = os.path.join(wd, 'img1_t.png')
 
                 # When
                 thumbnail(original_file, expected_thumbnail_file)
@@ -136,42 +123,6 @@ the one defined in ``tests/fixtures/thumbnail_context``.
 When the context is closing, this directory is destroyed. If you want to check what happen inside, you have to
 stop the code execution with a breakpoint on the assertion line and check what is inside.
 
-..
-    The feature ``fixtup.use`` is not implemented yet.
-    I have to write the ticket in github
-
-    Use in setUp
-    ------------
-
-    You can use the same fixture for all the tests in one test case using ``setUp``. The fixture will be destroyed at the
-    end of each test. You don't have to write the code for the ``tearDown``.
-
-    .. code-block:: python
-        :caption: ./tests/integrations/test_utils.py
-
-        import unittest
-        import os
-
-        import fixtup
-
-        class UtilsTest(unittest.TestCase):
-
-            def setUp(self):
-                fixtup.use(self, 'thumbnail_context')
-
-            def test_thumbnail_should_generate_thumbnail(self):
-                # Given
-                wd = os.getcwd()
-
-                original_file = os.path.join(wd, 'file.png')
-                expected_thumbnail_file = os.path.join(wd, 'file_t.png')
-
-                # When
-                thumbnail(original_file, expected_thumbnail_file)
-
-                # Then
-                self.assertTrue(os.path.isfile(expected_thumbnail_file)
-
 Test with pytest
 ================
 
@@ -187,8 +138,8 @@ Test with pytest
             # Given
             wd = os.getcwd()
 
-            original_file = os.path.join(wd, 'file.png')
-            expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+            original_file = os.path.join(wd, 'img1.png')
+            expected_thumbnail_file = os.path.join(wd, 'img1_t.png')
 
             # When
             thumbnail(original_file, expected_thumbnail_file)
@@ -221,8 +172,8 @@ To write once the initialization code of a fixture of ``Fixtup`` and use it in m
         # Given
         wd = os.getcwd()
 
-        original_file = os.path.join(wd, 'file.png')
-        expected_thumbnail_file = os.path.join(wd, 'file_t.png')
+        original_file = os.path.join(wd, 'img1.png')
+        expected_thumbnail_file = os.path.join(wd, 'img1_t.png')
 
         # When
         thumbnail(original_file, expected_thumbnail_file)

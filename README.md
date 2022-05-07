@@ -4,7 +4,7 @@
 
 You will love writing integration tests in python with ``Fixtup``.
 
-![outline schematic from fixtup](https://github.com/FabienArcellier/fixtup/raw/master/docs/source/_static/principle_simplified_diagram.png)
+![outline schematic from fixtup](https://raw.githubusercontent.com/FabienArcellier/fixtup/master/docs/source/_static/principle_simplified_diagram.png)
 
 Some of your tests need a database, a folder with data, dedicated environment variables, ``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning, it releases by itself the resources that it has provisioned.
 
@@ -45,8 +45,8 @@ def test_thumbnail_should_generate_thumbnail(self):
         self.assertTrue(os.directory.isfile(expected_thumbnail_file)
 ```
 
-[The complete example is available in the repo](./examples/unittest)
+[The complete example is available in the repo](https://github.com/FabienArcellier/fixtup/tree/master/examples)
 
 ## Contributing
 
-[More information into CONTRIBUTING.md](./CONTRIBUTING.md)
+[More information into CONTRIBUTING.md](https://github.com/FabienArcellier/fixtup/blob/master/CONTRIBUTING.md)

@@ -60,15 +60,33 @@ This hook allow you to wait the availability of the port 5432, the port of the p
     fixtup.helper.wait_port(5432, timeout=2000)
 
 
-Configure environnement variables dedicated to the fixture
-**********************************************************
+.. note::
 
-Les variables d'environnments offrent un moyen de spécifier la configuration à adopter au runtime.
-``Fixtup`` permet de les spécifier dans votre fixture au moyen d'un fichier ``.env``. Les variables de ce fichier
-seront chargées au moment où la fixture démarre.
+    more about :ref:`plugins_docker`
 
-C'est le bon endroit pour passer une ressource partagée pour les tests automatique, par exemple l'adresse d'un bucket S3
-qui stocke des fichiers temporaires que manipule votre application.
+Configure environnement variables loaded by a fixture
+*****************************************************
+
+Environment variables are the way to specify the configuration to adopt at runtime in a `twelve factor architecture <https://12factor.net/>`__.
+
+When the ``fixtup.plugins.env`` plugin is active, you can overridde or add any variable through a ``.env`` file in the
+fixture template directory.
+
+.. code-block:: bash
+    :caption: tests/fixtures/database_context/.env
+
+    # describe the environment variables you want
+    # load on test start
+    #
+    # the original environment is restored
+    # when the test ends
+    #
+    # VAR1="HELLO"
+    SQLITE_DSN=sqlite:///kanban.db
+
+.. note::
+
+    more about :ref:`plugins_dotenv`
 
 Mount a fixture once and keep it mounted for all the tests
 **********************************************************
@@ -111,7 +129,9 @@ tests.
 .. warning:: There is no hook yet in fixtup for execute a code and load / clean data for example between 2 tests on a
     fixture with ``keep_running`` policy.
 
-more about :term:`fixture livecycle`
+.. note::
+
+    more about :term:`fixture livecycle`
 
 .. _HookWaitAvailability:
 
@@ -129,7 +149,9 @@ your test will not start. If a timeout occurs, your test fails.
 
     fixtup.helper.wait_port(5432, timeout=2000)
 
-more about :term:`fixture hook`
+.. note::
+
+    more about :term:`fixture hook`
 
 .. _HookLoadData:
 
@@ -162,7 +184,9 @@ data inside a ``sqlalchemy`` managed database as ``sqlite`` and ``postgres``.
 
 `A working example is present in fixtup repository <https://github.com/FabienArcellier/fixtup/tree/master/examples/kanban_flask_sqlite>`__.
 
-more about :term:`fixture hook`
+.. note::
+
+    more about :term:`fixture hook`
 
 Use Fixtup with other test frameworks
 *************************************
