@@ -4,8 +4,7 @@ Support
 Discuss / Good practices about Fixtup
 =====================================
 
-You can exchange with the community on the discord space of ``Fixtup``. It's a good place to start a discussion
-about your usage, ideas you want to share, ...
+You can `exchange with the community on the discord space <https://discord.gg/nMn9YPRGSY>`_ of ``Fixtup``. It's a good place to start a discussion about your usage, ideas you want to share, ...
 
 Ask for help
 ============
@@ -16,5 +15,8 @@ Testing strategies | QA Architecture
 ====================================
 
 On big projects, testing strategies and CI/CD Architecture is a complex topic. There is no simple solution.
-I may exchange up to 1 hour with you on interesting challenges. I am always looking to hear about battlefield.
+I may exchange up to 1 hour with you on interesting challenges. I am always looking to hear about complex architectures
+and concrete use cases.
+
+You can contact me as **Fabien** on `the discord space <https://discord.gg/nMn9YPRGSY>`_
 

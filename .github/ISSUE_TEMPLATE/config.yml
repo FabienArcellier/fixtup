@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
+  - name: Discord
+    url: https://discord.gg/nMn9YPRGSY
+    about: Exchange with the community of fixtup users
   - name: Stackoverflow
     url: https://stackoverflow.com/questions/ask?tags=python-fixtup
     about: Please ask and answer questions about fixtup usage here
