@@ -5,6 +5,7 @@ on: [push]
 jobs:
     build:
         runs-on: macos-latest
+        timeout-minutes: 15
 
         strategy:
           matrix:
@@ -15,7 +16,7 @@ jobs:
 
 
             - name: install docker environment for docker plugin
-              uses: docker-practice/actions-setup-docker@1.0.9
+              uses: docker-practice/actions-setup-docker@master
 
             - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
