@@ -1,3 +1,5 @@
+import sys
+
 import os
 import unittest
 
@@ -29,9 +31,20 @@ class TestDocker(unittest.TestCase):
                     # Assert
                     output:str = plumbum.local['docker-compose']('ps')
                     lines = output.split('\n')
-                    self.assertEqual(4, len(lines))
-                    self.assertIn('sandbox_1', lines[2])
-                    self.assertIn('Exit 0', lines[2])
+
+                    output_row = output.split(os.sep)
+
+                    splitted_path = os.path.split(path)
+                    docker_compose_prefix = splitted_path[-1]
+
+                    docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
+                    self.assertIn(docker_compose_identifier, output_row[-1])
+
+                    if _if_linux():
+                        self.assertIn(f'Exit 0', output_row[-1])
+
+                    if _if_macos():
+                        self.assertIn(f'created', output_row[-1])
                 finally:
                     plumbum.local['docker-compose']('down')
 
@@ -75,10 +88,19 @@ class TestDocker(unittest.TestCase):
 
                     # Assert
                     output: str = plumbum.local['docker-compose']('ps')
-                    lines = output.split('\n')
-                    self.assertEqual(4, len(lines))
-                    self.assertIn('sandbox_1', lines[2])
-                    self.assertIn('Up', lines[2])
+                    output_row = output.split(os.sep)
+
+                    splitted_path = os.path.split(path)
+                    docker_compose_prefix = splitted_path[-1]
+
+                    docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
+                    self.assertIn(docker_compose_identifier, output_row[-1])
+
+                    if _if_linux():
+                        self.assertIn(f'Up', output_row[-1])
+
+                    if _if_macos():
+                        self.assertIn(f'running', output_row[-1])
                 finally:
                     plumbum.local['docker-compose']('down')
 
@@ -102,10 +124,19 @@ class TestDocker(unittest.TestCase):
 
                     # Assert
                     output: str = plumbum.local['docker-compose']('ps')
-                    lines = output.split('\n')
-                    self.assertEqual(4, len(lines))
-                    self.assertIn('sandbox_1', lines[2])
-                    self.assertIn('Exit', lines[2])
+                    output_row = output.split(os.sep)
+
+                    splitted_path = os.path.split(path)
+                    docker_compose_prefix = splitted_path[-1]
+                    docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
+                    self.assertIn(docker_compose_identifier, output_row[-1])
+
+                    if _if_linux():
+                        self.assertIn(f'Exit 143', output_row[-1])
+
+                    if _if_macos():
+                        self.assertIn(f'exited (143)', output_row[-1])
+
                 finally:
                     plumbum.local['docker-compose']('down')
 
@@ -130,10 +161,41 @@ class TestDocker(unittest.TestCase):
 
                     # Assert
                     output: str = plumbum.local['docker-compose']('ps')
-                    lines = output.split('\n')
-                    self.assertEqual(3, len(lines))
+                    output_row = output.split(os.sep)
+
+                    splitted_path = os.path.split(path)
+                    docker_compose_prefix = splitted_path[-1]
+                    docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
+                    self.assertNotIn(docker_compose_identifier, output_row[-1])
                 finally:
                     plumbum.local['docker-compose']('down')
+
+
+def _docker_compose_identifier(docker_prefix: str, identifier: str, index: int) -> str:
+    """
+    Docker compose build different identifier that depends of the platform
+
+    on linux, _ is used as separator
+    on macos, - is used as separator
+
+    linux : simple_fixture_docker__l16555o3_sandbox_1
+    macos : simple_fixture_docker__l16555o3-sandbox-1
+    """
+    if _if_linux():  # could be "linux", "linux2", "linux3", ...
+        return f"{docker_prefix}_{identifier}_{index}"
+
+    if _if_macos():
+        return f"{docker_prefix}-{identifier}-{index}"
+
+    raise OSError(f"not supported platform : {sys.platform}")
+
+
+def _if_linux() -> bool:
+    return sys.platform.startswith("linux")
+
+
+def _if_macos() -> bool:
+    return sys.platform == "darwin"
 
 
 if __name__ == '__main__':
