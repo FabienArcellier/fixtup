@@ -18,7 +18,7 @@ def init():
         prompt = lookup_prompt()
         available_manifests = list_project_manifests()
         fixture_repository = prompt.fixture_repository()
-        manifest_choice = prompt.choice(f"Python manifest {available_manifests.prompt_choices()} ?",
+        manifest_choice = prompt.choice(f"Python manifest",
                                         available_manifests.prompt_choices())
 
         picked_manifest = available_manifests.get(manifest_choice)

@@ -1,9 +1,8 @@
 import os
-from typing import List
+from typing import List, Optional
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import FuzzyWordCompleter
-from prompt_toolkit.shortcuts import confirm
 from prompt_toolkit.validation import Document, Validator, ValidationError
 from prompt_toolkit.completion import Completer, Completion, CompleteEvent
 
@@ -12,28 +11,40 @@ from fixtup.prompt.base import Prompt
 
 class PromptToolkit(Prompt):
 
-    def choice(self, question: str, choices: List[str]) -> str:
-        choice = prompt(question + " ", completer=choices_completer(choices), validator=ChoicesValidator(choices))
-        return choice
+    def choice(self, question: str, choices: List[str], default: Optional[str] = None) -> str:
+        if default is None:
+            default = choices[0] if len(choices) > 0 else ""
+
+        raw_choice = prompt(question + f" ({'/'.join(choices)}) [{default}] ",
+                        completer=choices_completer(choices),
+                        validator=ChoicesValidator(choices)),
+
+        if raw_choice[0] == "":
+            return default
+
+        return raw_choice[0]
 
     def fixture_repository(self) -> str:
         cwd = os.getcwd()
-        fixture_repository = prompt('Fixture repository ? ',
+        fixture_repository = prompt('Choose a directory to store fixture templates : ',
                          completer=RecursiveDirectoryCompleter(cwd),
                          validator=FixtureRepositoryValidator(cwd))
 
         return fixture_repository
 
     def new_fixture(self, fixture_repository: str) -> str:
-        fixture = prompt('Fixture identifier ? ',
+        fixture = prompt('Choose a fixture identifier : ',
                          completer=directory_completer(fixture_repository),
                          validator=NewFixtureValidator(fixture_repository))
 
         return fixture
 
+    def confirm(self, question: str, default: Optional[bool] = None) -> bool:
+        default_value = None
+        if default is not None:
+            default_value = 'y' if default is True else 'n'
 
-    def confirm(self, question: str) -> bool:
-        return confirm(question)
+        return self.choice(question, choices=['y', 'n'], default=default_value) == 'y'
 
 
 class ChoicesValidator(Validator):
@@ -52,7 +63,7 @@ class ChoicesValidator(Validator):
     def validate(self, document: Document):
         text = document.text
 
-        if document.text not in self.choices:
+        if document.text != "" and document.text not in self.choices:
             raise ValidationError(message=f'you have to pick one of those choices: {self.choices}')
 
 class FixtureRepositoryValidator(Validator):

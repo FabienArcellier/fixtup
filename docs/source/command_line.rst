@@ -21,8 +21,8 @@ The ``fixtup init`` command initiates your fixture repository and configures the
 
     $ fixtup init
 
-    Fixture repository ? tests/fixtures/fixtup
-    Manifest ? pyproject.toml
+    Choose a directory to store fixture templates : tests/fixtures
+    Python manifest (setup.cfg/pyproject.toml) [setup.cfg]
 
 ``fixtup new`` - generate a new fixture
 ***************************************
@@ -37,10 +37,9 @@ In less than 2 minutes you are ready to use fixtup in your project.
 
     $ fixtup new
 
-    Fixture directory ? simple
-    Is this fixture is shared between all the tests ? no
-    Is this fixture use docker container ? yes
-    Is this fixture use .env file ? no
+    Choose a fixture identifier : thumbnail_context
+    Mount environment variables on this fixture (y/n) [y]
+    Mount docker container on this fixture (y/n) [y]
 
 The result will take this form in ``tests/fixture/fixtup/simple``
 
