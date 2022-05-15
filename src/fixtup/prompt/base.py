@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 
 class Prompt():
 
-    def choice(self, question: str, choices: List[str]) -> str:
+    def choice(self, question: str, choices: List[str], default: Optional[str] = None) -> str:
         """
         ask the user to make a choice based on propositions
 
@@ -41,9 +41,9 @@ class Prompt():
         """
         raise NotImplementedError()
 
-    def confirm(self, question: str) -> bool:
+    def confirm(self, question: str, default: Optional[bool] = None) -> bool:
         """
-        ask the user to confirm a question by using yes or no
+        ask the user to confirm a question by using y or n
 
         >>> prompt = lookup_prompt()
         >>> is_shared = prompt.confirm('Is this fixture is shared between all the tests ?')

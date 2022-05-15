@@ -1,5 +1,5 @@
 import threading
-from typing import List
+from typing import List, Optional
 
 from fixtup.prompt.base import Prompt
 
@@ -25,7 +25,7 @@ class Mock(Prompt):
     requires user input
     """
 
-    def choice(self, question: str, choices: List[str]) -> str:
+    def choice(self, question: str, choices: List[str], default: Optional[str] = None) -> str:
         mocked_input: List[str] = thread_store.input
         _input = mocked_input.pop(0)
         assert _input in choices, f"{_input} does not match the available choices {choices}"
@@ -40,6 +40,6 @@ class Mock(Prompt):
         mocked_input: List[str] = thread_store.input
         return mocked_input.pop(0)
 
-    def confirm(self, question: str) -> bool:
+    def confirm(self, question: str, default: Optional[bool] = None) -> bool:
         mocked_input: List[str] = thread_store.input
         return mocked_input.pop(0) == "y"

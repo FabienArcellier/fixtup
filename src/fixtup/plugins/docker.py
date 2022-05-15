@@ -16,7 +16,7 @@ warnings.simplefilter("ignore", ResourceWarning)
 
 def on_new_fixture(template: FixtureTemplate):
     prompt = lookup_prompt()
-    mount_containers = prompt.confirm('Is this fixture mount docker containers ?')
+    mount_containers = prompt.confirm('Mount docker container on this fixture')
     if mount_containers:
         RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resource'))
         shutil.copy(os.path.join(RESOURCE_DIR, 'docker', 'docker-compose.yml'), os.path.join(template.directory, 'docker-compose.yml'))

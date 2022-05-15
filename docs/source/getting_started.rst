@@ -34,8 +34,8 @@ With the ``fixtup init`` command.
 .. code-block:: bash
 
     $ fixtup init
-    Fixtures repository ? tests/fixtures
-    Python manifest ? setup.cfg
+    Choose a directory to store fixture templates : tests/fixtures
+    Python manifest (setup.cfg/pyproject.toml) [setup.cfg]
 
 .. note::
 
@@ -59,8 +59,10 @@ Scaffold your first fixture
 .. code-block:: bash
 
     $ fixture new
-    Fixture identifier ? thumbnail_context
-    Is this fixture is shared between all the tests ? no
+    Choose a fixture identifier : thumbnail_context
+    Mount environment variables on this fixture (y/n) [y]
+    Mount docker container on this fixture (y/n) [y]
+
 
 This command scaffold a new :term:`fixture template`. It is generated in ``tests/fixtures/thumbnail_context``.
 

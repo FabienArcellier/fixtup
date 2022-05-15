@@ -6,8 +6,7 @@ from prompt_toolkit.validation import ValidationError
 
 import fixtup
 from fixtup.prompt.prompt_toolkit import NewFixtureValidator, directory_completer, \
-    FixtureRepositoryValidator, RecursiveDirectoryCompleter, ChoicesValidator
-
+    FixtureRepositoryValidator, RecursiveDirectoryCompleter, ChoicesValidator, PromptToolkit
 
 class TestValidationError(unittest.TestCase):
 

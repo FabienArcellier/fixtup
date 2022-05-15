@@ -13,7 +13,7 @@ store = {}
 
 def on_new_fixture(template: FixtureTemplate):
     prompt = lookup_prompt()
-    override_environment = prompt.confirm('Is this fixture override environment variable ?')
+    override_environment = prompt.confirm('Mount environment variables on this fixture')
     if override_environment:
         RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resource'))
         shutil.copy(os.path.join(RESOURCE_DIR, 'dotenv', '.env'), os.path.join(template.directory, '.env'))
