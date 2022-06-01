@@ -9,4 +9,4 @@ fixtup version number follow semantic versioning : https://semver.org/
 * MINOR version when you add functionality in a backwards compatible manner
 * PATCH version when you make backwards compatible bug fixes.
 """
-__version__ = "0.0.7"
+__version__ = "0.0.8"
