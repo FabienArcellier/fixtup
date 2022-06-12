@@ -33,7 +33,8 @@ def configure(settings: dict) -> None:
 
 
 @contextmanager
-def up(_fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
+def up(_fixture: str,
+       keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
     """
     Mount a fixture to use it in a test.
 

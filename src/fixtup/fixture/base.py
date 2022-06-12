@@ -37,16 +37,19 @@ class FixtureEngine:
             return
 
         try:
-            shutil.copytree(fixture_template.directory, fixture.directory)
-            # restore the directory after having removing the old one
-            os.chdir(fixture.directory)
+            if not fixture_template.mount_in_place:
+                shutil.copytree(fixture_template.directory, fixture.directory)
+                # restore the directory after having removing the old one
+                os.chdir(fixture.directory)
 
             self.plugin_engine.run(PluginEvent.mounting, fixture)
             self.hook_engine.run(HookEvent.mounting, fixture_template)
             self.store.fixture_mounted(fixture_template, fixture)
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
-            if os.path.isdir(fixture.directory):
+            # When a fixture is mount in place, Fixtup should preserve the original
+            # when error happens
+            if not fixture_template.mount_in_place and os.path.isdir(fixture.directory):
                 shutil.rmtree(fixture.directory, True)
 
             raise
@@ -59,9 +62,12 @@ class FixtureEngine:
                 f"fixture {fixture.identifier} is mounted but should not, the template does not use keep_mounted policy"
             return fixture
 
-        tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
-        fixture_directory = tempfile.mkdtemp(prefix=tmp_prefix)
-        os.rmdir(fixture_directory)
+        if fixture_template.mount_in_place:
+            fixture_directory = fixture_template.directory
+        else:
+            tmp_prefix = '{0}_{1}'.format(fixture_template.identifier, '_')
+            fixture_directory = tempfile.mkdtemp(prefix=tmp_prefix)
+            os.rmdir(fixture_directory)
 
         return Fixture.create_from_template(fixture_template, fixture_directory)
 
@@ -90,7 +96,10 @@ class FixtureEngine:
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.stopping, fixture)
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
-            if os.path.isdir(fixture.directory):
+
+            # When a fixture is mount in place, Fixtup should preserve the original
+            # when error happens
+            if not template.mount_in_place and os.path.isdir(fixture.directory):
                 shutil.rmtree(fixture.directory, True)
 
             raise
@@ -121,7 +130,10 @@ class FixtureEngine:
             self.store.fixture_stopped(fixture)
         except PluginRuntimeError:
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
-            if os.path.isdir(fixture.directory):
+
+            # When a fixture is mount in place, Fixtup should preserve the original
+            # when error happens
+            if not template.mount_in_place and os.path.isdir(fixture.directory):
                 shutil.rmtree(fixture.directory, True)
 
             raise
@@ -137,7 +149,9 @@ class FixtureEngine:
         self.plugin_engine.run(PluginEvent.unmounting, fixture)
         self.hook_engine.run(HookEvent.unmounting, template)
 
-        shutil.rmtree(fixture.directory, True)
+        if not template.mount_in_place:
+            shutil.rmtree(fixture.directory, True)
+
         self.store.fixture_unmounted(fixture)
 
     @contextlib.contextmanager

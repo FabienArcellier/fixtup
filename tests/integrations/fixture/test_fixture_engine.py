@@ -90,6 +90,33 @@ class TestFixtureEngine(unittest.TestCase):
             file_txt = os.path.join(fixture.directory, 'file.txt')
             self.assertTrue(os.path.isfile(file_txt), f"{file_txt} should be a file")
 
+    def test_mount_should_use_template_directory_when_the_fixture_is_mount_in_place(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('mount_in_place')
+
+            # Acts
+            fixture = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture)
+
+            # Assert
+            self.assertEqual(State.Mounted, fixture.state)
+            self.assertEqual(template.directory, fixture.directory)
+
+    def test_unmount_should_keep_template_directory_when_the_fixture_is_mount_in_place(self):
+        # Arrange
+        with fixtup.up('fixtup_project'):
+            template = fixture_template('mount_in_place')
+
+            # Acts
+            fixture = self.tested.new_fixture(template)
+            self.tested.mount(template, fixture)
+            self.tested.unmount(template, fixture)
+
+            # Assert
+            self.assertEqual(State.Unmounted, fixture.state)
+            self.assertTrue(os.path.isdir(template.directory), f"{template.directory} should be persisted")
+
     def test_unmount_should_remove_the_fixture_directory(self):
         # Arrange
         with fixtup.up('fixtup_project'):
