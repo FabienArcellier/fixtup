@@ -5,5 +5,4 @@
 # of fixtup.
 
 
-python3 -m unittest discover tests/integrations
 python3 -m unittest discover tests/acceptances

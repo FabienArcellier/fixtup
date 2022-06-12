@@ -2,7 +2,7 @@ from typing import Optional
 
 from flask import Flask, jsonify, abort, request, Response
 
-from kanban.database import db_connect, db_session
+from kanban.database import db_session
 from kanban.model import WorkItem, BoardColumn
 
 app = Flask(__name__)
@@ -26,7 +26,6 @@ def column_id(id: int):
 @app.route('/work_item', methods=['GET', 'POST'])
 def work_item():
     if request.method == 'POST':
-        dbsession = db_session()
         payload = request.json
         work_item = WorkItem(
             title=payload.get('title', ''),
@@ -34,8 +33,8 @@ def work_item():
             column=payload.get('column', 1)
         )
 
-        dbsession.add(work_item)
-        dbsession.commit()
+        db_session.add(work_item)
+        db_session.commit()
 
         return jsonify({'ok': True, 'data': work_item})
 
@@ -75,24 +74,16 @@ def work_item_id(id: int):
         if description is not None:
             work_item.description = description
 
-        dbsession = db_session()
-        dbsession.commit()
+        db_session.commit()
 
         return jsonify({'ok': True})
 
     abort(400)
 
 
-@app.before_request
-def init_session():
-    db_connect()
-
-
 @app.teardown_appcontext
 def shutdown_session(exception=None):
-    dbsession = db_session()
-    if dbsession is not None:
-        dbsession.remove()
+    db_session.remove()
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # Sandbox : kanban API with flask and sqlite
 
-This minimal example show with unittest how fixtup help you to test a flask application that work with sqlite
+This minimal example show with unittest how fixtup help you to test a flask application that work with sqlite. Une base sqlite est montée dans le dossier `/tmp/kanban.db`
 
 1. install the dependencies
 
