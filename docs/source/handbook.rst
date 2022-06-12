@@ -188,6 +188,40 @@ data inside a ``sqlalchemy`` managed database as ``sqlite`` and ``postgres``.
 
     more about :term:`fixture hook`
 
+Mount a fixture in place
+************************
+
+
+To use 2 complementary fixtures, one that mount a database in a docker container and one taht mount a dataset, only the fixture that mount the dataset has to override the working directory. For the fixture that mount
+the database, it has to be mounted straight in the template directory.
+
+The flag ``mount_in_place`` in `fixtup.yml` mount the fixture straight in the template directory.
+
+.. code-block:: yaml
+    :caption: tests/fixtures/database/fixtup.yml
+
+    keep_mounted: true
+    keep_running: true
+    mount_in_place: false
+
+.. code-block:: python
+:caption: ./tests/integrations/test_utils.py
+
+    import unittest
+    import os
+
+    import fixtup
+
+    class UtilsTest(unittest.TestCase)
+
+        def test_thumbnail_should_generate_thumbnail(self):
+            with fixtup.up(['database', 'dataset1']):
+                # Given
+                wd = os.getcwd()
+
+                # ...
+
+
 Use Fixtup with other test frameworks
 *************************************
 
