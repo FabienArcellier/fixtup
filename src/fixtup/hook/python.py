@@ -52,8 +52,10 @@ class PythonHookEngine(HookEngine):
 def script(event: 'HookEvent') -> Optional[str]:
     files = {
         HookEvent.mounting: os.path.join(".hooks", "hook_mounted.py"),
+        HookEvent.setup_data: os.path.join(".hooks", "hook_setup_data.py"),
         HookEvent.starting: os.path.join(".hooks", "hook_started.py"),
         HookEvent.stopping: os.path.join(".hooks", "hook_stopping.py"),
+        HookEvent.teardown_data: os.path.join(".hooks", "hook_teardown_data.py"),
         HookEvent.unmounting: os.path.join(".hooks", "hook_unmounting.py")
     }
 

@@ -21,7 +21,8 @@ class FixtupProcess:
     """
     _mounted_fixtures_detailled: List[Tuple[FixtureTemplate, Fixture]] = attr.ib(factory=list)
     _mounted_fixtures: List[Fixture] = attr.ib(factory=list)
-    _running_fixtures: List[Fixture] = attr.ib(factory=list)
+    _started_fixtures: List[Fixture] = attr.ib(factory=list)
+    _ready_fixtures: List[Fixture] = attr.ib(factory=list)
 
     def fixture_mounted(self, template:FixtureTemplate ,fixture: Fixture):
         self._mounted_fixtures.append(fixture)
@@ -36,14 +37,14 @@ class FixtupProcess:
         assert _fixture is not None
 
         _fixture.started()
-        self._running_fixtures.append(_fixture)
+        self._started_fixtures.append(_fixture)
 
     def fixture_stopped(self, fixture: Fixture):
         _fixture = first(self._mounted_fixtures, lambda f: f.identifier == fixture.identifier)
         assert _fixture is not None
 
         _fixture.stopped()
-        self._running_fixtures.remove(_fixture)
+        self._started_fixtures.remove(_fixture)
 
     def fixture_unmounted(self, fixture: Fixture):
         for index, (template, _fixture) in enumerate(copy.copy(self._mounted_fixtures_detailled)):
@@ -58,8 +59,8 @@ class FixtupProcess:
         _fixture = first(self._mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
         return _fixture is not None
 
-    def is_running(self, fixture_template: FixtureTemplate) -> bool:
-        _fixture = first(self._running_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
+    def is_started(self, fixture_template: FixtureTemplate) -> bool:
+        _fixture = first(self._started_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
         return _fixture is not None
 
     def fixture(self, fixture_template: FixtureTemplate) -> Fixture:
@@ -74,7 +75,7 @@ class FixtupProcess:
 
 
 """
-Cette entité a un scope d'application à l'échelle du process. Elle maintient la liste des fixtures
-déjà montées.
+This entity has a scope of application at the process level.
+It maintains the list of fixtures already mounted.
 """
 fixtup_process = FixtupProcess()

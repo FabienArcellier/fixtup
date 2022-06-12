@@ -13,7 +13,10 @@ from fixtup.tests.settings import override_fixtup_settings
 class TestFixtup(unittest.TestCase):
 
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False, emulate_new_process=True))
+        reset_runtime_context(RuntimeContext(unittest=True,
+                                             enable_plugins=False,
+                                             enable_hooks=False,
+                                             emulate_new_process=True))
 
     def tearDown(self) -> None:
         reset_runtime_context()
@@ -101,8 +104,6 @@ class TestFixtup(unittest.TestCase):
                     self.assertIn('plugin: fixtup.plugins.dummy_plugin_error', exception.msg)
 
     def test_up_on_fixture_with_keep_mounted_policy_should_keep_the_same_fixture_environment(self):
-        # self.skipTest("not implemented yet")
-
         reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
@@ -139,7 +140,43 @@ class TestFixtup(unittest.TestCase):
             # Assert
             self.assertEqual(current_dir, fixture_cwd)
 
+
+    def test_up_on_fixture_with_setup_data_hook_should_invoke_the_hook_on_every_up(self):
+        """
+        This test validates that on a fixture that remains active
+        between 2 tests, the setup_data hook and the teardown_data hook
+        are invoked to mount and clean the data.
+        """
+        reset_runtime_context(RuntimeContext(unittest=True,
+                                             enable_plugins=False,
+                                             enable_hooks=True,
+                                             emulate_new_process=True))
+
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+            'plugins': []
+        }):
+            current_dir = os.getcwd()
+
+            # Acts
+            with fixtup.up('simple_fixture_setup_data'):
+                fixture_cwd = os.getcwd()
+                self.assertTrue(os.path.isfile(os.path.join(fixture_cwd, 'file.data')))
+
+            self.assertFalse(os.path.isfile(os.path.join(fixture_cwd, 'file.data')))
+
+            with fixtup.up('simple_fixture_setup_data'):
+                fixture_cwd = os.getcwd()
+                self.assertTrue(os.path.isfile(os.path.join(fixture_cwd, 'file.data')))
+
+            # Assert
+            self.assertFalse(os.path.isfile(os.path.join(fixture_cwd, 'file.data')))
+
     def test_up_on_fixture_without_policies_should_create_a_new_fixture_environment(self):
+        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False, emulate_new_process=False))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -148,10 +185,10 @@ class TestFixtup(unittest.TestCase):
             'plugins': []
         }):
             # Acts
-            with fixtup.up('simple_fixture_keep_mounted'):
+            with fixtup.up('simple_fixture'):
                 fixture1 = os.getcwd()
 
-            with fixtup.up('simple_fixture_keep_mounted'):
+            with fixtup.up('simple_fixture'):
                 fixture2 = os.getcwd()
 
             # Assert

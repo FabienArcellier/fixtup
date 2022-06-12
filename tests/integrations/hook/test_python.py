@@ -26,6 +26,23 @@ class TestPythonHookEngine(unittest.TestCase):
             fake_mounted_file_existing = os.path.join(os.getcwd(), 'mounted')
             self.assertTrue(os.path.isfile(fake_mounted_file_existing), f'{fake_mounted_file_existing} has to exists')
 
+    def test_run_should_invoke_the_hook_relative_to_setup_data_event(self):
+        with fixtup.up("fixtup_hook"):
+            # Arrange
+            template = FixtureTemplate.fake(
+                identifier='hello',
+                directory=os.path.join(os.getcwd(), 'fixtup')
+            )
+
+            # Acts
+            self._tested.run(HookEvent.setup_data, template)
+
+            # Assert
+            fake_mounted_file_existing = os.path.join(os.getcwd(), 'setup_data')
+            self.assertTrue(os.path.isfile(fake_mounted_file_existing), f'{fake_mounted_file_existing} has to exists')
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
