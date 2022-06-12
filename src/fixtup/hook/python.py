@@ -5,6 +5,7 @@ import sys
 from typing import Optional
 
 from fixtup.entity.fixture_template import FixtureTemplate
+from fixtup.exceptions import HookRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
 from fixtup.lib.env import env_override
 from fixtup.logger import get_logger
@@ -39,7 +40,13 @@ class PythonHookEngine(HookEngine):
             If a developper set a breakpoint in its hook script, the python interpreter
             will stop on the breakpoint. This behavior makes it easier to debug a hook.
             """
-            subprocess.check_call([sys.executable, hook_script])
+            try:
+                subprocess.check_call([sys.executable, hook_script])
+            except subprocess.CalledProcessError as exception:
+                raise HookRuntimeError("Error on hook invocation",
+                                       template=template,
+                                       hook_event=event,
+                                       hook_script=hook_script)
 
 
 def script(event: 'HookEvent') -> Optional[str]:

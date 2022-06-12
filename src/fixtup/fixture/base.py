@@ -11,7 +11,7 @@ import attr
 from fixtup.entity.fixtup_process import FixtupProcess
 from fixtup.entity.fixture import Fixture, State
 from fixtup.entity.fixture_template import FixtureTemplate
-from fixtup.exceptions import PluginRuntimeError
+from fixtup.exceptions import PluginRuntimeError, HookRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
 from fixtup.lib.signal import register_signal_handler, unregister_signal_handler
 from fixtup.logger import get_logger
@@ -93,7 +93,7 @@ class FixtureEngine:
             self.plugin_engine.run(PluginEvent.starting, fixture)
             self.hook_engine.run(HookEvent.starting, template)
             self.store.fixture_started(fixture)
-        except PluginRuntimeError:
+        except (PluginRuntimeError, HookRuntimeError):
             self.plugin_engine.release(PluginEvent.stopping, fixture)
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
 
@@ -114,7 +114,8 @@ class FixtureEngine:
 
         finally:
             logger.debug(f'stop fixture : {fixture.directory}')
-            self.stop(template, fixture)
+            if fixture.state == State.Started:
+                self.stop(template, fixture)
 
     def stop(self, template: FixtureTemplate, fixture: Fixture, teardown: bool = False) -> None:
         """
