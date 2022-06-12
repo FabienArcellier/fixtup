@@ -205,7 +205,7 @@ The flag ``mount_in_place`` in `fixtup.yml` mount the fixture straight in the te
     mount_in_place: false
 
 .. code-block:: python
-:caption: ./tests/integrations/test_utils.py
+    :caption: ./tests/integrations/test_utils.py
 
     import unittest
     import os
