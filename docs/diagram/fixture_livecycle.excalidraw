@@ -101,8 +101,8 @@
     },
     {
       "type": "text",
-      "version": 486,
-      "versionNonce": 420049958,
+      "version": 493,
+      "versionNonce": 1384712058,
       "isDeleted": false,
       "id": "8NSAW2lgpk9XnsVVCzeXT",
       "fillStyle": "hachure",
@@ -115,7 +115,7 @@
       "y": 867,
       "strokeColor": "#c92a2a",
       "backgroundColor": "#fa5252",
-      "width": 63,
+      "width": 79,
       "height": 25,
       "seed": 1018398934,
       "groupIds": [
@@ -123,17 +123,17 @@
       ],
       "strokeSharpness": "sharp",
       "boundElements": [],
-      "updated": 1655036332168,
+      "updated": 1655048310127,
       "link": null,
       "locked": false,
       "fontSize": 20,
       "fontFamily": 1,
-      "text": "running",
+      "text": "started",
       "baseline": 18,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "running"
+      "originalText": "started"
     },
     {
       "type": "rectangle",
@@ -182,8 +182,8 @@
     },
     {
       "type": "text",
-      "version": 577,
-      "versionNonce": 1972580646,
+      "version": 594,
+      "versionNonce": 1159768742,
       "isDeleted": false,
       "id": "RxGFVdV0dCjUfI4Xh4ua5",
       "fillStyle": "hachure",
@@ -196,7 +196,7 @@
       "y": 1068,
       "strokeColor": "#c92a2a",
       "backgroundColor": "#fa5252",
-      "width": 17,
+      "width": 55,
       "height": 25,
       "seed": 595337318,
       "groupIds": [
@@ -204,22 +204,22 @@
       ],
       "strokeSharpness": "sharp",
       "boundElements": [],
-      "updated": 1655036336930,
+      "updated": 1655048463675,
       "link": null,
       "locked": false,
       "fontSize": 20,
       "fontFamily": 1,
-      "text": "...",
+      "text": "ready",
       "baseline": 18,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "..."
+      "originalText": "ready"
     },
     {
       "type": "rectangle",
-      "version": 355,
-      "versionNonce": 1387482234,
+      "version": 357,
+      "versionNonce": 922079034,
       "isDeleted": false,
       "id": "4cqyBMvw95PG79tvNfHuF",
       "fillStyle": "hachure",
@@ -232,7 +232,7 @@
       "y": 1040,
       "strokeColor": "#c92a2a",
       "backgroundColor": "transparent",
-      "width": 157.99999999999997,
+      "width": 158,
       "height": 85,
       "seed": 2048983290,
       "groupIds": [
@@ -257,7 +257,7 @@
           "type": "arrow"
         }
       ],
-      "updated": 1655036344884,
+      "updated": 1655036407035,
       "link": null,
       "locked": false
     },
