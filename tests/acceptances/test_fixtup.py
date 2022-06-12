@@ -121,6 +121,24 @@ class TestFixtup(unittest.TestCase):
             # Assert
             self.assertEqual(fixture1, fixture2)
 
+    def test_up_on_fixture_with_mount_in_place_should_keep_the_current_working_directory(self):
+        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
+
+        # Acts
+        with override_fixtup_settings({
+            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
+            'plugins': []
+        }):
+            current_dir = os.getcwd()
+
+            # Acts
+            with fixtup.up('simple_fixture_mount_in_place'):
+                fixture_cwd = os.getcwd()
+
+
+            # Assert
+            self.assertEqual(current_dir, fixture_cwd)
+
     def test_up_on_fixture_without_policies_should_create_a_new_fixture_environment(self):
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
@@ -138,6 +156,7 @@ class TestFixtup(unittest.TestCase):
 
             # Assert
             self.assertNotEqual(fixture1, fixture2)
+
 
 
 if __name__ == '__main__':

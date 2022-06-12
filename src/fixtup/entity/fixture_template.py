@@ -20,6 +20,12 @@ class FixtureTemplate():
     """
     keep_running: bool = attr.ib()
 
+    """
+    This flag control if a fixture is mount in temporary directory or if it's mounted in place in the fixture template
+    directory directly.
+    """
+    mount_in_place: bool = attr.ib(default=False)
+
     config: dict = attr.ib(factory=dict)
 
     @classmethod
@@ -36,8 +42,13 @@ class FixtureTemplate():
     def create_from_fixture_template(cls, path: str, fixture_yml: dict) -> 'FixtureTemplate':
         keep_mounted = fixture_yml.get('keep_mounted', False)
         keep_running = fixture_yml.get('keep_running', False)
+        mount_in_place = fixture_yml.get('mount_in_place', False)
         identifier = os.path.basename(path)
-        return FixtureTemplate(identifier, path, keep_mounted, keep_running, config=fixture_yml)
+        return FixtureTemplate(identifier, path,
+                               config=fixture_yml,
+                               keep_mounted=keep_mounted,
+                               keep_running=keep_running,
+                               mount_in_place=mount_in_place)
 
     @classmethod
     def fake(cls, **kwargs):
@@ -52,6 +63,7 @@ class FixtureTemplate():
             directory=os.path.join(directory, identifier),
             keep_mounted=kwargs.get('keep_mounted', False),
             keep_running=kwargs.get('keep_running', False),
+            mount_in_place=kwargs.get('mount_in_place', False),
         )
 
     def variables(self) -> dict:
