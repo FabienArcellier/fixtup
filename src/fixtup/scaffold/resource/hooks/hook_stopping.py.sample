@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+#
+# To enable this hook, rename this file to hook_stopping.py.
+#
+# This hook executes before the fixture is stopped.

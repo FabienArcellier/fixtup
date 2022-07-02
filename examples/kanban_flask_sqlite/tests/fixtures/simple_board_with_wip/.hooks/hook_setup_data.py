@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 #
-# rename this file into hook_started.py to activate
+# rename this file into hook_setup_data.py to activate
 # this hook.
 #
-# this hook is executed after the environment has been started
+# this hook is executed before every test
 #
-# It's a way to check if the environment is ready for the test.
-#  * check if a port is listening before executing the test
-#  * check if a database in postgresql is up and mounted
-#
+# This hook is executed between each test and is intended
+# to mount a dataset in a database or another system before playing the test.
 
 import kanban.database
 from kanban.database import db_session

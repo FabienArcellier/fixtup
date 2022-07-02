@@ -11,8 +11,7 @@ to run your tests and improve your Quality Assurance process.
 Mount a postgresql database in a test
 *************************************
 
-Using the docker plugin (present by default), a fixture can declare service to start when the fixture is mounted.
-This declaration is a ``docker-compose.yml`` file at the root of the fixture.
+Using the docker plugin (present by default), a fixture can declare service to start when the fixture is mounted.This declaration is a ``docker-compose.yml`` file at the root of the fixture.
 
 When the test starts, the fixture will run the containers from the working directory
 mounted from the fixture.
@@ -179,7 +178,7 @@ The flag ``mount_in_place`` in `fixtup.yml` mount the fixture straight in the te
 
     keep_mounted: true
     keep_running: true
-    mount_in_place: false
+    mount_in_place: true
 
 .. code-block:: python
     :caption: ./tests/integrations/test_utils.py
