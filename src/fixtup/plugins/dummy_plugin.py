@@ -17,6 +17,12 @@ def on_mounting(fixture: Fixture):
         file.write('')
 
 
+def on_setup_data(fixture: Fixture):
+    directory = os.getcwd()
+    with io.open(os.path.join(directory, 'setup_data.txt'), 'w') as file:
+        file.write('')
+
+
 def on_starting(fixture: Fixture):
     directory = os.getcwd()
     with io.open(os.path.join(directory, 'starting.txt'), 'w') as file:
@@ -28,6 +34,11 @@ def on_stopping(fixture: Fixture):
     with io.open(os.path.join(directory, 'stopping.txt'), 'w') as file:
         file.write('')
 
+
+def on_teardown_data(fixture: Fixture):
+    directory = os.getcwd()
+    with io.open(os.path.join(directory, 'teardown_data.txt'), 'w') as file:
+        file.write('')
 
 def on_unmounting(fixture: Fixture):
     directory = os.getcwd()

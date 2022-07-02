@@ -4,7 +4,6 @@ from flask import Response
 
 import fixtup
 
-import kanban.database
 from kanban.app import app
 
 
@@ -13,7 +12,7 @@ class TestApp(unittest.TestCase):
         self.client = app.test_client()
 
     def tearDown(self) -> None:
-        kanban.database.db_dispose()
+        pass
 
     def test_put_should_move_work_item_in_a_new_column(self):
         with fixtup.up('simple_board'):

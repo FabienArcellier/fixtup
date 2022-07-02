@@ -11,7 +11,7 @@ import attr
 from fixtup.entity.fixtup_process import FixtupProcess
 from fixtup.entity.fixture import Fixture, State
 from fixtup.entity.fixture_template import FixtureTemplate
-from fixtup.exceptions import PluginRuntimeError
+from fixtup.exceptions import PluginRuntimeError, HookRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
 from fixtup.lib.signal import register_signal_handler, unregister_signal_handler
 from fixtup.logger import get_logger
@@ -81,19 +81,37 @@ class FixtureEngine:
 
     def _teardown(self):
         for template, fixture in self.store.mounted_fixtures():
+            if fixture.state == State.Ready:
+                self.teardown_data(template, fixture, process_teardown=True)
+
             if fixture.state == State.Started:
-                self.stop(template, fixture, teardown=True)
-            self.unmount(template, fixture, teardown=True)
+                self.stop(template, fixture, process_teardown=True)
 
-    def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
-        if self.store.is_running(template):
-            return
+            self.unmount(template, fixture, process_teardown=True)
 
+    @contextlib.contextmanager
+    def run(self, template: FixtureTemplate, fixture: Fixture):
+        logger = get_logger()
         try:
-            self.plugin_engine.run(PluginEvent.starting, fixture)
-            self.hook_engine.run(HookEvent.starting, template)
-            self.store.fixture_started(fixture)
-        except PluginRuntimeError:
+            self.start(template, fixture)
+            self.setup_data(template, fixture)
+            logger.debug(f'start fixture: {fixture.directory}')
+            yield
+
+        finally:
+            self.teardown_data(template, fixture)
+
+            logger.debug(f'stop fixture : {fixture.directory}')
+            if fixture.state == State.Started:
+                self.stop(template, fixture)
+
+    def setup_data(self, template: FixtureTemplate, fixture: Fixture) -> None:
+        try:
+            self.plugin_engine.run(PluginEvent.setup_data, fixture)
+            self.hook_engine.run(HookEvent.setup_data, template)
+            fixture.setup()
+        except (PluginRuntimeError, HookRuntimeError):
+            self.plugin_engine.release(PluginEvent.teardown_data, fixture)
             self.plugin_engine.release(PluginEvent.stopping, fixture)
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
 
@@ -104,24 +122,31 @@ class FixtureEngine:
 
             raise
 
-    @contextlib.contextmanager
-    def run(self, template: FixtureTemplate, fixture: Fixture):
-        logger = get_logger()
+    def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
+        if self.store.is_started(template):
+            return
+
         try:
-            self.start(template, fixture)
-            logger.debug(f'start fixture: {fixture.directory}')
-            yield
+            self.plugin_engine.run(PluginEvent.starting, fixture)
+            self.hook_engine.run(HookEvent.starting, template)
+            self.store.fixture_started(fixture)
+        except (PluginRuntimeError, HookRuntimeError):
+            self.plugin_engine.release(PluginEvent.stopping, fixture)
+            self.plugin_engine.release(PluginEvent.unmounting, fixture)
 
-        finally:
-            logger.debug(f'stop fixture : {fixture.directory}')
-            self.stop(template, fixture)
+            # When a fixture is mount in place, Fixtup should preserve the original
+            # when error happens
+            if not template.mount_in_place and os.path.isdir(fixture.directory):
+                shutil.rmtree(fixture.directory, True)
 
-    def stop(self, template: FixtureTemplate, fixture: Fixture, teardown: bool = False) -> None:
+            raise
+
+    def stop(self, template: FixtureTemplate, fixture: Fixture, process_teardown: bool = False) -> None:
         """
 
-        :param teardown: true when the fixture engine is tear downed at the end of the process usually
+        :param process_teardown: true when the fixture engine is tear downed at the end of the process usually
         """
-        if template.keep_running is True and not teardown:
+        if template.keep_running is True and not process_teardown:
             return
 
         try:
@@ -138,12 +163,34 @@ class FixtureEngine:
 
             raise
 
-    def unmount(self, template: FixtureTemplate, fixture: Fixture, teardown: bool = False) -> None:
+    def register_process_teardown(self):
+        """
+        register cleanup callbacks to unmount fixtures always mounted
+        at the end of the test runtime execution
+
+        Mounted fixtures are usually :
+
+        * fixture with shared policy
+        """
+        atexit.register(self.process_teardown_exit)
+        register_signal_handler(signal.SIGTERM, self.process_teardown_signal)
+        register_signal_handler(signal.SIGQUIT, self.process_teardown_signal)
+
+    def teardown_data(self, template, fixture, process_teardown: bool = False):
         """
 
-        :param teardown: true when the fixture engine is tear downed at the end of the process usually
+        :param process_teardown: true when the fixture engine is tear downed at the end of the process usually
         """
-        if (template.keep_mounted is True or template.keep_running is True) and not teardown:
+        self.plugin_engine.run(PluginEvent.teardown_data, fixture)
+        self.hook_engine.run(HookEvent.teardown_data, fixture)
+        fixture.teardown()
+
+    def unmount(self, template: FixtureTemplate, fixture: Fixture, process_teardown: bool = False) -> None:
+        """
+
+        :param process_teardown: true when the fixture engine is tear downed at the end of the process usually
+        """
+        if (template.keep_mounted is True or template.keep_running is True) and not process_teardown:
             return
 
         self.plugin_engine.run(PluginEvent.unmounting, fixture)
@@ -168,19 +215,6 @@ class FixtureEngine:
                 logger.debug(f'remove mounted fixture directory : {fixture.directory}')
                 self.unmount(template, fixture)
 
-    def register_process_teardown(self):
-        """
-        register cleanup callbacks to unmount fixtures always mounted
-        at the end of the test runtime execution
-
-        Mounted fixtures are usually :
-
-        * fixture with shared policy
-        """
-        atexit.register(self.process_teardown_exit)
-        register_signal_handler(signal.SIGTERM, self.process_teardown_signal)
-        register_signal_handler(signal.SIGQUIT, self.process_teardown_signal)
-
     def unregister_process_teardown(self):
         """
         unregister cleanup callbacks if cleanup was triggered
@@ -189,3 +223,5 @@ class FixtureEngine:
         atexit.unregister(self.process_teardown_exit)
         unregister_signal_handler(signal.SIGTERM, self.process_teardown_signal)
         unregister_signal_handler(signal.SIGQUIT, self.process_teardown_signal)
+
+

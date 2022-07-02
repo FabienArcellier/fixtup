@@ -33,6 +33,14 @@ class RuntimeContext:
     enable_plugins = attr.ib(default=True)
 
     """
+    The hooks are ignored when enable_hooks is False.
+
+    They are not loaded, neither executed. The plugin engine is doing
+    pass-through
+    """
+    enable_hooks = attr.ib(default=True)
+
+    """
     This will emulate a new process every time the factory is called. It will initialize
     entity Fixtup Process
     """

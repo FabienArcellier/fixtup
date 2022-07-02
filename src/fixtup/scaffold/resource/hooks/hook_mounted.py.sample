@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+#
+# To enable this hook, rename this file to hook_mounted.py
+#
+# This hook runs after the fixture has been mounted.
+# This hook is executed even if the mount_in_place flag is used in the manifest fixtup.yml.
+# In this case, the current folder will be the fixture template folder
+import os
+print(os.getcwd())

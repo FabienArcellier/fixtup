@@ -13,6 +13,7 @@ class State(Enum):
     """
     Mounted = "mounted"
     Started = "started"
+    Ready = "ready"
     Unmounted = "unmounted"
 
 
@@ -56,6 +57,14 @@ class Fixture:
     def mounted(self):
         assert self.state == State.Unmounted
         self.state = State.Mounted
+
+    def setup(self):
+        assert self.state == State.Started
+        self.state = State.Ready
+
+    def teardown(self):
+        assert self.state == State.Ready
+        self.state = State.Started
 
     def started(self):
         assert self.state == State.Mounted

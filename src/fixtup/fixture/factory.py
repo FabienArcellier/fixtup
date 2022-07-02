@@ -3,8 +3,7 @@ from typing import Optional
 from fixtup.entity.fixtup_process import fixtup_process, FixtupProcess
 from fixtup.factory import factory, RuntimeContext
 from fixtup.fixture.base import FixtureEngine
-from fixtup.hook.mock import MockHookEngine
-from fixtup.hook.python import PythonHookEngine
+from fixtup.hook.factory import lookup_hook_engine
 from fixtup.plugin.factory import lookup_plugin_engine
 
 fixture_engine: Optional[FixtureEngine] = None
@@ -23,6 +22,7 @@ def lookup_fixture_engine(context: RuntimeContext) -> FixtureEngine:
         fixture_engine = None
 
     plugin_engine = lookup_plugin_engine()
+    hook_engine = lookup_hook_engine()
 
     # In automatic testing of fixtup itself, we need
     # to ensure the fixtup process is not shared for
@@ -36,9 +36,6 @@ def lookup_fixture_engine(context: RuntimeContext) -> FixtureEngine:
     else:
         _fixtup_process = fixtup_process
 
-    if context.unittest:
-        fixture_engine = FixtureEngine(MockHookEngine(), plugin_engine, _fixtup_process)
-    else:
-        fixture_engine = FixtureEngine(PythonHookEngine(), plugin_engine, _fixtup_process)
 
+    fixture_engine = FixtureEngine(hook_engine, plugin_engine, _fixtup_process)
     return fixture_engine
