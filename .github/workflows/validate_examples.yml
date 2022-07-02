@@ -10,7 +10,7 @@ jobs:
         strategy:
           matrix:
             python-version: [3.9]
-            examples: ['kanban_flask_sqlite', 'unittest', 'kanban_flask_postgresql']
+            examples: ['kanban_flask_sqlite', 'unittest']
 
         steps:
             - uses: actions/checkout@v2
