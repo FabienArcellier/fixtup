@@ -27,4 +27,4 @@ class WorkItem(Base):
     pid = Column(Integer, primary_key=True)
     column = Column(Integer, ForeignKey('board_column.pid'))
     title = Column(Text())
-    description = Column(Integer)
+    description = Column(Text())
