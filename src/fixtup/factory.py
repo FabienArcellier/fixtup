@@ -73,7 +73,7 @@ def reset_runtime_context(context: Optional[RuntimeContext] = None):
         thread_store.runtime_conf = context
 
 
-def depends(func: Callable[['RuntimeContext', Any, Any], T], *args, **kwargs) -> T:
+def depends(func: Callable[..., T], *args, **kwargs) -> T:
     """
     this method allow to manage binding rules to tune the behavior depending of runtime option.
     If we execute a code during unittest, we want to inject specific dependency
