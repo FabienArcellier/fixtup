@@ -194,6 +194,19 @@ class TestFixtup(unittest.TestCase):
             # Assert
             self.assertNotEqual(fixture1, fixture2)
 
+    def test_up_with_multiple_fixtures_should_create_all_of_them(self):
+        # reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
+
+        with fixtup.up('simple_fixture_docker'):
+            fixture1 = os.getcwd()
+
+            with fixtup.up('simple_fixture_dotenv'):
+                fixture2 = os.getcwd()
+
+                docker_compose_path = os.path.join(fixture1, 'docker-compose.yml')
+                dotenv_path = os.path.join(fixture2, '.env')
+                self.assertTrue(os.path.isfile(docker_compose_path), f"{docker_compose_path} is not a file")
+                self.assertTrue(os.path.isfile(dotenv_path), f"{dotenv_path} is not a file")
 
 
 if __name__ == '__main__':

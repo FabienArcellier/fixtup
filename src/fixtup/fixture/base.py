@@ -13,6 +13,7 @@ from fixtup.entity.fixture import Fixture, State
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.exceptions import PluginRuntimeError, HookRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
+from fixtup.lib.env import with_cwd
 from fixtup.lib.signal import register_signal_handler, unregister_signal_handler
 from fixtup.logger import get_logger
 from fixtup.plugin.base import PluginEngine, PluginEvent
@@ -45,7 +46,7 @@ class FixtureEngine:
             self.plugin_engine.run(PluginEvent.mounting, fixture)
             self.hook_engine.run(HookEvent.mounting, fixture_template)
             self.store.fixture_mounted(fixture_template, fixture)
-        except PluginRuntimeError:
+        except (PluginRuntimeError, HookRuntimeError):
             self.plugin_engine.release(PluginEvent.unmounting, fixture)
             # When a fixture is mount in place, Fixtup should preserve the original
             # when error happens
@@ -126,20 +127,22 @@ class FixtureEngine:
         if self.store.is_started(template):
             return
 
-        try:
-            self.plugin_engine.run(PluginEvent.starting, fixture)
-            self.hook_engine.run(HookEvent.starting, template)
-            self.store.fixture_started(fixture)
-        except (PluginRuntimeError, HookRuntimeError):
-            self.plugin_engine.release(PluginEvent.stopping, fixture)
-            self.plugin_engine.release(PluginEvent.unmounting, fixture)
+        with with_cwd(fixture.directory):
+            try:
+                os.chdir(fixture.directory)
+                self.plugin_engine.run(PluginEvent.starting, fixture)
+                self.hook_engine.run(HookEvent.starting, template)
+                self.store.fixture_started(fixture)
+            except (PluginRuntimeError, HookRuntimeError):
+                self.plugin_engine.release(PluginEvent.stopping, fixture)
+                self.plugin_engine.release(PluginEvent.unmounting, fixture)
 
-            # When a fixture is mount in place, Fixtup should preserve the original
-            # when error happens
-            if not template.mount_in_place and os.path.isdir(fixture.directory):
-                shutil.rmtree(fixture.directory, True)
+                # When a fixture is mount in place, Fixtup should preserve the original
+                # when error happens
+                if not template.mount_in_place and os.path.isdir(fixture.directory):
+                    shutil.rmtree(fixture.directory, True)
 
-            raise
+                raise
 
     def stop(self, template: FixtureTemplate, fixture: Fixture, process_teardown: bool = False) -> None:
         """
@@ -149,19 +152,20 @@ class FixtureEngine:
         if template.keep_running is True and not process_teardown:
             return
 
-        try:
-            self.plugin_engine.run(PluginEvent.stopping, fixture)
-            self.hook_engine.run(HookEvent.stopping, template)
-            self.store.fixture_stopped(fixture)
-        except PluginRuntimeError:
-            self.plugin_engine.release(PluginEvent.unmounting, fixture)
+        with with_cwd(fixture.directory):
+            try:
+                self.plugin_engine.run(PluginEvent.stopping, fixture)
+                self.hook_engine.run(HookEvent.stopping, template)
+                self.store.fixture_stopped(fixture)
+            except (PluginRuntimeError, HookRuntimeError):
+                self.plugin_engine.release(PluginEvent.unmounting, fixture)
 
-            # When a fixture is mount in place, Fixtup should preserve the original
-            # when error happens
-            if not template.mount_in_place and os.path.isdir(fixture.directory):
-                shutil.rmtree(fixture.directory, True)
+                # When a fixture is mount in place, Fixtup should preserve the original
+                # when error happens
+                if not template.mount_in_place and os.path.isdir(fixture.directory):
+                    shutil.rmtree(fixture.directory, True)
 
-            raise
+                raise
 
     def register_process_teardown(self):
         """
@@ -193,8 +197,9 @@ class FixtureEngine:
         if (template.keep_mounted is True or template.keep_running is True) and not process_teardown:
             return
 
-        self.plugin_engine.run(PluginEvent.unmounting, fixture)
-        self.hook_engine.run(HookEvent.unmounting, template)
+        with with_cwd(fixture.directory):
+            self.plugin_engine.run(PluginEvent.unmounting, fixture)
+            self.hook_engine.run(HookEvent.unmounting, template)
 
         if not template.mount_in_place:
             shutil.rmtree(fixture.directory, True)

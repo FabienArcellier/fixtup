@@ -1,15 +1,16 @@
 import os
 from contextlib import contextmanager
-from typing import Generator
+from typing import Generator, List, Union
 
 from fixtup.entity.settings import Settings
-from fixtup.exceptions import FixtureNotFound
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
 from fixtup.logger import get_logger
 from fixtup.settings.module import configure_from_code
 
 logger = get_logger()
+
+current_working_dir = None
 
 
 def configure(settings: dict) -> None:
@@ -33,8 +34,7 @@ def configure(settings: dict) -> None:
 
 
 @contextmanager
-def up(_fixture: str,
-       keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
+def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
     """
     Mount a fixture to use it in a test.
 
@@ -44,16 +44,32 @@ def up(_fixture: str,
     If you want to keep the mounted context to debug the impact of the code inside
     the mounted fixture, set `keep_mounted_fixture` at True.
 
-    >>> with fixtup.up('thumbnail_context') as wd:
+    >>> with fixtup.up('thumbnail_context'):
     >>>     os.chdir(wd)
     >>>     # do something ...
 
-    :param _fixture: the identifier of the fixture, it's the name of the directory that define the fixture
+    :param fixture: the identifier of the fixture, it's the name of the directory that define the fixture
     :param keep_mounted_fixture: don't remove the directory of mounted fixture at the end of the context
     """
 
-    fixture_engine = lookup_fixture_engine()
-    template = fixture_template(_fixture)
+    # If we load 2 fixtures one after the other, the fixtup configuration is not recoverable
+    # if we don't reset the working folder.
+    #
+    # >>> with fixtup.up('fixture1'):
+    # >>>  with fixtup.up('fixture2'):
+    #       ...
+    #
+    global current_working_dir
+    if current_working_dir is None:
+        highest_context = True
+    else:
+        highest_context = False
+
+    if current_working_dir is not None:
+        os.chdir(current_working_dir)
+
+    fixture_engine = lookup_fixture_engine(highest_context=highest_context)
+    template = fixture_template(fixture)
 
     current_working_dir = os.getcwd()
 
@@ -61,5 +77,8 @@ def up(_fixture: str,
         with fixture_engine.use(template, keep_mounted_fixture=keep_mounted_fixture) as fixture:
             with fixture_engine.run(template, fixture):
                 yield
+
     finally:
         os.chdir(current_working_dir)
+        if highest_context is True:
+            current_working_dir = None

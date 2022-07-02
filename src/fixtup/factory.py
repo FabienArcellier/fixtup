@@ -9,7 +9,7 @@ If the code is used in unit tests, it is possible
 instantiate specific dependencies.
 """
 import threading
-from typing import Optional, Callable, TypeVar
+from typing import Optional, Callable, TypeVar, Any
 
 import attr
 
@@ -33,6 +33,7 @@ class RuntimeContext:
     enable_plugins = attr.ib(default=True)
 
     """
+<<<<<<< HEAD
     The hooks are ignored when enable_hooks is False.
 
     They are not loaded, neither executed. The plugin engine is doing
@@ -41,6 +42,13 @@ class RuntimeContext:
     enable_hooks = attr.ib(default=True)
 
     """
+=======
+    When we use 2 successive fixtures in a test and this flag is active,
+    we consider that the 2 fixtures are executed in separate test processes.
+
+    This flag is essential internally to test the behavior of policies such as keep_running, ...
+
+>>>>>>> we need to be able to instantiate multiple fixtures nested together
     This will emulate a new process every time the factory is called. It will initialize
     entity Fixtup Process
     """
@@ -65,7 +73,7 @@ def reset_runtime_context(context: Optional[RuntimeContext] = None):
         thread_store.runtime_conf = context
 
 
-def depends(func: Callable[['RuntimeContext'], T]) -> T:
+def depends(func: Callable[['RuntimeContext', Any, Any], T], *args, **kwargs) -> T:
     """
     this method allow to manage binding rules to tune the behavior depending of runtime option.
     If we execute a code during unittest, we want to inject specific dependency
@@ -82,7 +90,7 @@ def depends(func: Callable[['RuntimeContext'], T]) -> T:
     >>> print(parser)
     """
 
-    return func(thread_store.runtime_conf)
+    return func(thread_store.runtime_conf, *args, **kwargs)
 
 
 def factory(func: Callable[['RuntimeContext'], T]) -> Callable[..., T]:
@@ -102,7 +110,7 @@ def factory(func: Callable[['RuntimeContext'], T]) -> Callable[..., T]:
     :param func:
     """
 
-    def _wrapper() -> T:
-        return depends(func)
+    def _wrapper(*args, **kwargs) -> T:
+        return depends(func, *args, **kwargs)
 
     return _wrapper

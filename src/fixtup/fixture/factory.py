@@ -10,10 +10,14 @@ fixture_engine: Optional[FixtureEngine] = None
 
 
 @factory
-def lookup_fixture_engine(context: RuntimeContext) -> FixtureEngine:
+def lookup_fixture_engine(context: RuntimeContext, highest_context: bool = False) -> FixtureEngine:
     """
+    In the case where a fixture is invoked inside another fixture,
+    the existing fixture engine is reused in a test even if the emulate_new_process flag is active.
     """
     global fixture_engine
+    if fixture_engine is not  None and highest_context is False:
+        return fixture_engine
     if fixture_engine is not None and not context.emulate_new_process:
         return fixture_engine
     elif fixture_engine is not None and context.emulate_new_process:
