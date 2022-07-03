@@ -18,7 +18,7 @@ class TestApp(unittest.TestCase):
         with fixtup.up('pgsql'):
             with fixtup.up('simple_board'):
                 # Arrange
-                self.client.put("/work_item/12", json={
+                self.client.put("/work_item/4", json={
                     'column': 2,
                     'title': "implement feature XXX",
                     'description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam "
@@ -26,7 +26,7 @@ class TestApp(unittest.TestCase):
                 })
 
                 # Acts
-                response: Response = self.client.get("/work_item/12")
+                response: Response = self.client.get("/work_item/4")
 
                 # Assert
                 self.assertEqual(2, response.json['column'])
@@ -35,7 +35,7 @@ class TestApp(unittest.TestCase):
         with fixtup.up('pgsql'):
             with fixtup.up('simple_board_with_wip'):
                 # Arrange
-                response_mutation: Response = self.client.put("/work_item/12", json={
+                response_mutation: Response = self.client.put("/work_item/5", json={
                     'column': 3,
                     'title': "implement feature XXX",
                     'description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam "
@@ -43,7 +43,7 @@ class TestApp(unittest.TestCase):
                 })
 
                 # Acts
-                response_query: Response = self.client.get("/work_item/12")
+                response_query: Response = self.client.get("/work_item/5")
 
                 # Assert
                 json_mutation = response_mutation.json

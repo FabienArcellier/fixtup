@@ -12,7 +12,7 @@ class BoardColumn(Base):
     wip_limit: int
 
     pid = Column(Integer, primary_key=True)
-    step_name = Column(Text(), unique=True)
+    step_name = Column(Text, unique=True)
     wip_limit = Column(Integer, nullable=True)
 
 
@@ -26,5 +26,5 @@ class WorkItem(Base):
 
     pid = Column(Integer, primary_key=True)
     column = Column(Integer, ForeignKey('board_column.pid'))
-    title = Column(Text())
-    description = Column(Integer)
+    title = Column(Text)
+    description = Column(Text)
