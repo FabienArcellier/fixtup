@@ -20,8 +20,7 @@ Here are some use cases that could be implemented with a plug-in:
 Configure plugins in Fixtup
 ***************************
 
-A plug-in has to be registers in fixtup settings. If for you it is in a ``setup.cfg`` file, the list of
-plugins is declared in ``plugins`` section:
+A plug-in has to be registers in fixtup settings. If for you it is in a ``setup.cfg`` file, the list of plugins is declared in ``plugins`` section:
 
 .. code-block:: ini
     :caption: ./setup.cfg
@@ -64,7 +63,6 @@ You have created a plugin, you want to share it with the community?
 Implement your own plug-in
 **************************
 
-
 To implement a plug-in, you need to implement a module with those functions.
 The functions are optional, if they are absent, ``fixtup`` will not take them into account.
 
@@ -100,6 +98,11 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
         """
         pass
 
+    def on_setup_data(fixture: Fixture):
+        """
+        This function is called by fixtup between each test to provision data
+        """
+        pass
 
     def on_starting(fixture: Fixture):
         """
@@ -107,18 +110,21 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
         """
         pass
 
-
     def on_stopping(fixture: Fixture):
         """
         this function is called by fixtup every time it end a test.
         """
         pass
 
+    def on_teardown_data(fixture: Fixture):
+        """
+        This function is called by fixtup between each test to cleanup data
+        """
+        pass
 
     def on_unmounting(fixture: Fixture):
         """
-        this function is called by fixtup every time the fixture folder is removed. It's the only case where
-        the code of fixtup is invoked after the invocation of plugin and hook
+        this function is called by fixtup every time the fixture folder is removed. It's the only case where the code of fixtup is invoked after the invocation of plugin and hook
         """
         pass
 
