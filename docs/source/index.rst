@@ -1,26 +1,29 @@
 Fixtup
 ######
 
-You will love writing integration tests in python with ``Fixtup``.
-
-
 .. figure:: _static/principle_simplified_diagram.png
     :align: center
 
-Some of your tests need a database, a folder with data, dedicated environment variables,
-``Fixtup`` provides all of this for you. Don't even bother to take care of the cleaning,
-it releases by itself the resources that it has provisioned.
+Do you have already given up on writing integration tests ?
 
-``Fixtup`` makes it easy to use external dependencies in your tests. It integrates
-to your favorite test framework like pytest, unitest or even BDD framework like robot framework
-or behave.
+* it would have been too complicated to mount several containers to run these tests
+* it would have been necessary to write too much boilerplate to run these tests in a CI
+* it would have taken another developer too many steps to run these tests
+* it would have been difficult to debug them individually in an IDE
+
+With Fixtup, **write clear, robust and easy-to-execute integration tests** with your favorite test framwork like ``pytest``, ``unittest`` or event BDD framework as ``robot framework`` or ``behave``.
+
+* it starts the services needed to run your test
+* it throws the longest fixtures only once whether you play a test or 100
+* it cleans files and data between each test
+* it runs on a developer's workstation without configuration
 
 Benefits
 ********
 
 * You can get up and running with Fixtup **in minutes**, even on legacy project, **no matter what your test framework is**.
-* You will **stop wasting your time on boilerplate code** to create a database, that's all done in one line with Fixtup.
-* Fixtup provides an easy way to **run tests in debug in your favorite IDE, pycharm and vscode**.
+* You will **stop wasting your time on boilerplate code**
+* Fixtup provides an easy way to **run tests in debug in your favorite IDE like pycharm and vscode**.
 * Fixtup is cross-platform which makes it easy to use it on Linux, Mac and Windows.
 
 .. toctree::
