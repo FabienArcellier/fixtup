@@ -110,6 +110,9 @@ class FixtureEngine:
     def start(self, template: FixtureTemplate, fixture: Fixture) -> None:
         assert template.identifier == fixture.template_identifier
 
+        if self.store.is_up(template):
+            return
+
         if not template.mount_in_place:
             shutil.copytree(template.directory, fixture.directory)
 

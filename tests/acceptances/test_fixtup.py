@@ -53,6 +53,20 @@ class TestFixtup(unittest.TestCase):
 
         self.assertEqual(working_dir, os.getcwd())
 
+    def test_up_should_reuse_fixtures_through_different_tests_when_keep_up_flag_is_on(self):
+        # Acts
+        reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
+
+        # Arrange
+        with fixtup.up("simple_fixture_keep_up"):
+            cwd = os.getcwd()
+
+        with fixtup.up("simple_fixture_keep_up"):
+            cwd2 = os.getcwd()
+
+        # Assert
+        self.assertEqual(cwd, cwd2)
+
     def test_up_should_keep_the_fixture_if_the_flag_keep_mounted_fixture_is_present(self):
         # Acts & Assert
         with fixtup.up('simple', keep_mounted_fixture=True):
