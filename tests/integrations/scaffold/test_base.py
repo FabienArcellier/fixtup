@@ -36,7 +36,7 @@ class TestScaffold(unittest.TestCase):
         # Arrange
         with fixtup.up('fixtup_project'):
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_mounted=True)
+            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_up=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -46,7 +46,7 @@ class TestScaffold(unittest.TestCase):
 
             with io.open(fixtup_manifest) as file_pointer:
                 manifest = yaml.load(file_pointer, yaml.SafeLoader)
-                self.assertTrue(manifest["keep_mounted"], f"invalid manifest {manifest}")
+                self.assertTrue(manifest["keep_up"], f"invalid manifest {manifest}")
 
     def test_scaffold_new_fixture_generate_a_manifest_with_keep_mounted_policy(self):
         # Arrange
@@ -63,14 +63,13 @@ class TestScaffold(unittest.TestCase):
             with io.open(fixtup_manifest) as file_pointer:
                 manifest = yaml.load(file_pointer, yaml.SafeLoader)
                 template = FixtureTemplate.create_from_fixture_template(fixture.directory, manifest)
-                self.assertTrue(template.keep_mounted)
-                self.assertFalse(template.keep_running)
+                self.assertFalse(template.keep_up)
 
-    def test_scaffold_new_fixture_generate_a_manifest_with_keep_running_policy(self):
+    def test_scaffold_new_fixture_generate_a_manifest_with_keep_up_policy(self):
         # Arrange
         with fixtup.up('fixtup_project'):
             fixture_repository = os.path.join(os.getcwd(), "fixtup")
-            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_running=True)
+            fixture = FixtureTemplate.fake(directory=fixture_repository, keep_up=True)
 
             # Acts
             scaffold_new_fixture(fixture)
@@ -81,8 +80,7 @@ class TestScaffold(unittest.TestCase):
             with io.open(fixtup_manifest) as file_pointer:
                 manifest = yaml.load(file_pointer, yaml.SafeLoader)
                 template = FixtureTemplate.create_from_fixture_template(fixture.directory, manifest)
-                self.assertFalse(template.keep_mounted)
-                self.assertTrue(template.keep_running)
+                self.assertTrue(template.keep_up)
 
 
 if __name__ == '__main__':

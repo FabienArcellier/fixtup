@@ -93,7 +93,7 @@ class TestFixtureEngine(unittest.TestCase):
         finally:
             self.tested.stop(template, fixture)
 
-    def test_process_teardown_exit_should_remove_the_fixture_directory_for_fixture_with_keep_running_policy(self):
+    def test_process_teardown_exit_should_remove_the_fixture_directory_for_fixture_with_keep_up_policy(self):
         # Arrange
         template = fixture_template('simple_fixture_keep_up')
         fixture = self.tested.new_fixture(template)

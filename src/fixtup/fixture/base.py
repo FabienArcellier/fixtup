@@ -32,7 +32,7 @@ class FixtureEngine:
         if self.store.is_up(fixture_template):
             fixture = self.store.fixture(fixture_template)
 
-            assert fixture_template.keep_mounted is True or fixture_template.keep_running is True, \
+            assert fixture_template.keep_up is True, \
                 f"fixture {fixture.identifier} is mounted but should not, the template does not use keep_mounted policy"
             return fixture
 
@@ -138,7 +138,7 @@ class FixtureEngine:
 
         :param process_teardown: true when the fixture engine is tear downed at the end of the process usually
         """
-        if template.keep_running is True and not process_teardown:
+        if template.keep_up is True and not process_teardown:
             return
 
         with with_cwd(fixture.directory):
