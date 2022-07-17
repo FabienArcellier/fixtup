@@ -2,6 +2,9 @@ import os
 
 import attr
 
+from fixtup.logger import get_logger
+
+logger = get_logger()
 
 @attr.s
 class FixtureTemplate():
@@ -33,7 +36,18 @@ class FixtureTemplate():
 
     @classmethod
     def create_from_fixture_template(cls, path: str, fixture_yml: dict) -> 'FixtureTemplate':
-        keep_up = fixture_yml.get('keep_up', False)
+        if "keep_up" in fixture_yml:
+            keep_up = fixture_yml['keep_up']
+        # manage keep_running alias in fixtup.yml, set as deprecated
+        # we can drop the support in next version
+        elif "keep_up" not in fixture_yml and "keep_running" in fixture_yml:
+            logger.warning(f"replace keep_running: xxxxxx by keep_up: xxxxxx in {path}/fixtup.yml, the support for keep_running may be dropped")
+            keep_up = fixture_yml['keep_running']
+        else:
+            keep_up = False
+
+
+
         mount_in_place = fixture_yml.get('mount_in_place', False)
         identifier = os.path.basename(path)
         return FixtureTemplate(identifier, path,

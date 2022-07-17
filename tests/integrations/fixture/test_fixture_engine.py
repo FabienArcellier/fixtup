@@ -1,3 +1,5 @@
+import logging
+
 import os
 import unittest
 
@@ -11,8 +13,12 @@ from fixtup.fixture_template.base import fixture_template
 class TestFixtureEngine(unittest.TestCase):
 
     def setUp(self) -> None:
+        logging.disable(logging.WARNING)
         reset_runtime_context(RuntimeContext(emulate_new_process=True))
         self.tested = lookup_fixture_engine()
+
+    def tearDown(self) -> None:
+        logging.disable(logging.INFO)
 
     def test_new_fixture_should_create_an_empty_directory_in_tmp_file(self):
         # Arrange
@@ -33,6 +39,23 @@ class TestFixtureEngine(unittest.TestCase):
         # Arrange
         try:
             template = fixture_template('simple_fixture_keep_up')
+            # Acts
+            fixture1 = self.tested.new_fixture(template)
+            self.tested.start(template, fixture1)
+            self.tested.stop(template, fixture1)
+
+            fixture2 = self.tested.new_fixture(template)
+
+            # Assert
+            self.assertEqual(State.Up, fixture1.state)
+            self.assertIs(fixture1, fixture2)
+        finally:
+            self.tested.process_teardown_exit()
+
+    def test_new_fixture_from_template_keep_the_fixture_up_with_legacy_policy(self):
+        # Arrange
+        try:
+            template = fixture_template('simple_fixture_keep_running_legacy')
             # Acts
             fixture1 = self.tested.new_fixture(template)
             self.tested.start(template, fixture1)
