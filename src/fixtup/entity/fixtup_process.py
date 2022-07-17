@@ -13,65 +13,55 @@ from fixtup.lib.list import first
 class FixtupProcess:
     """
     Saves informations about fixtup relative to the current process
-    runtime. The process may be unittest or pytest.
+    runtime. The process is usually the test runtime, so it can be unittest or pytest for example.
 
     The information will be :
 
-    * a list of mounted fixtures - fixtures that has been mounted
+    * a list of fixtures that are up
     """
-    _mounted_fixtures_detailled: List[Tuple[FixtureTemplate, Fixture]] = attr.ib(factory=list)
-    _mounted_fixtures: List[Fixture] = attr.ib(factory=list)
-    _started_fixtures: List[Fixture] = attr.ib(factory=list)
-    _ready_fixtures: List[Fixture] = attr.ib(factory=list)
+    _active_fixtures_detailled: List[Tuple[FixtureTemplate, Fixture]] = attr.ib(factory=list)
+    _up_fixtures: List[Fixture] = attr.ib(factory=list)
 
-    def fixture_mounted(self, template:FixtureTemplate ,fixture: Fixture):
-        self._mounted_fixtures.append(fixture)
-        self._mounted_fixtures_detailled.append((template, fixture))
-        fixture.mounted()
+    def fixture_up(self, template: FixtureTemplate, fixture: Fixture):
+        fixture.up()
+        self._up_fixtures.append(fixture)
+        self._active_fixtures_detailled.append((template, fixture))
 
-        # Post-conditions
-        assert unique(self._mounted_fixtures, lambda f: f.identifier)
+        # check invariant, the same fixture must be registered only once as mounted.
+        assert unique(self._up_fixtures, lambda f: f.identifier)
 
-    def fixture_started(self, fixture: Fixture):
-        _fixture = first(self._mounted_fixtures, lambda f: f.identifier == fixture.identifier)
+    def fixture_down(self, fixture: Fixture):
+        _fixture = first(self._up_fixtures, lambda f: f.identifier == fixture.identifier)
         assert _fixture is not None
 
-        _fixture.started()
-        self._started_fixtures.append(_fixture)
-
-    def fixture_stopped(self, fixture: Fixture):
-        _fixture = first(self._mounted_fixtures, lambda f: f.identifier == fixture.identifier)
-        assert _fixture is not None
-
-        _fixture.stopped()
-        self._started_fixtures.remove(_fixture)
-
-    def fixture_unmounted(self, fixture: Fixture):
-        for index, (template, _fixture) in enumerate(copy.copy(self._mounted_fixtures_detailled)):
+        for index, (template, _fixture) in enumerate(copy.copy(self._active_fixtures_detailled)):
             if _fixture.identifier == fixture.identifier:
-                _fixture.unmounted()
-                del self._mounted_fixtures_detailled[index]
-                del self._mounted_fixtures[index]
+                _fixture.down()
+                del self._active_fixtures_detailled[index]
+                del self._up_fixtures[index]
 
-        assert unique(self._mounted_fixtures, lambda f: f.identifier)
+        # check invariant, the same fixture must be registered only once as mounted.
+        assert unique(self._up_fixtures, lambda f: f.identifier)
 
-    def is_mounted(self, fixture_template: FixtureTemplate) -> bool:
-        _fixture = first(self._mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
-        return _fixture is not None
-
-    def is_started(self, fixture_template: FixtureTemplate) -> bool:
-        _fixture = first(self._started_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
+    def is_up(self, fixture_template: FixtureTemplate) -> bool:
+        _fixture = first(self._up_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
         return _fixture is not None
 
     def fixture(self, fixture_template: FixtureTemplate) -> Fixture:
-        _fixture = first(self._mounted_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
+        """
+        retrieve a running fixture for reuse instead of loading a new one.
+        Usually these are the fixtures that have the `keep_up` policy active.
+
+        :param fixture_template:
+        """
+        _fixture = first(self._up_fixtures, lambda f: f.template_identifier == fixture_template.identifier)
         if _fixture is None:
-            raise FixtupException('no fixture is mounted for this fixture template, use is_mounted before invoking fixture()')
+            raise FixtupException('no fixture is started for this fixture template, use is_started before invoking fixture()')
 
         return _fixture
 
-    def mounted_fixtures(self) -> List[Tuple[FixtureTemplate, Fixture]]:
-        return copy.copy(self._mounted_fixtures_detailled)
+    def active_fixtures(self) -> List[Tuple[FixtureTemplate, Fixture]]:
+        return copy.copy(self._active_fixtures_detailled)
 
 
 """

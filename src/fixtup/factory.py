@@ -42,15 +42,10 @@ class RuntimeContext:
     enable_hooks = attr.ib(default=True)
 
     """
-=======
     When we use 2 successive fixtures in a test and this flag is active,
     we consider that the 2 fixtures are executed in separate test processes.
 
-    This flag is essential internally to test the behavior of policies such as keep_running, ...
-
->>>>>>> we need to be able to instantiate multiple fixtures nested together
-    This will emulate a new process every time the factory is called. It will initialize
-    entity Fixtup Process
+    This flag is essential internally to test the behavior of policies such as keep_up, ...
     """
     emulate_new_process = attr.ib(default=False)
 

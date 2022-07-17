@@ -26,11 +26,9 @@ class PluginEngine:
 def event_to_function(event: PluginEvent) -> str:
     _event_to_function = {
         event.new_fixture: "on_new_fixture",
-        event.mounting: "on_mounting",
         event.starting: "on_starting",
         event.setup_data: "on_setup_data",
         event.stopping: "on_stopping",
-        event.unmounting: "on_unmounting",
         event.teardown_data: "on_teardown_data",
     }
 

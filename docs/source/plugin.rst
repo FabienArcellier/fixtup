@@ -90,14 +90,6 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
             with io.open(os.path.join(template.directory, 'terraform.tf'), 'w') as fp:
                 pass
 
-
-    def on_mounting(fixture: Fixture):
-        """
-        this function is called by fixtup when the fixture folder is instantiated in the
-        temporary folder. If the fixture is shared, this method will be invoked once.
-        """
-        pass
-
     def on_setup_data(fixture: Fixture):
         """
         This function is called by fixtup between each test to provision data
@@ -119,12 +111,6 @@ The functions are optional, if they are absent, ``fixtup`` will not take them in
     def on_teardown_data(fixture: Fixture):
         """
         This function is called by fixtup between each test to cleanup data
-        """
-        pass
-
-    def on_unmounting(fixture: Fixture):
-        """
-        this function is called by fixtup every time the fixture folder is removed. It's the only case where the code of fixtup is invoked after the invocation of plugin and hook
         """
         pass
 

@@ -6,12 +6,10 @@ import attr
 
 class PluginEvent(Enum):
     new_fixture = "new_fixture"
-    mounting = "mounting"
     setup_data = "setup_data"
     starting = "starting"
     stopping = "stopping"
     teardown_data = "teardown_data"
-    unmounting = "unmounting"
 
 
 @attr.s

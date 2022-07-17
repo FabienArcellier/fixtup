@@ -91,17 +91,17 @@ fixture template directory.
 Keep a fixture running between the tests
 ****************************************
 
-The ``keep_running`` policy keeps the environment loaded after the fixture is used, until the test runner stops. Once the fixture is started, it will remain up during all tests.
+The ``keep_up`` policy keeps the environment loaded after the fixture is used, until the test runner stops. Once the fixture is started, it will remain up during all tests.
 
 This policy is useful when the docker stack takes too much time to start and stop. We will reuse this stack between all our tests. For example, if your fixture mounts a postgresql database, the database will stay up and running between all your tests.
 
 .. code-block:: yaml
     :caption: ./tests/fixtures/postgres_datastore/fixtup.yml
 
-    keep_running: true
+    keep_up: true
 
 .. warning:: You cannot use 2 postgresql databases on the same port in 2 different fixtures
-    if you are using a fixture with the ``keep_running`` policy.
+    if you are using a fixture with the ``keep_up`` policy.
 
 .. note::
 
@@ -176,8 +176,7 @@ The flag ``mount_in_place`` in `fixtup.yml` mount the fixture straight in the te
 .. code-block:: yaml
     :caption: tests/fixtures/database/fixtup.yml
 
-    keep_mounted: true
-    keep_running: true
+    keep_up: true
     mount_in_place: true
 
 .. code-block:: python
@@ -231,18 +230,3 @@ are not clean up as well (containers for example, ...).
 
                 # ...
 
-Mount a fixture once and keep it mounted for all the tests
-**********************************************************
-
-When the `keep_mounted` policy is active on a fixture, it is mounted only once at the first test that use this fixture, then reused by each test. Between each test the fixture is starting and stopping. For exemple, with the docker plugin, network is mounted only once. Containers start and stop between every tests.
-
-.. warning:: If you persist information in your test, like create a file or add record in a database, they will be present when fixtup will be running the next test that use this fixture.
-
-When the test runtime stop or when the user interrupts the tests, the fixture is unmounted.
-
-To enable the `keep_mounted` policy, edit `fixtup.yml` in a fixture template
-
-.. code-block:: yaml
-    :caption: tests/fixtures/fixtup/simple_fixture/fixtup.yml
-
-    keep_mounted: true

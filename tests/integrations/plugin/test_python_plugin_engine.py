@@ -15,10 +15,10 @@ class TestPythonPluginBase(unittest.TestCase):
 
     def test_run_should_execute_the_plugin_event_for_event_handler_that_requires_fixture(self):
         events = {
-            PluginEvent.mounting: "mounting.txt",
+            PluginEvent.setup_data: "setup_data.txt",
             PluginEvent.starting: "starting.txt",
             PluginEvent.stopping: "stopping.txt",
-            PluginEvent.unmounting: "unmounting.txt",
+            PluginEvent.teardown_data: "teardown_data.txt"
         }
 
         self._tested.register_plugin('fixtup.plugins.dummy_plugin')
@@ -66,7 +66,7 @@ class TestPythonPluginBase(unittest.TestCase):
             fixture = Fixture.fake()
             # Acts
             try:
-                self._tested.run(PluginEvent.mounting, fixture=fixture)
+                self._tested.run(PluginEvent.starting, fixture=fixture)
                 self.fail("this test should raise PluginRuntimeError")
             except PluginRuntimeError as exception:
                 pass
