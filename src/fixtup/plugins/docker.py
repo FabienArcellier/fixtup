@@ -22,7 +22,7 @@ def on_new_fixture(template: FixtureTemplate):
         shutil.copy(os.path.join(RESOURCE_DIR, 'docker', 'docker-compose.yml'), os.path.join(template.directory, 'docker-compose.yml'))
 
 
-def on_mounting(fixture: Fixture):
+def on_starting(fixture: Fixture):
     if _is_docker_compose_absent(fixture):
         return
 
@@ -31,11 +31,6 @@ def on_mounting(fixture: Fixture):
     exit_code, stdout, stderr = cmd.run()
     if exit_code != 0:
         raise OSError(stderr)
-
-
-def on_starting(fixture: Fixture):
-    if _is_docker_compose_absent(fixture):
-        return
 
     docker_compose = plumbum.local['docker-compose']
     cmd = docker_compose['up', '--detach']
@@ -57,14 +52,11 @@ def on_stopping(fixture: Fixture):
         cmd = docker_compose['logs', '--timestamps']
         cmd & plumbum.FG
 
-
-def on_unmounting(fixture: Fixture):
-    if _is_docker_compose_absent(fixture):
-        return
-
     docker_compose = plumbum.local['docker-compose']
     cmd = docker_compose['down']
     cmd()
+
+
 
 
 def _is_docker_compose_absent(fixture: Fixture):

@@ -9,20 +9,12 @@ def on_new_fixture(template: FixtureTemplate):
     pass
 
 
-def on_mounting(fixture: Fixture):
+def on_starting(fixture: Fixture):
     for i in range(0, 10, 1):
         _call_error()
 
 
-def on_starting(fixture: Fixture):
-    pass
-
-
 def on_stopping(fixture: Fixture):
-    pass
-
-
-def on_unmounting(fixture: Fixture):
     pass
 
 

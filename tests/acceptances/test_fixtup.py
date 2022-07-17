@@ -53,7 +53,7 @@ class TestFixtup(unittest.TestCase):
 
         self.assertEqual(working_dir, os.getcwd())
 
-    def test_up_should_keep_the_mounted_fixture_if_the_flag_keep_mounted_fixture_is_present(self):
+    def test_up_should_keep_the_fixture_if_the_flag_keep_mounted_fixture_is_present(self):
         # Acts & Assert
         with fixtup.up('simple', keep_mounted_fixture=True):
             cwd = os.getcwd()
@@ -102,25 +102,6 @@ class TestFixtup(unittest.TestCase):
                         self.fail('up should raise PluginRuntimeError')
                 except PluginRuntimeError as exception:
                     self.assertIn('plugin: fixtup.plugins.dummy_plugin_error', exception.msg)
-
-    def test_up_on_fixture_with_keep_mounted_policy_should_keep_the_same_fixture_environment(self):
-        reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
-        SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
-
-        # Acts
-        with override_fixtup_settings({
-            "fixtures": os.path.join(SCRIPT_DIR, "../fixtures/fixtup"),
-            'plugins': []
-        }):
-            # Acts
-            with fixtup.up('simple_fixture_keep_mounted'):
-                fixture1 = os.getcwd()
-
-            with fixtup.up('simple_fixture_keep_mounted'):
-                fixture2 = os.getcwd()
-
-            # Assert
-            self.assertEqual(fixture1, fixture2)
 
     def test_up_on_fixture_with_mount_in_place_should_keep_the_current_working_directory(self):
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))

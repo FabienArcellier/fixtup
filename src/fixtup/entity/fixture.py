@@ -10,11 +10,12 @@ class State(Enum):
     """
     This state means a directory for the fixture already exists
     and is ready to use
+
+    :see: https://fixtup.readthedocs.io/en/latest/concepts.html#term-fixture-livecycle
     """
-    Mounted = "mounted"
-    Started = "started"
+    Up = "up"
     Ready = "ready"
-    Unmounted = "unmounted"
+    Down = "down"
 
 
 @attr.s
@@ -37,7 +38,7 @@ class Fixture:
             identifier=identifier,
             directory=fixture_path,
             template_identifier=fixture_template.identifier,
-            state=State.Unmounted
+            state=State.Down
         )
 
     @classmethod
@@ -51,29 +52,21 @@ class Fixture:
             identifier=kwargs.get('identifier', 'fixture_1234'),
             directory=kwargs.get('directory', '/tmp/fixture_1234'),
             template_identifier=kwargs.get('template_identifier', 'fixture'),
-            state=kwargs.get('state', State.Unmounted),
+            state=kwargs.get('state', State.Down),
         )
 
-    def mounted(self):
-        assert self.state == State.Unmounted
-        self.state = State.Mounted
-
-    def setup(self):
-        assert self.state == State.Started
+    def setup_data(self):
+        assert self.state == State.Up
         self.state = State.Ready
 
-    def teardown(self):
+    def teardown_data(self):
         assert self.state == State.Ready
-        self.state = State.Started
+        self.state = State.Up
 
-    def started(self):
-        assert self.state == State.Mounted
-        self.state = State.Started
+    def up(self):
+        assert self.state == State.Down
+        self.state = State.Up
 
-    def stopped(self):
-        assert self.state == State.Started
-        self.state = State.Mounted
-
-    def unmounted(self):
-        assert self.state == State.Mounted
-        self.state = State.Unmounted
+    def down(self):
+        assert self.state == State.Up
+        self.state = State.Down
