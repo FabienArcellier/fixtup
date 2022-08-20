@@ -39,13 +39,20 @@ class PromptToolkit(Prompt):
 
         return fixture
 
-    def confirm(self, question: str, default: Optional[bool] = None) -> bool:
-        default_value = None
-        if default is not None:
-            default_value = 'y' if default is True else 'n'
-
+    def confirm(self, question: str, default: bool = False) -> bool:
+        default_value = 'y' if default is True else 'n'
         return self.choice(question, choices=['y', 'n'], default=default_value) == 'y'
 
+    def input(self, question: str, default: Optional[str] = None) -> Optional[str]:
+        if default == "":
+            value = prompt(f"{question} : ")
+        else:
+            value = prompt(f'{question} [{default}] : ')
+
+        if value == "":
+            return default
+        else:
+            return value
 
 class ChoicesValidator(Validator):
     """

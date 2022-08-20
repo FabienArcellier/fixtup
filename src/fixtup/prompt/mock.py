@@ -40,6 +40,18 @@ class Mock(Prompt):
         mocked_input: List[str] = thread_store.input
         return mocked_input.pop(0)
 
-    def confirm(self, question: str, default: Optional[bool] = None) -> bool:
+    def confirm(self, question: str, default: bool = False) -> bool:
         mocked_input: List[str] = thread_store.input
-        return mocked_input.pop(0) == "y"
+        _input = mocked_input.pop(0)
+        if _input == "":
+            return default
+        else:
+            return _input == "y"
+
+    def input(self, question: str, default: Optional[str] = None) -> Optional[str]:
+        mocked_input: List[str] = thread_store.input
+        _input = mocked_input.pop(0)
+        if _input == "":
+            return default
+        else:
+            return _input

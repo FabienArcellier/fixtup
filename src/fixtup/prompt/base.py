@@ -41,7 +41,7 @@ class Prompt():
         """
         raise NotImplementedError()
 
-    def confirm(self, question: str, default: Optional[bool] = None) -> bool:
+    def confirm(self, question: str, default: bool = False) -> bool:
         """
         ask the user to confirm a question by using y or n
 
@@ -50,5 +50,18 @@ class Prompt():
 
         :param question: the question to confirm
         :return:
+        """
+        raise NotImplementedError()
+
+    def input(self, question: str, default: Optional[str] = None) -> Optional[str]:
+        """
+        ask a user to write something on one line
+
+        >>> prompt = lookup_prompt()
+        >>> database_url = prompt.text('What is the database url ?', default="sqlite://helloworld.db")
+
+        :param question: the question to answer
+        :param default: the value to use if the user let it blank
+        :return: the input written by the user, if it's blank, return the default value
         """
         raise NotImplementedError()
