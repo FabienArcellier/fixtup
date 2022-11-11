@@ -7,13 +7,19 @@ import plumbum
 
 from fixtup import fixtup
 from fixtup.entity.fixture import Fixture
-from fixtup.plugins.docker import on_starting, on_stopping
+from fixtup.os import is_windows
+from fixtup.plugins.docker import on_starting, on_stopping, get_docker_compose_cmd
 from fixtup.tests.settings import override_fixtup_settings
 
 
 class TestDocker(unittest.TestCase):
 
+    def setUp(self) -> None:
+        if os.getenv('IGNORE_DOCKER_TESTS', '0') == '1':
+            self.skipTest('this test use docker and is ignored on ci running windows because github action does not support docker on windows')
+
     def test_docker_plugin_should_do_nothing_when_there_is_no_docker_compose_file(self):
+
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
         with override_fixtup_settings({
             "fixtures": os.path.join(SCRIPT_DIR, "../../fixtures/fixtup"),
@@ -49,7 +55,7 @@ class TestDocker(unittest.TestCase):
                     on_starting(fixture_fake)
 
                     # Assert
-                    output: str = plumbum.local['docker-compose']('ps')
+                    output: str = get_docker_compose_cmd()('ps')
                     output_row = output.split(os.sep)
 
                     splitted_path = os.path.split(path)
@@ -64,7 +70,7 @@ class TestDocker(unittest.TestCase):
                     if _if_macos():
                         self.assertIn(f'running', output_row[-1])
                 finally:
-                    plumbum.local['docker-compose']('down')
+                    get_docker_compose_cmd()('down')
 
     def test_on_stopping_should_stop_and_remove_every_trace_of_busybox(self):
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
@@ -84,7 +90,7 @@ class TestDocker(unittest.TestCase):
                     on_stopping(fixture_fake)
 
                     # Assert
-                    output: str = plumbum.local['docker-compose']('ps')
+                    output: str = get_docker_compose_cmd()('ps')
                     output_row = output.split(os.sep)
 
                     splitted_path = os.path.split(path)
@@ -92,7 +98,7 @@ class TestDocker(unittest.TestCase):
                     docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
                     self.assertNotIn(docker_compose_identifier, output_row[-1])
                 finally:
-                    plumbum.local['docker-compose']('down')
+                    get_docker_compose_cmd()('down')
 
 
 def _docker_compose_identifier(docker_prefix: str, identifier: str, index: int) -> str:
@@ -108,7 +114,7 @@ def _docker_compose_identifier(docker_prefix: str, identifier: str, index: int) 
     if _if_linux():  # could be "linux", "linux2", "linux3", ...
         return f"{docker_prefix}_{identifier}_{index}"
 
-    if _if_macos():
+    if _if_macos() or is_windows():
         return f"{docker_prefix}-{identifier}-{index}"
 
     raise OSError(f"not supported platform : {sys.platform}")

@@ -1,10 +1,10 @@
-name: ci-macos
+name: ci-windows
 
 on: [push]
 
 jobs:
     build:
-        runs-on: macos-latest
+        runs-on: windows-latest
         timeout-minutes: 15
 
         strategy:

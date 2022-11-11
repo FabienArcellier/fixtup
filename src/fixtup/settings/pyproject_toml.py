@@ -5,6 +5,7 @@ import toml
 
 from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
+from fixtup.os import universal_path
 from fixtup.settings.base import SettingsParser, RESOURCE_DIR
 
 logger = get_logger()
@@ -67,7 +68,7 @@ class PyprojectToml(SettingsParser):
             pyproject_append_settings = file_pointer.read()
 
         pyproject_append_settings = pyproject_append_settings\
-            .replace("{{ fixtures }}", settings.fixtures)
+            .replace("{{ fixtures }}", universal_path(settings.fixtures))
 
         with io.open(manifest_expected_path, mode="a") as file_pointer:
             file_pointer.write(pyproject_append_settings)

@@ -2,13 +2,15 @@ import os
 
 import alfred
 import click
+from plumbum import local
 
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
 
 
 @alfred.command("ci", help="workflow to execute the continuous integration process")
 @click.option("--no-docs", is_flag=True,help="ignore documentation in continuous integration")
-def ci(no_docs: bool):
+@click.option("--no-docker", is_flag=True, help="disable the test suite using docker (for windows & macos on github action)")
+def ci(no_docs: bool, no_docker: bool):
     """
     workflow to execute the continuous integration process
 
@@ -17,10 +19,13 @@ def ci(no_docs: bool):
 
     >>> $ alfred ci
     """
-    alfred.invoke_command('lint')
-    alfred.invoke_command('tests')
+    ignore_docker_test = '1' if no_docker else '0'
 
-    if not no_docs:
-        alfred.invoke_command('docs:check')
+    with local.env(IGNORE_DOCKER_TESTS=ignore_docker_test):
+        alfred.invoke_command('lint')
+        alfred.invoke_command('tests')
+
+        if not no_docs:
+            alfred.invoke_command('docs:check')
 
 

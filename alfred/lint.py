@@ -12,7 +12,12 @@ def lint():
 
     >>> $ alfred lint
     """
-    mypy = alfred.sh("mypy", "mypy should be present")
-    os.chdir(ROOT_DIR)
-    alfred.run(mypy, ['src'])
+    is_windows = os.name == "nt"
+
+    if not is_windows:
+        mypy = alfred.sh("mypy", "mypy should be present")
+        os.chdir(ROOT_DIR)
+        alfred.run(mypy, ['src'])
+    else:
+        print("linter is not supported on non posix platform as windows")
 

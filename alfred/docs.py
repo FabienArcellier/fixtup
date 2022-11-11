@@ -49,8 +49,13 @@ def docs__check():
 
     >>> $ alfred docs:check
     """
-    doc_directory = os.path.join(ROOT_DIR, 'docs')
+    is_windows = os.name == "nt"
 
-    make = alfred.sh("make", "make should be present")
-    os.chdir(doc_directory)
-    alfred.run(make, ['linkcheck'])
+    if not is_windows:
+        doc_directory = os.path.join(ROOT_DIR, 'docs')
+
+        make = alfred.sh("make", "make should be present")
+        os.chdir(doc_directory)
+        alfred.run(make, ['linkcheck'])
+    else:
+        print("dock checking is not supported on non posix platform as windows")

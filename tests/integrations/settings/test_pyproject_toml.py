@@ -60,7 +60,8 @@ class TestPyprojectToml(unittest.TestCase):
             settings = self._tested.read_settings(cwd)
 
             # Assert
-            self.assertEqual("tests/fixtures/fixtup", settings.fixtures)
+            expected_path = os.path.join("tests", "fixtures", "fixtup")
+            self.assertEqual(expected_path, settings.fixtures)
             self.assertIn("fixtup.plugins.docker", settings.plugins)
 
 
