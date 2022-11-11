@@ -5,6 +5,7 @@ import configparser
 
 from fixtup.entity.settings import Settings
 from fixtup.logger import get_logger
+from fixtup.os import universal_path
 from fixtup.settings.base import SettingsParser, RESOURCE_DIR
 
 
@@ -71,7 +72,7 @@ class SetupCfg(SettingsParser):
             setup_cfg_content = file_pointer.read()
 
         setup_cfg_content = setup_cfg_content\
-            .replace("{{ fixtures }}", settings.fixtures)
+            .replace("{{ fixtures }}", universal_path(settings.fixtures))
 
         with io.open(manifest_expected_path, mode="a") as file_pointer:
             file_pointer.write(setup_cfg_content)

@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from fixtup.entity.settings import Settings
@@ -13,7 +14,8 @@ class TestSettings(unittest.TestCase):
         settings = Settings.from_manifest("hello/world/setup.cfg", {'fixtures': "test/fixtures"})
 
         # Acts & Assert
-        self.assertIn("hello/world", settings.configuration_dir)
+        expected_path = os.path.join("hello", "world")
+        self.assertIn(expected_path, settings.configuration_dir)
 
     def test_from_manifest_should_extract_fixture(self):
         # Arrange
@@ -22,7 +24,8 @@ class TestSettings(unittest.TestCase):
         entity = Settings.from_manifest(self.fake_manifest_dir, {"fixtures": "test/fixtures"})
 
         # Assert
-        self.assertEqual("test/fixtures", entity.fixtures)
+        expected_path = os.path.join("test", "fixtures")
+        self.assertEqual(expected_path, entity.fixtures)
 
     def test_from_manifest_should_extract_plugins_list(self):
         # Arrange

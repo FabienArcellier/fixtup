@@ -6,6 +6,7 @@ import shutil
 
 from fixtup.entity.fixture import Fixture
 from fixtup.entity.fixture_template import FixtureTemplate
+from fixtup.os import is_posix, is_windows
 from fixtup.prompt.factory import lookup_prompt
 
 
@@ -26,13 +27,13 @@ def on_starting(fixture: Fixture):
     if _is_docker_compose_absent(fixture):
         return
 
-    docker_compose = plumbum.local['docker-compose']
+    docker_compose = get_docker_compose_cmd()
     cmd = docker_compose['up', '--no-start', '--remove-orphans']
     exit_code, stdout, stderr = cmd.run()
     if exit_code != 0:
         raise OSError(stderr)
 
-    docker_compose = plumbum.local['docker-compose']
+    docker_compose = get_docker_compose_cmd()
     cmd = docker_compose['up', '--detach']
     cmd()
 
@@ -41,7 +42,7 @@ def on_stopping(fixture: Fixture):
     if _is_docker_compose_absent(fixture):
         return
 
-    docker_compose = plumbum.local['docker-compose']
+    docker_compose = get_docker_compose_cmd()
     cmd = docker_compose['stop']
     cmd()
 
@@ -52,7 +53,7 @@ def on_stopping(fixture: Fixture):
         cmd = docker_compose['logs', '--timestamps']
         cmd & plumbum.FG
 
-    docker_compose = plumbum.local['docker-compose']
+    docker_compose = get_docker_compose_cmd()
     cmd = docker_compose['down']
     cmd()
 
@@ -61,3 +62,9 @@ def on_stopping(fixture: Fixture):
 
 def _is_docker_compose_absent(fixture: Fixture):
     return not os.path.isfile(os.path.join(fixture.directory, 'docker-compose.yml'))
+
+def get_docker_compose_cmd():
+    if is_windows():
+        return  plumbum.local['docker-compose.exe']
+
+    return plumbum.local['docker-compose']

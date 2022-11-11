@@ -59,7 +59,8 @@ class TestCli(unittest.TestCase):
             self.assertEqual(0, result.exit_code)
 
             settings = read_settings()
-            self.assertEqual("tests/fixture", settings.fixtures)
+            expected_fixture_path = os.path.join("tests", "fixture")
+            self.assertEqual(expected_fixture_path, settings.fixtures)
             self.assertIn("fixtup.plugins.docker", settings.plugins)
 
     def test_init_should_configure_a_project_with_setup_cfg_valid_with_info(self):

@@ -1,7 +1,7 @@
 import os
 
 import alfred
-import click
+
 
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
 

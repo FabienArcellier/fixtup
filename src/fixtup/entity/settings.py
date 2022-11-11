@@ -5,6 +5,7 @@ from typing import Optional, Dict, Any, List
 import attr
 
 from fixtup.entity.project_manifest import ProjectManifest
+from fixtup.os import native_path
 
 
 @attr.s
@@ -21,7 +22,7 @@ class Settings:
     """
     The path to the repository that contains the fixtures
     """
-    fixtures: str = attr.ib()
+    fixtures: str = attr.ib(converter=native_path)
 
     """
     list of python modules to load as fixtup plugin.
