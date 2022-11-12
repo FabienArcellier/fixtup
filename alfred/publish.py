@@ -51,7 +51,6 @@ def publish():
     click.echo(f"Next release {next_version} (current: {current_version})")
     click.echo("")
     value = click.prompt("Confirm", type=Choice(['y', 'n']), show_choices=True, default='n')
-    click.echo(f"{value=}")
 
     if value == 'y':
         alfred.run(git, ['tag', fixtup.__version__])
