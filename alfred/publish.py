@@ -1,6 +1,8 @@
 import os
+import sys
 
-from click import UsageError
+import click
+from click import UsageError, Choice
 import alfred
 
 import fixtup
@@ -8,7 +10,7 @@ import fixtup
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
 
 
-@alfred.command("publish", help="tag a release of fixtup and release through github actions")
+@alfred.command("publish", help="tag a new release and trigger pypi publication")
 def publish():
     """
     tag a release of fixtup and release through github actions
@@ -17,8 +19,43 @@ def publish():
     """
     git = alfred.sh("git", "git should be present")
     os.chdir(ROOT_DIR)
-    alfred.run(git, ['tag', fixtup.__version__])
-    alfred.run(git, ['push', 'origin', fixtup.__version__])
+
+    # update the existing tags
+    alfred.run(git, ["fetch"])
+
+    current_version: str = git["describe", "--tags", "--abbrev=0"]().strip()
+    git_status: str = git["status"]()
+
+    on_master = "On branch master" in git_status
+    if not on_master:
+        click.echo(click.style("Branch should be on master, use git checkout master", fg="red"))
+        click.echo(git_status.strip()[0])
+        sys.exit(1)
+
+    up_to_date = "Your branch is up to date with 'origin/master'" in git_status
+    if not up_to_date:
+        click.echo(click.style("Branch should be up to date with origin/master, push your change to repository", fg="red"))
+        sys.exit(1)
+
+    non_commited_changes = "Changes not staged for commit" in git_status or "Changes to be committed" in git_status
+    if non_commited_changes:
+        click.echo(click.style("Changes in progress, can't release a new version", fg="red"))
+        sys.exit(1)
+
+    next_version: str = fixtup.__version__
+    if current_version == next_version:
+        click.echo(click.style(f"Version {next_version} already exists, update __version__ in src/fixtup/__init__.py", fg='red'))
+        sys.exit(1)
+
+    click.echo("")
+    click.echo(f"Next release {next_version} (current: {current_version})")
+    click.echo("")
+    value = click.prompt("Confirm", type=Choice(['y', 'n']), show_choices=True, default='n')
+    click.echo(f"{value=}")
+
+    if value == 'y':
+        alfred.run(git, ['tag', fixtup.__version__])
+        alfred.run(git, ['push', 'origin', fixtup.__version__])
 
 
 @alfred.command("publish:pypi", help="workflow to release fixtup to pypi")
