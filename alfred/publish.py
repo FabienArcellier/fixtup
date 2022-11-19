@@ -8,6 +8,7 @@ import alfred
 import fixtup
 
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
+VERSION = fixtup.__version__
 
 
 @alfred.command("publish", help="tag a new release and trigger pypi publication")
@@ -42,19 +43,18 @@ def publish():
         click.echo(click.style("Changes in progress, can't release a new version", fg="red"))
         sys.exit(1)
 
-    next_version: str = fixtup.__version__
-    if current_version == next_version:
-        click.echo(click.style(f"Version {next_version} already exists, update __version__ in src/fixtup/__init__.py", fg='red'))
+    if current_version == VERSION:
+        click.echo(click.style(f"Version {VERSION} already exists, update __version__ in src/fixtup/__init__.py", fg='red'))
         sys.exit(1)
 
     click.echo("")
-    click.echo(f"Next release {next_version} (current: {current_version})")
+    click.echo(f"Next release {VERSION} (current: {current_version})")
     click.echo("")
     value = click.prompt("Confirm", type=Choice(['y', 'n']), show_choices=True, default='n')
 
     if value == 'y':
-        alfred.run(git, ['tag', fixtup.__version__])
-        alfred.run(git, ['push', 'origin', fixtup.__version__])
+        alfred.run(git, ['tag', VERSION])
+        alfred.run(git, ['push', 'origin', VERSION])
 
 
 @alfred.command("publish:pypi", help="workflow to release fixtup to pypi")
