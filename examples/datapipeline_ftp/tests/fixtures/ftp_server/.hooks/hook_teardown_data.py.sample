@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+#
+# To enable this hook, rename this file to hook_teardown_data.py
+#
+# This hook is executed between each test and is intended
+# to clean dataset in a database or another system before moving to the next test.
