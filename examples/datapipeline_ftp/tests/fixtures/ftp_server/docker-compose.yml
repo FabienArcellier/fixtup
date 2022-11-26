@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  ftp:
+    image: fauria/vsftpd
+    init: true
+    ports:
+      - 0.0.0.0:20:20
+      - 0.0.0.0:21:21
+      - 0.0.0.0:21100-21110:21100-21110
+    environment:
+      - FTP_USER=${FTP_USER}
+      - FTP_PASS=${FTP_PASS}
+      - PASV_ADDRESS=localhost
+      - PASV_ADDR_RESOLVE=YES
