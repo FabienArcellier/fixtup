@@ -1,22 +1,18 @@
 # Fixtup
 
+Test your python application beyond your code !
+
 [![version](https://img.shields.io/pypi/v/fixtup.svg?label=version)](https://pypi.org/project/fixtup/) [![ci](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml/badge.svg)](https://github.com/FabienArcellier/fixtup/actions/workflows/ci.yml) [![MIT](https://img.shields.io/badge/license-MIT-007EC7.svg)](LICENSE.md)
 
-![Fixtup manages environments & data for your tests](https://raw.githubusercontent.com/FabienArcellier/fixtup/master/docs/source/_static/principle_simplified_diagram.png)
+![Fixtup manages disposable environments & data for your tests](https://raw.githubusercontent.com/FabienArcellier/fixtup/master/docs/source/_static/principle_simplified_diagram.png)
 
-Do you have already given up on writing integration tests ?
-
-* it would have been too complicated to mount several containers to run these tests
-* it would have been necessary to write too much boilerplate to run these tests in a CI
-* it would have taken another developer too many steps to run these tests
-* it would have been difficult to debug them individually in an IDE
-
-With Fixtup, **write clear, robust and easy-to-execute integration tests** with your favorite test framwork like ``pytest``, ``unittest`` or event BDD framework as ``robot framework`` or ``behave``.
+**write clear, robust and easy-to-execute system integration tests** with your favorite test framwork like ``pytest``, ``unittest`` or event BDD framework as ``robot framework`` or ``behave``.
 
 * it starts the services needed to run your test
-* it throws the longest fixtures only once whether you play a test or 100
+* it mount the longest fixtures only once whether you play a test or 100
 * it cleans files and data between each test
 * it runs on a developer's workstation without configuration
+* it can be debugged step by step in your favorite IDE
 
 ## Benefits
 
@@ -27,13 +23,23 @@ With Fixtup, **write clear, robust and easy-to-execute integration tests** with 
 
 ## Getting started
 
-Take 10 minutes to get all the key to start with fixtup in [Getting started](https://fixtup.readthedocs.io/en/latest/getting_started.html).
+**write clear, robust and easy-to-execute system integration tests** in 5 minutes.
 
 ```bash
-pip install fixtup
+poetry init
+poety add --dev fixtup
 ```
 
-Here is an example that shows how fixtup makes it easier to **test a function that generate a thumbnail**.
+```bash
+$ poetry run fixtup init
+$ poetry run fixtup new
+Choose a fixture identifier : thumbnail_context
+Mount environment variables on this fixture (y/n) [n]
+Mount docker container on this fixture (y/n) [n]
+```
+
+We will use this fixture to mount a directory with existing picture `file.png` and test
+our `thumbnail` function is working well.
 
 ```python
 def test_thumbnail_should_generate_thumbnail(self):
@@ -51,6 +57,9 @@ def test_thumbnail_should_generate_thumbnail(self):
         # Then
         self.assertTrue(os.directory.isfile(expected_thumbnail_file)
 ```
+
+Fixtup mount the fixture `thumbnail_context` in temporary directory. At the end of the test, it clean up everything for you
+Want more ? [Fixtup even mount your containers, take a try](https://fixtup.readthedocs.io/en/latest/handbook.html#mount-a-postgresql-database-in-a-test).
 
 [The complete example is available in the repo](https://github.com/FabienArcellier/fixtup/tree/master/examples)
 

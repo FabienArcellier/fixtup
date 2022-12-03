@@ -8,8 +8,8 @@ to run your tests and improve your Quality Assurance process.
   :backlinks: top
   :local:
 
-Mount a postgresql database in a test
-*************************************
+Mount a postgresql database for a test
+**************************************
 
 Using the docker plugin (present by default), a fixture can declare service to start when the fixture is mounted.This declaration is a ``docker-compose.yml`` file at the root of the fixture.
 
@@ -88,8 +88,8 @@ fixture template directory.
 
     more about :ref:`plugins_dotenv`
 
-Keep a fixture running between the tests
-****************************************
+Keep a postgresql running running between all the tests
+*******************************************************
 
 The ``keep_up`` policy keeps the environment loaded after the fixture is used, until the test runner stops. Once the fixture is started, it will remain up during all tests.
 
@@ -195,6 +195,35 @@ The flag ``mount_in_place`` in `fixtup.yml` mount the fixture straight in the te
                 wd = os.getcwd()
 
                 # ...
+
+
+Use Fixtup in a pytest fixture
+******************************
+
+To write once the initialization code of a fixture of ``Fixtup`` and use it in many tests, you can write a fixture for
+``pytest``.
+
+.. code-block:: python
+    :caption: ./tests/integrations/test_utils.py
+
+    def thumbnail_context():
+        with fixtup.up('thumbnail_context'):
+            yield None
+
+
+    def test_thumbnail_should_generate_thumbnail(thumbnail_context):
+        # Given
+        wd = os.getcwd()
+
+        original_file = os.path.join(wd, 'img1.png')
+        expected_thumbnail_file = os.path.join(wd, 'img1_t.png')
+
+        # When
+        thumbnail(original_file, expected_thumbnail_file)
+
+        # Then
+        self.assertTrue(os.path.isfile(expected_thumbnail_file)
+
 
 
 Use Fixtup with other test frameworks

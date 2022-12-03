@@ -1,22 +1,18 @@
 Fixtup
 ######
 
+Test your python application beyond your code !
+
 .. figure:: _static/principle_simplified_diagram.png
     :align: center
 
-Do you have already given up on writing integration tests ?
-
-* it would have been too complicated to mount several containers to run these tests
-* it would have been necessary to write too much boilerplate to run these tests in a CI
-* it would have taken another developer too many steps to run these tests
-* it would have been difficult to debug them individually in an IDE
-
-With Fixtup, **write clear, robust and easy-to-execute integration tests** with your favorite test framwork like ``pytest``, ``unittest`` or event BDD framework as ``robot framework`` or ``behave``.
+**Write clear, robust and easy-to-execute system integration tests** with your favorite test framwork like ``pytest``, ``unittest`` or event BDD framework as ``robot framework`` or ``behave``.
 
 * it starts the services needed to run your test
 * it throws the longest fixtures only once whether you play a test or 100
 * it cleans files and data between each test
 * it runs on a developer's workstation without configuration
+* it can be debugged step by step in your favorite IDE
 
 Benefits
 ********
