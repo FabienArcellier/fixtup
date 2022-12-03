@@ -26,8 +26,8 @@ Test your python application beyond your code !
 **write clear, robust and easy-to-execute system integration tests** in 5 minutes.
 
 ```bash
-poetry init
-poety add --dev fixtup
+$ poetry init
+$ poety add --dev fixtup
 ```
 
 ```bash
