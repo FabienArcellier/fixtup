@@ -1,20 +1,23 @@
+import importlib.metadata
 import os
 import sys
+from typing import Optional
 
+import alfred
 import click
 from click import UsageError, Choice
-import alfred
+from plumbum.commands.processes import ProcessExecutionError
 
 import fixtup
 
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
-VERSION = fixtup.__version__
+VERSION = importlib.metadata.version(fixtup.__name__)
 
 
 @alfred.command("publish", help="tag a new release and trigger pypi publication")
 def publish():
     """
-    tag a release of fixtup and release through github actions
+    tag a release through github actions
 
     >>> $ alfred publish
     """
@@ -24,7 +27,15 @@ def publish():
     # update the existing tags
     alfred.run(git, ["fetch"])
 
-    current_version: str = git["describe", "--tags", "--abbrev=0"]().strip()
+    current_version: Optional[str] = None
+    try:
+        current_version = git["describe", "--tags", "--abbrev=0"]().strip()
+    except ProcessExecutionError as exception:
+        # happens when no tag exists yet
+        if "fatal: No names found, cannot describe anything." in exception.stderr:
+            current_version = None
+        else:
+            raise
     git_status: str = git["status"]()
 
     on_master = "On branch master" in git_status
@@ -44,7 +55,7 @@ def publish():
         sys.exit(1)
 
     if current_version == VERSION:
-        click.echo(click.style(f"Version {VERSION} already exists, update __version__ in src/fixtup/__init__.py", fg='red'))
+        click.echo(click.style(f"Version {VERSION} already exists, update version in pyproject.toml", fg='red'))
         sys.exit(1)
 
     click.echo("")
