@@ -9,7 +9,7 @@ jobs:
 
         strategy:
           matrix:
-            python-version: [3.9]
+            python-version: ["3.10"]
             examples: ['kanban_flask_sqlite', 'unittest', 'kanban_flask_postgresql']
 
         steps:
