@@ -2,7 +2,10 @@ import socket
 
 from time import monotonic, sleep
 
-from typing import Optional
+from typing import Optional, Callable
+
+import requests
+from requests import Response
 
 __all__ = ['wait_port', 'wait_readiness']
 
@@ -33,7 +36,7 @@ def wait_port(port: int, host: str = 'localhost', timeout: Optional[int] = None,
         sleep(attempt_every / 1000)
 
 
-def wait_readiness(url: str, timeout: Optional[int] = None, attempt_every: int = 100):
+def wait_readiness(url: str, timeout: Optional[int] = None, attempt_every: int = 1000, predicate: Optional[Callable[[Response], bool]] = None) -> None:
     """
     wait until a url reply to http request with 200.
 
@@ -43,5 +46,27 @@ def wait_readiness(url: str, timeout: Optional[int] = None, attempt_every: int =
 
     :param url: port that has to be open
     :param timeout: timeout in ms before raising TimeoutError.
+    :param attempt_every: time in ms between each attempt to check if the port is responding (default 1000ms)
+    :param predicate: a function that takes the request response and check if the result is valid
     """
-    pass
+    start = monotonic()
+    ready = False
+    while ready is False and (timeout is None or monotonic() - start < timeout / 1000):
+        try:
+            r = requests.get(url)
+            if predicate is None:
+                predicate = lambda r: r.status_code == 200
+
+            if predicate(r):
+                ready = True
+                break
+                
+        except requests.exceptions.ConnectionError:
+            pass
+
+        sleep(attempt_every / 1000)
+
+    if ready is False:
+        raise TimeoutError(f"{url} is not ready after {timeout}ms")
+
+    return
