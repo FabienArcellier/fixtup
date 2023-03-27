@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+    sandbox:
+        image: httpd
+        ports:
+            - "8888:80"
+        init: true
+
