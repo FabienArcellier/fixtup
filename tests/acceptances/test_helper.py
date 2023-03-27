@@ -10,6 +10,9 @@ from fixtup.tests.settings import override_fixtup_settings
 class TestHelper(unittest.TestCase):
 
     def setUp(self):
+        if os.getenv('IGNORE_DOCKER_TESTS', '0') == '1':
+            self.skipTest('this test use docker and is ignored on ci running windows because github action does not support docker on windows')
+
         reset_runtime_context(RuntimeContext(emulate_new_process=True))
 
     def tearDown(self) -> None:
