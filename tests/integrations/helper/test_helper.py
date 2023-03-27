@@ -1,3 +1,5 @@
+import os
+
 import unittest
 
 import fixtup.helper
@@ -5,7 +7,8 @@ import fixtup.helper
 
 class TestHelper(unittest.TestCase):
     def setUp(self):
-        pass
+        if os.getenv('IGNORE_DOCKER_TESTS', '0') == '1':
+            self.skipTest('this test use docker and is ignored on ci running windows because github action does not support docker on windows')
 
     def test_wait_readiness_should_detect_webserver(self):
         # Assign
