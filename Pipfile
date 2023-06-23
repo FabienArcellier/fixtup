@@ -2,16 +2,17 @@
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
-
 # pipenv install
+
 [packages]
 fixtup = {path = ".", editable=true}
 six = "*"
-
+platformdirs = "*"
 # pipenv install --dev
+
 [dev-packages]
 fixtup = {path = ".", extras = ["dev"], editable=true}
-
 # pipenv install --categories="dev_windows"
+
 [dev_windows]
 fixtup = {path = ".", extras = ["dev_windows"], editable=true}
