@@ -1,10 +1,7 @@
 import threading
 
 from fixtup.entity.settings import Settings
-from fixtup.logger import get_logger
 from fixtup.settings.base import SettingsParser
-
-logger = get_logger()
 
 thread_store = threading.local()
 thread_store.settings = None

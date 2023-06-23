@@ -6,7 +6,6 @@ import click
 from fixtup.cli.commands.info import info
 from fixtup.cli.commands.init import init
 from fixtup.cli.commands.new import new
-from fixtup.logger import get_logger
 
 BASE_DIR = os.path.realpath(os.path.join(__file__, '..'))
 

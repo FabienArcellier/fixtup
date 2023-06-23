@@ -1,5 +1,5 @@
+from fixtup import logger
 from fixtup.entity.plugin import PluginEvent
-from fixtup.logger import get_logger
 
 
 class PluginEngine:
@@ -15,7 +15,6 @@ class PluginEngine:
         This method try to release resource instanciate through a plugin. We run the event
          in degraded mode. If it raise an error, it will ignore it.
         """
-        logger = get_logger()
         logger.warning(f"release plugin resource due to internal error with event {event}")
         try:
             self.run(event, *args, **kwargs)

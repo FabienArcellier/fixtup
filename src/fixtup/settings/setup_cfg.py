@@ -3,13 +3,10 @@ import os
 
 import configparser
 
+from fixtup import logger
 from fixtup.entity.settings import Settings
-from fixtup.logger import get_logger
 from fixtup.os import universal_path
 from fixtup.settings.base import SettingsParser, RESOURCE_DIR
-
-
-logger = get_logger()
 
 
 class SetupCfg(SettingsParser):

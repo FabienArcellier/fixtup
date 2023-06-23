@@ -5,10 +5,7 @@ from typing import Generator, List, Union
 from fixtup.entity.settings import Settings
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
-from fixtup.logger import get_logger
 from fixtup.settings.module import configure_from_code
-
-logger = get_logger()
 
 current_working_dir = None
 

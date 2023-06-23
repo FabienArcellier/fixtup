@@ -2,9 +2,8 @@ import os
 
 import attr
 
-from fixtup.logger import get_logger
+from fixtup import logger
 
-logger = get_logger()
 
 @attr.s
 class FixtureTemplate():
