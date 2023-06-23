@@ -1,7 +1,8 @@
 import os
 from contextlib import contextmanager
-from typing import Generator, List, Union
+from typing import Generator, List, Union, Optional
 
+from fixtup import ctx
 from fixtup.entity.settings import Settings
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
@@ -12,7 +13,7 @@ current_working_dir = None
 
 def configure(settings: dict) -> None:
     """
-    configure the module fixtup to override configuration
+    (deprecated) configure the module fixtup to override configuration
 
     You should prefer configure fixtup using
     python manifest like setup.cfg or pyproject.toml.
@@ -31,7 +32,7 @@ def configure(settings: dict) -> None:
 
 
 @contextmanager
-def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
+def up(fixture: str, keep_mounted_fixture: bool = False, settings: Optional[dict] = None) -> Generator[None, None, None]:
     """
     Mount a fixture to use it in a test.
 
@@ -56,6 +57,12 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
     # >>>  with fixtup.up('fixture2'):
     #       ...
     #
+    ctx.start()
+
+    if settings is not None:
+        _settings = Settings.from_configuration(settings)
+        configure_from_code(_settings)
+
     global current_working_dir
     if current_working_dir is None:
         highest_context = True
