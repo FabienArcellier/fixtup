@@ -7,7 +7,6 @@ name = "pypi"
 [packages]
 fixtup = {path = ".", editable=true}
 six = "*"
-platformdirs = "*"
 # pipenv install --dev
 
 [dev-packages]

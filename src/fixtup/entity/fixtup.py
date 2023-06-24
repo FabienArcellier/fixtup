@@ -22,9 +22,7 @@ class Fixtup:
     enable_hooks: bool = True
     enable_plugins: bool = True
 
-    # A chaque fois que fixtup.up est invoqué, fixtup redémarre comme si c'était une nouvelle exécution des
-    # tests. Ce mode est nécessaire pour tester certains workflows dans les tests automatiques qui requiert un
-    # contexte fixtup complètement vierge
+    # Each time fixtup.up is invoked, fixtup restarts as if it were a new test run. This mode is necessary to test some workflows in the automatic tests which requires a completely blank fixtup context
     emulate_new_process: bool = False
 
 
