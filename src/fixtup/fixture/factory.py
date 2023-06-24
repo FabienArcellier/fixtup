@@ -36,3 +36,7 @@ def lookup_fixture_engine(highest_context: bool = False) -> FixtureEngine:
 
     fixture_engine = FixtureEngine(hook_engine, plugin_engine, _fixtup_process)
     return fixture_engine
+
+def reset_fixture_engine() -> None:
+    global fixture_engine
+    fixture_engine = None

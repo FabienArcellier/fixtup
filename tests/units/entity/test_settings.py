@@ -15,7 +15,7 @@ class TestSettings(unittest.TestCase):
 
         # Acts & Assert
         expected_path = os.path.join("hello", "world")
-        self.assertIn(expected_path, settings.configuration_dir)
+        self.assertIn(expected_path, settings.projectdir)
 
     def test_from_manifest_should_extract_fixture(self):
         # Arrange

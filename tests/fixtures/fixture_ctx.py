@@ -4,6 +4,7 @@ from contextlib import contextmanager
 
 from fixtup import ctx
 from fixtup.entity.fixtup import Fixtup
+from fixtup.fixture.factory import reset_fixture_engine
 
 
 @contextmanager
@@ -63,3 +64,4 @@ def teardown_fake() -> None:
     >>>         fixture_ctx.teardown_fake()
     """
     ctx.inject(None)
+    reset_fixture_engine()

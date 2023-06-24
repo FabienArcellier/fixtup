@@ -1,6 +1,7 @@
 import os
 from typing import Optional, List
 
+from fixtup.entity.fixtup import Fixtup
 from fixtup.entity.project_manifest import ProjectManifests
 from fixtup.entity.settings import Settings
 from fixtup.exceptions import PythonManifestMissing, FixtupSettingsMissing, FixtupSettingsAlreadyPresent
@@ -62,6 +63,23 @@ def list_project_manifests() -> ProjectManifests:
     return project_manifests
 
 
+def load_settings_into_ctx(ctx: Fixtup) -> None:
+    """
+    load the project settings into fixtup context
+
+    >>> fixtup_context = ctx.get()
+    >>> load_settings_into_ctx(fixtup_context)
+    """
+    settings = read_settings()
+
+    ctx.projectloaded = True
+    ctx.projectdir = settings.projectdir
+    ctx.plugins = settings.plugins
+    ctx.manifestpath = settings.manifestpath
+    ctx.fixturesdir = settings.fixtures_dir
+    return
+
+
 def read_settings() -> Settings:
     """
     Read the settings of fixtup into the python project manifest
@@ -104,8 +122,8 @@ def write_settings(settings: Settings):
     parsers = lookup_parsers()
     for parser in parsers:
         if settings.manifest_identifier == parser.manifest:
-            if settings.configuration_dir is not None and parser.contains_settings(settings.configuration_dir):
-                raise FixtupSettingsAlreadyPresent(f"fail to write settings because it already exists in {settings.manifest_path}")
+            if settings.projectdir is not None and parser.contains_settings(settings.projectdir):
+                raise FixtupSettingsAlreadyPresent(f"fail to write settings because it already exists in {settings.manifestpath}")
 
             parser.append_settings(settings)
             return

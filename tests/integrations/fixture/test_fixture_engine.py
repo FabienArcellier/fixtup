@@ -14,6 +14,7 @@ class TestFixtureEngine(unittest.TestCase):
     def setUp(self) -> None:
         self.context = fixture_ctx.setup_fake()
         self.context.emulate_new_process = True
+        self.context.fixturesdir = os.path.realpath(os.path.join(__file__, '..', '..', '..', 'fixtures', 'fixtup'))
 
         logging.disable(logging.WARNING)
         self.tested = lookup_fixture_engine()

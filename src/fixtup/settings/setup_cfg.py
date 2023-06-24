@@ -62,7 +62,7 @@ class SetupCfg(SettingsParser):
         """
         write the settings at the end of the manifest
         """
-        manifest_expected_path = self._manifest_expected_path(settings.configuration_dir)
+        manifest_expected_path = self._manifest_expected_path(settings.projectdir)
         self._assert_manifest_exists(manifest_expected_path)
 
         with io.open(os.path.join(RESOURCE_DIR, 'setup_cfg_settings.in')) as file_pointer:

@@ -6,6 +6,7 @@ from fixtup import ctx
 from fixtup.entity.settings import Settings
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
+from fixtup.settings.base import load_settings_into_ctx
 from fixtup.settings.module import configure_from_code
 
 current_working_dir = None
@@ -57,11 +58,11 @@ def up(fixture: str, keep_mounted_fixture: bool = False, settings: Optional[dict
     # >>>  with fixtup.up('fixture2'):
     #       ...
     #
-    ctx.start()
-
+    fixtup_context = ctx.start()
     if settings is not None:
         _settings = Settings.from_configuration(settings)
         configure_from_code(_settings)
+
 
     global current_working_dir
     if current_working_dir is None:
@@ -72,6 +73,7 @@ def up(fixture: str, keep_mounted_fixture: bool = False, settings: Optional[dict
     if current_working_dir is not None:
         os.chdir(current_working_dir)
 
+    load_settings_into_ctx(fixtup_context)
     fixture_engine = lookup_fixture_engine(highest_context=highest_context)
     template = fixture_template(fixture)
 
