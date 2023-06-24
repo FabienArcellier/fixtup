@@ -4,7 +4,7 @@ import logging
 
 DEFAULT_LOGGER = 'fixtup'
 
-def warning(*args, name: str = None, **kwargs) -> None:
+def warning(*args, name: Optional[str] = None, **kwargs) -> None:
     """
     log a warning message. It use the same signature as `Logger.warning``.
 
@@ -15,7 +15,7 @@ def warning(*args, name: str = None, **kwargs) -> None:
     logger.warning(*args, **kwargs)
 
 
-def info(*args, name: str = None, **kwargs) -> None:
+def info(*args, name: Optional[str] = None, **kwargs) -> None:
     """
     log a info message. It use the same signature as `Logger.info``.
 
@@ -26,7 +26,7 @@ def info(*args, name: str = None, **kwargs) -> None:
     logger.info(*args, **kwargs)
 
 
-def debug(*args, name: str = None, **kwargs) -> None:
+def debug(*args, name: Optional[str] = None, **kwargs) -> None:
     """
     log a debug message. It use the same signature as `Logger.debug``.
 
@@ -37,7 +37,7 @@ def debug(*args, name: str = None, **kwargs) -> None:
     logger.debug(*args, **kwargs)
 
 
-def error(*args, name: str = None, **kwargs) -> None:
+def error(*args, name: Optional[str] = None, **kwargs) -> None:
     """
     log a error message. It use the same signature as `Logger.error``.
 

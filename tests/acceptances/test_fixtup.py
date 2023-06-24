@@ -1,25 +1,24 @@
-import logging
 import os
 import shutil
 import unittest
 
 import fixtup
 from fixtup.exceptions import FixtureNotFound, PluginRuntimeError
-from fixtup.factory import reset_runtime_context, RuntimeContext
 from fixtup.tests.logger import disable_logging
 from fixtup.tests.settings import override_fixtup_settings
+from fixtures import fixture_ctx
 
 
 class TestFixtup(unittest.TestCase):
 
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True,
-                                             enable_plugins=False,
-                                             enable_hooks=False,
-                                             emulate_new_process=True))
+        self.context = fixture_ctx.setup_fake()
+        self.context.enable_hooks = False
+        self.context.enable_plugins = False
+        self.context.emulate_new_process = True
 
     def tearDown(self) -> None:
-        reset_runtime_context()
+        fixture_ctx.teardown_fake()
 
     def test_up_should_mount_a_fixture_into_tmp_file(self):
         # Arrange
@@ -55,7 +54,7 @@ class TestFixtup(unittest.TestCase):
 
     def test_up_should_reuse_fixtures_through_different_tests_when_keep_up_flag_is_on(self):
         # Acts
-        reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
+        self.context.emulate_new_process = False
 
         # Arrange
         with fixtup.up("simple_fixture_keep_up"):
@@ -98,7 +97,9 @@ class TestFixtup(unittest.TestCase):
             self.assertTrue(os.path.isfile(os.path.join(cwd, 'hello.txt')))
 
     def test_up_should_show_error_message_when_error_happens_in_plugins(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True, emulate_new_process=True))
+        # Arrange
+        self.context.enable_plugins = True
+        self.context.emulate_new_process = True
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -142,11 +143,7 @@ class TestFixtup(unittest.TestCase):
         between 2 tests, the setup_data hook and the teardown_data hook
         are invoked to mount and clean the data.
         """
-        reset_runtime_context(RuntimeContext(unittest=True,
-                                             enable_plugins=False,
-                                             enable_hooks=True,
-                                             emulate_new_process=True))
-
+        self.context.enable_hooks = True
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -171,7 +168,6 @@ class TestFixtup(unittest.TestCase):
             self.assertFalse(os.path.isfile(os.path.join(fixture_cwd, 'file.data')))
 
     def test_up_on_fixture_without_policies_should_create_a_new_fixture_environment(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False, emulate_new_process=False))
         SCRIPT_DIR = os.path.realpath(os.path.join(__file__, '..'))
 
         # Acts
@@ -190,8 +186,6 @@ class TestFixtup(unittest.TestCase):
             self.assertNotEqual(fixture1, fixture2)
 
     def test_up_with_multiple_fixtures_should_create_all_of_them(self):
-        # reset_runtime_context(RuntimeContext(unittest=True, emulate_new_process=False))
-
         with fixtup.up('simple_fixture_docker'):
             fixture1 = os.getcwd()
 

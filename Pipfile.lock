@@ -324,11 +324,11 @@
         },
         "alfred-cli": {
             "hashes": [
-                "sha256:2e23130d72a48620f14890d1bb87222136da80181f82fc37d1a2568b647b6e3f",
-                "sha256:fae65bb79afb0df8661a7dea9ab9438e9b2ef0f5c8faae73a63c3fd9b3921359"
+                "sha256:0761655569e0ed887b1c4985bcf4006d9ff36b2588a0d74656988ee4d0f68632",
+                "sha256:7836c8f026f2f5f5198d32edbaa6aa654f1cf12a503e856a0924d6d1519fcc7f"
             ],
             "markers": "python_version >= '3.8' and python_version < '4.0'",
-            "version": "==2.0.0"
+            "version": "==2.1.0"
         },
         "attrs": {
             "hashes": [

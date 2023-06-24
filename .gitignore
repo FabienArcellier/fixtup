@@ -6,3 +6,8 @@
 /dist
 /examples/*/build
 .idea
+
+**.pyc
+
+/.venv/*
+!/.venv/.gitkeep

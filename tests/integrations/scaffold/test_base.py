@@ -6,17 +6,18 @@ import yaml
 
 import fixtup
 from fixtup.entity.fixture_template import FixtureTemplate
-from fixtup.factory import reset_runtime_context, RuntimeContext
 from fixtup.scaffold.base import scaffold_new_fixture
+from fixtures import fixture_ctx
 
 
 class TestScaffold(unittest.TestCase):
 
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False))
+        self.context = fixture_ctx.setup_fake()
+        self.context.enable_plugins = False
 
     def tearDown(self) -> None:
-        reset_runtime_context()
+        fixture_ctx.teardown_fake()
 
     def test_scaffold_new_fixture_should_generate_a_fixture_directory(self):
         # Arrange

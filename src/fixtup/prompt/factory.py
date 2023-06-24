@@ -1,15 +1,19 @@
-from fixtup.factory import factory, RuntimeContext
+from fixtup import ctx
+from fixtup.entity.fixtup import Driver
 from fixtup.prompt import Prompt
 
 
-@factory
-def lookup_prompt(context: RuntimeContext) -> Prompt:
+def lookup_prompt() -> Prompt:
     """
     """
-    from fixtup.prompt.prompt_toolkit import PromptToolkit
-    from fixtup.prompt.mock import Mock
+    fixtup_context = ctx.get()
+    driver_prompt = fixtup_context.driver_prompt
 
-    if context.unittest:
+    if driver_prompt == Driver.prompt_toolkit:
+        from fixtup.prompt.prompt_toolkit import PromptToolkit
+        return PromptToolkit()
+    elif driver_prompt == Driver.mock:
+        from fixtup.prompt.mock import Mock
         return Mock()
     else:
-        return PromptToolkit()
+        raise NotImplementedError(f"{fixtup_context.driver_prompt} is not supported")

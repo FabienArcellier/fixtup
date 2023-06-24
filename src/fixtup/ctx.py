@@ -34,7 +34,7 @@ def start() -> Fixtup:
     return _ctx
 
 
-def inject(context: Fixtup):
+def inject(context: Optional[Fixtup]):
     """
     this function allows the fixture fixture_ctx.use_fake to override the fixtup context.
 

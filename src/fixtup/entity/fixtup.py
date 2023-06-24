@@ -5,6 +5,9 @@ from typing import Optional, List
 import attr
 import platformdirs
 
+class Driver:
+    mock = 'mock'
+    prompt_toolkit = 'prompt-toolkit'
 
 @attr.s
 class Fixtup:
@@ -14,6 +17,16 @@ class Fixtup:
     appdir: Optional[str] = None
     mountdir: Optional[str] = None
     pid_owner: Optional[int] = None
+
+    driver_prompt: str = Driver.prompt_toolkit
+    enable_hooks: bool = True
+    enable_plugins: bool = True
+
+    # A chaque fois que fixtup.up est invoqué, fixtup redémarre comme si c'était une nouvelle exécution des
+    # tests. Ce mode est nécessaire pour tester certains workflows dans les tests automatiques qui requiert un
+    # contexte fixtup complètement vierge
+    emulate_new_process: bool = False
+
 
     # Project settings
     projectloaded: bool = False

@@ -3,21 +3,23 @@ import logging
 import os
 import unittest
 
-import fixtup
 from fixtup.entity.fixture import State
-from fixtup.factory import RuntimeContext, reset_runtime_context
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
+from fixtures import fixture_ctx
 
 
 class TestFixtureEngine(unittest.TestCase):
 
     def setUp(self) -> None:
+        self.context = fixture_ctx.setup_fake()
+        self.context.emulate_new_process = True
+
         logging.disable(logging.WARNING)
-        reset_runtime_context(RuntimeContext(emulate_new_process=True))
         self.tested = lookup_fixture_engine()
 
     def tearDown(self) -> None:
+        fixture_ctx.teardown_fake()
         logging.disable(logging.INFO)
 
     def test_new_fixture_should_create_an_empty_directory_in_tmp_file(self):
