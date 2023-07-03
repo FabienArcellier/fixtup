@@ -1,7 +1,7 @@
 import click
 from click.exceptions import ClickException
 
-from fixtup import ctx
+from fixtup import context
 from fixtup.exceptions import FixtupException
 from fixtup.settings.base import load_settings_into_ctx
 
@@ -9,7 +9,7 @@ from fixtup.settings.base import load_settings_into_ctx
 @click.command(help="Display fixtup configuration information")
 def info():
     try:
-        fixtup_context = ctx.start()
+        fixtup_context = context.up()
         load_settings_into_ctx(fixtup_context)
         click.echo(f"Configuration: {fixtup_context.manifestpath}")
         click.echo(f"Fixtures: {fixtup_context.fixturesdir}")

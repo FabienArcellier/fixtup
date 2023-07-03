@@ -6,19 +6,19 @@ import fixtup
 from fixtup.exceptions import FixtureNotFound, PluginRuntimeError
 from fixtup.tests.logger import disable_logging
 from fixtup.tests.settings import override_fixtup_settings
-from fixtures import fixture_ctx
+from fixtures import fixture_context
 
 
 class TestFixtup(unittest.TestCase):
 
     def setUp(self):
-        self.context = fixture_ctx.setup_fake()
+        self.context = fixture_context.setup_fake()
         self.context.enable_hooks = False
         self.context.enable_plugins = False
         self.context.emulate_new_process = True
 
     def tearDown(self) -> None:
-        fixture_ctx.teardown_fake()
+        fixture_context.teardown_fake()
 
     def test_up_should_mount_a_fixture_into_tmp_file(self):
         # Arrange

@@ -1,11 +1,11 @@
-from fixtup import ctx
+from fixtup import context
 from fixtup.hook.base import HookEngine
 from fixtup.hook.mock import MockHookEngine
 from fixtup.hook.python import PythonHookEngine
 
 
 def lookup_hook_engine() -> HookEngine:
-    fixtup_context = ctx.get()
+    fixtup_context = context.up()
     hook_engine: HookEngine
     if fixtup_context.enable_hooks is True:
         hook_engine = PythonHookEngine()

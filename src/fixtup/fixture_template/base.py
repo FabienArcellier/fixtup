@@ -3,14 +3,14 @@ import os
 
 import yaml
 
-from fixtup import ctx
+from fixtup import context
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.exceptions import FixtureNotFound
 from fixtup.logger import get_logger
 
 
 def fixture_template(identifier: str) -> FixtureTemplate:
-    fixtup_context = ctx.get()
+    fixtup_context = context.current()
 
     fixtures_path = fixtup_context.fixturesdir
     fixture_template = _fixture_template_path(fixtures_path, identifier)

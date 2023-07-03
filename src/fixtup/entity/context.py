@@ -12,7 +12,7 @@ class Driver:
 
 
 @attr.s
-class Fixtup:
+class Context:
 
     # Global settings
     appname: str = attr.ib(default='fixtup')
@@ -26,7 +26,6 @@ class Fixtup:
 
     # Each time fixtup.up is invoked, fixtup restarts as if it were a new test run. This mode is necessary to test some workflows in the automatic tests which requires a completely blank fixtup context
     emulate_new_process: bool = attr.ib(default=False)
-
 
     # Project settings
     projectloaded: bool = attr.ib(default=False)

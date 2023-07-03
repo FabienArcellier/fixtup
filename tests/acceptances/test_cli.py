@@ -5,23 +5,23 @@ from click.testing import CliRunner
 
 import fixtup
 from fixtup.cli.base import cli
-from fixtup.entity.fixtup import Driver
+from fixtup.entity.context import Driver
 from fixtup.prompt.mock import send_text, reset_input
 from fixtup.settings import read_settings
 from fixtup.tests.settings import override_fixtup_settings
-from fixtures import fixture_ctx
+from fixtures import fixture_context
 
 
 class TestCli(unittest.TestCase):
 
     def setUp(self):
-        self.context = fixture_ctx.setup_fake()
+        self.context = fixture_context.setup_fake()
         self.context.driver_prompt = Driver.mock
         reset_input()
         self._runner = CliRunner()
 
     def tearDown(self) -> None:
-        fixture_ctx.teardown_fake()
+        fixture_context.teardown_fake()
 
     def test_invoke_should_show_a_list_of_command(self):
         # Arrange

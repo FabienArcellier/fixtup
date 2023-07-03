@@ -1,11 +1,11 @@
-from fixtup import ctx
+from fixtup import context
 from fixtup.plugin.base import PluginEngine
 from fixtup.plugin.mock import MockPluginEngine
 from fixtup.plugin.python import PythonPluginEngine
 
 
 def lookup_plugin_engine() -> PluginEngine:
-    fixtup_context = ctx.get()
+    fixtup_context = context.current()
     plugin_engine: PluginEngine
     if fixtup_context.enable_plugins is True:
         plugin_engine = PythonPluginEngine()

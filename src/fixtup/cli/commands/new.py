@@ -2,7 +2,7 @@ import os
 
 import click
 
-from fixtup import ctx
+from fixtup import context
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.prompt.factory import lookup_prompt
 from fixtup.scaffold.base import scaffold_new_fixture
@@ -14,7 +14,7 @@ def new() -> None:
     """
     scaffolding command that will generate a new fixture
     """
-    fixtup_context = ctx.start()
+    fixtup_context = context.up()
     load_settings_into_ctx(fixtup_context)
 
     prompt = lookup_prompt()

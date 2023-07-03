@@ -1,8 +1,8 @@
 import os
 from contextlib import contextmanager
-from typing import Generator, List, Union, Optional
+from typing import Generator, Optional
 
-from fixtup import ctx
+from fixtup import context
 from fixtup.entity.settings import Settings
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
@@ -58,7 +58,7 @@ def up(fixture: str, keep_mounted_fixture: bool = False, settings: Optional[dict
     # >>>  with fixtup.up('fixture2'):
     #       ...
     #
-    fixtup_context = ctx.start()
+    fixtup_context = context.up()
     if settings is not None:
         _settings = Settings.from_configuration(settings)
         configure_from_code(_settings)

@@ -7,17 +7,17 @@ import yaml
 import fixtup
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.scaffold.base import scaffold_new_fixture
-from fixtures import fixture_ctx
+from fixtures import fixture_context
 
 
 class TestScaffold(unittest.TestCase):
 
     def setUp(self):
-        self.context = fixture_ctx.setup_fake()
+        self.context = fixture_context.setup_fake()
         self.context.enable_plugins = False
 
     def tearDown(self) -> None:
-        fixture_ctx.teardown_fake()
+        fixture_context.teardown_fake()
 
     def test_scaffold_new_fixture_should_generate_a_fixture_directory(self):
         # Arrange
