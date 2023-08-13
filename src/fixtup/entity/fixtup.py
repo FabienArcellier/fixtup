@@ -1,9 +1,14 @@
+import typing
+
 import os
 import tempfile
 from typing import Optional, List
 
 import attr
 import platformdirs
+
+if typing.TYPE_CHECKING:
+    from fixtup.fixture.base import FixtureEngine
 
 
 class Driver:
@@ -12,7 +17,7 @@ class Driver:
 
 
 @attr.s
-class Context:
+class Fixtup:
 
     # Global settings
     appname: str = attr.ib(default='fixtup')
@@ -33,6 +38,9 @@ class Context:
     manifestpath: Optional[str] = attr.ib(default=None)
     fixturesdir: Optional[str] = attr.ib(default=None)
     plugins: List[str] = attr.ib(factory=list)
+
+    # Runtime settings
+    engine: Optional['FixtureEngine'] = attr.ib(default=None)
 
     def __attrs_post_init__(self):
         if self.appdir is None:

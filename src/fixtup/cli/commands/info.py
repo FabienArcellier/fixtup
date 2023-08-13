@@ -1,16 +1,17 @@
 import click
 from click.exceptions import ClickException
 
-from fixtup import context
+from fixtup.context import lib_context, lib_context_setup
 from fixtup.exceptions import FixtupException
-from fixtup.settings.base import load_settings_into_ctx
+from fixtup.settings.base import load_settings
 
 
 @click.command(help="Display fixtup configuration information")
 def info():
     try:
-        fixtup_context = context.up()
-        load_settings_into_ctx(fixtup_context)
+        lib_context_setup()
+        load_settings()
+        fixtup_context = lib_context()
         click.echo(f"Configuration: {fixtup_context.manifestpath}")
         click.echo(f"Fixtures: {fixtup_context.fixturesdir}")
         click.echo(f"Plugins:")

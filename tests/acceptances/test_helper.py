@@ -3,6 +3,7 @@ import os
 import unittest
 
 import fixtup.helper
+from fixtup.context import lib_context_inject, lib_context_eject
 from fixtures import fixture_context
 
 
@@ -12,11 +13,11 @@ class TestHelper(unittest.TestCase):
         if os.getenv('IGNORE_DOCKER_TESTS', '0') == '1':
             self.skipTest('this test use docker and is ignored on ci running windows because github action does not support docker on windows')
 
-        self.context = fixture_context.setup_fake()
+        self.context = lib_context_inject()
         self.context.emulate_new_process = True
 
     def tearDown(self) -> None:
-        fixture_context.teardown_fake()
+        lib_context_eject()
 
     def test_wait_port_should_raise_error_when_timeout_is_spend(self):
         # Assign

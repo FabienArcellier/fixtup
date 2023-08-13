@@ -1,7 +1,7 @@
 import os
 from typing import Optional, List
 
-from fixtup.entity.context import Context
+from fixtup.context import lib_context
 from fixtup.entity.project_manifest import ProjectManifests
 from fixtup.entity.settings import Settings
 from fixtup.exceptions import PythonManifestMissing, FixtupSettingsMissing, FixtupSettingsAlreadyPresent
@@ -63,20 +63,20 @@ def list_project_manifests() -> ProjectManifests:
     return project_manifests
 
 
-def load_settings_into_ctx(ctx: Context) -> None:
+def load_settings() -> None:
     """
     load the project settings into fixtup context
 
-    >>> fixtup_context = context.current()
-    >>> load_settings_into_ctx(fixtup_context)
+    >>> load_settings()
     """
+    fixtup = lib_context()
     settings = read_settings()
 
-    ctx.projectloaded = True
-    ctx.projectdir = settings.projectdir
-    ctx.plugins = settings.plugins
-    ctx.manifestpath = settings.manifestpath
-    ctx.fixturesdir = settings.fixtures_dir
+    fixtup.projectloaded = True
+    fixtup.projectdir = settings.projectdir
+    fixtup.plugins = settings.plugins
+    fixtup.manifestpath = settings.manifestpath
+    fixtup.fixturesdir = settings.fixtures_dir
     return
 
 

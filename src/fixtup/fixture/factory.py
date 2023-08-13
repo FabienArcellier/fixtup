@@ -1,25 +1,20 @@
-from typing import Optional
-
-from fixtup import context
+from fixtup.context import lib_context
 from fixtup.entity.fixtup_process import fixtup_process, FixtupProcess
 from fixtup.fixture.base import FixtureEngine
 from fixtup.hook.factory import lookup_hook_engine
 from fixtup.plugin.factory import lookup_plugin_engine
 
-fixture_engine: Optional[FixtureEngine] = None
-
 
 def lookup_fixture_engine(highest_context: bool = False) -> FixtureEngine:
-    fixtup_context = context.current()
-    global fixture_engine
-    if fixture_engine is not None and highest_context is False:
-        return fixture_engine
-    if fixture_engine is not None and not fixtup_context.emulate_new_process:
-        return fixture_engine
-    elif fixture_engine is not None and fixtup_context.emulate_new_process:
-        fixture_engine.unregister_process_teardown()
-        fixture_engine.process_teardown_exit()
-        fixture_engine = None
+    fixtup_context = lib_context()
+    if fixtup_context.engine is not None and highest_context is False:
+        return fixtup_context.engine
+    if fixtup_context.engine is not None and not fixtup_context.emulate_new_process:
+        return fixtup_context.engine
+    elif fixtup_context.engine is not None and fixtup_context.emulate_new_process:
+        fixtup_context.engine.unregister_process_teardown()
+        fixtup_context.engine.process_teardown_exit()
+        fixtup_context.engine = None
 
     plugin_engine = lookup_plugin_engine()
     hook_engine = lookup_hook_engine()

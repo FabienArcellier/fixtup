@@ -3,6 +3,7 @@ import shutil
 import unittest
 
 import fixtup
+from fixtup.context import lib_context_inject, lib_context_eject
 from fixtup.exceptions import FixtureNotFound, PluginRuntimeError
 from fixtup.tests.logger import disable_logging
 from fixtup.tests.settings import override_fixtup_settings
@@ -12,13 +13,13 @@ from fixtures import fixture_context
 class TestFixtup(unittest.TestCase):
 
     def setUp(self):
-        self.context = fixture_context.setup_fake()
+        self.context = lib_context_inject()
         self.context.enable_hooks = False
         self.context.enable_plugins = False
         self.context.emulate_new_process = True
 
     def tearDown(self) -> None:
-        fixture_context.teardown_fake()
+        lib_context_eject()
 
     def test_up_should_mount_a_fixture_into_tmp_file(self):
         # Arrange

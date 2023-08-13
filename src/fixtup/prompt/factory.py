@@ -1,12 +1,12 @@
-from fixtup import context
-from fixtup.entity.context import Driver
+from fixtup.context import lib_context
+from fixtup.entity.fixtup import Driver
 from fixtup.prompt import Prompt
 
 
 def lookup_prompt() -> Prompt:
     """
     """
-    fixtup_context = context.current()
+    fixtup_context = lib_context()
     driver_prompt = fixtup_context.driver_prompt
 
     if driver_prompt == Driver.prompt_toolkit:

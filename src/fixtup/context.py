@@ -1,58 +1,66 @@
 """
-Initializes a context for the fixtup library, freely accessible through ``context.current()``.
+lib_context is a module that manages the global execution context of fixtup. This context is a source of truth shared between all fixtup modules.
 
-This context is initialized when fixtup is started, either when starting the first fixture or when executing a command.
+It can be retrieved with the ``lib_context()`` function.
 
->>> from fixtup import context
->>> ctx = context.current()
+>>> from fixtup.context import lib_context
+>>> fixtup = lib_context()
 """
 from typing import Optional
 
 from fixtup import logger
-from fixtup.entity.context import Context
-from fixtup.fixture.factory import fixture_engine_down
+from fixtup.entity.fixtup import Fixtup
 
-_context: Optional[Context] = None
+_lib_context: Optional[Fixtup] = None
+_fake_lib_context: Optional[Fixtup] = None
 
-
-def current() -> Context:
+def lib_context_setup() -> None:
     """
-    returns the context of the fixtup library
+    Initialize the fixtup context.
     """
-    if _context is None:
-        """
-        If you need to emulate fixtup in automatic testing, you should prepare your test with `with ctx_fixture.mock()`.
-        """
-        raise RuntimeError("This code must be executed in a fixtup context.")
-
-    return _context
-
-
-def up() -> Context:
-    """
-    Mount the fixtup context.
-    """
-    global _context
-    if _context is None:
+    global _lib_context
+    if _lib_context is None:
         logger.debug('init a global context for fixtup')
-        _context = Context()
+        if _fake_lib_context is None:
+            _lib_context = Fixtup()
+        else:
+            _lib_context = _fake_lib_context
     else:
         logger.debug(f'a global context already exist for fixtup, it reuse it')
 
-    return _context
-
-
-def inject(context: Optional[Context]):
+def lib_context_teardown() -> None:
     """
-    this function allows the fixture fixture_ctx.use_fake to override the fixtup context.
-
-    This function is dedicated to the automatic test.
+    Uninitialize the fixtup context.
     """
-    global _context
-    _context = context
+    global _lib_context
+    _lib_context = None
 
 
-def down() -> None:
-    global _context
-    _context = None
-    fixture_engine_down()
+def lib_context() -> Fixtup:
+    """
+    returns the context of the fixtup library
+    """
+    if _lib_context is None:
+        """
+        If you need to emulate fixtup in automatic testing, you should prepare your test with `with context.use_fake_lib_context()`
+        """
+        raise RuntimeError("This code must be executed in fixtup lib context.")
+
+    return _lib_context
+
+def lib_context_inject() -> Fixtup:
+    """
+    Inject a fixtup context. This is useful for testing.
+    """
+    global _fake_lib_context
+    _fake_lib_context = Fixtup()
+    return _fake_lib_context
+
+def lib_context_eject() -> None:
+    """
+    Eject the injected fixtup context. This is useful for testing.
+
+    When tearing down a test, this method cleans up the context that would be loaded when calling `lib_context_setup()`.
+    """
+    global _fake_lib_context
+    _fake_lib_context = None

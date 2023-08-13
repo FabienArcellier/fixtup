@@ -3,24 +3,28 @@ import logging
 import os
 import unittest
 
+from fixtup.context import lib_context_inject, lib_context_eject, lib_context_setup, lib_context_teardown
 from fixtup.entity.fixture import State
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
-from fixtures import fixture_context
+
 
 
 class TestFixtureEngine(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.context = fixture_context.setup_fake()
+        self.context = lib_context_inject()
         self.context.emulate_new_process = True
         self.context.fixturesdir = os.path.realpath(os.path.join(__file__, '..', '..', '..', 'fixtures', 'fixtup'))
+        lib_context_setup()
 
         logging.disable(logging.WARNING)
         self.tested = lookup_fixture_engine()
 
+
     def tearDown(self) -> None:
-        fixture_context.teardown_fake()
+        lib_context_eject()
+        lib_context_teardown()
         logging.disable(logging.INFO)
 
     def test_new_fixture_should_create_an_empty_directory_in_tmp_file(self):
