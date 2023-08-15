@@ -103,14 +103,14 @@ class Settings:
         )
 
     @property
-    def configuration_dir(self) -> Optional[str]:
+    def projectdir(self) -> Optional[str]:
         if self.manifest is None:
             return None
 
         return os.path.dirname(self.manifest.path)
 
     @property
-    def manifest_path(self) -> Optional[str]:
+    def manifestpath(self) -> Optional[str]:
         if self.manifest is not None:
             return self.manifest.path
 
@@ -131,8 +131,8 @@ class Settings:
 
         :return: absolute path of the directory that contains the fixtures
         """
-        if self.configuration_dir is None:
+        if self.projectdir is None:
             return self.fixtures
         else:
-            return os.path.join(self.configuration_dir, self.fixtures)
+            return os.path.join(self.projectdir, self.fixtures)
 

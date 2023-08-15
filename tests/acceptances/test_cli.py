@@ -5,7 +5,8 @@ from click.testing import CliRunner
 
 import fixtup
 from fixtup.cli.base import cli
-from fixtup.factory import RuntimeContext, reset_runtime_context
+from fixtup.context import lib_context_inject, lib_context_eject
+from fixtup.entity.fixtup import Driver
 from fixtup.prompt.mock import send_text, reset_input
 from fixtup.settings import read_settings
 from fixtup.tests.settings import override_fixtup_settings
@@ -14,12 +15,13 @@ from fixtup.tests.settings import override_fixtup_settings
 class TestCli(unittest.TestCase):
 
     def setUp(self):
+        self.context = lib_context_inject()
+        self.context.driver_prompt = Driver.mock
         reset_input()
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False))
         self._runner = CliRunner()
 
     def tearDown(self) -> None:
-        reset_runtime_context()
+        lib_context_eject()
 
     def test_invoke_should_show_a_list_of_command(self):
         # Arrange
@@ -121,8 +123,6 @@ class TestCli(unittest.TestCase):
 
     def test_new_should_ask_for_docker_template(self):
         # Arrange
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
-
         send_text("hello world")
         send_text("y")
         send_text("y")
@@ -151,8 +151,6 @@ class TestCli(unittest.TestCase):
 
     def test_new_should_ask_for_docker_template_and_not_create_the_template_when_the_user_refuse(self):
         # Arrange
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
-
         send_text("hello world")
         send_text("n")
 
@@ -180,8 +178,6 @@ class TestCli(unittest.TestCase):
 
     def test_new_should_ask_for_dotenv_template(self):
         # Arrange
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
-
         send_text("hello world")
         send_text("y")
         send_text("y")
@@ -210,8 +206,6 @@ class TestCli(unittest.TestCase):
 
     def test_new_should_ask_for_dotenv_and_not_create_the_template_when_the_user_refuse(self):
         # Arrange
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=True))
-
         send_text("hello world")
         send_text("n")
 

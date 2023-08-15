@@ -1,20 +1,19 @@
-import io
 import os
 import subprocess
 import sys
 from typing import Optional
 
+from fixtup import logger
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.exceptions import HookRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
 from fixtup.lib.env import env_override
-from fixtup.logger import get_logger
 
 
 class PythonHookEngine(HookEngine):
 
     def run(self, event: HookEvent, template: FixtureTemplate) -> None:
-        logger = get_logger()
+
         hook_directory = os.path.join(template.directory, '.hooks')
         if not os.path.isdir(hook_directory):
             logger.debug(f"fixture {template.identifier} does not expose hook directory in {hook_directory}")

@@ -3,13 +3,10 @@ import os
 
 import configparser
 
+from fixtup import logger
 from fixtup.entity.settings import Settings
-from fixtup.logger import get_logger
 from fixtup.os import universal_path
 from fixtup.settings.base import SettingsParser, RESOURCE_DIR
-
-
-logger = get_logger()
 
 
 class SetupCfg(SettingsParser):
@@ -65,7 +62,7 @@ class SetupCfg(SettingsParser):
         """
         write the settings at the end of the manifest
         """
-        manifest_expected_path = self._manifest_expected_path(settings.configuration_dir)
+        manifest_expected_path = self._manifest_expected_path(settings.projectdir)
         self._assert_manifest_exists(manifest_expected_path)
 
         with io.open(os.path.join(RESOURCE_DIR, 'setup_cfg_settings.in')) as file_pointer:

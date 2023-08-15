@@ -1,18 +1,15 @@
-import logging
 import unittest
 
-from fixtup.logger import get_logger
 from fixtup.plugin.python import PythonPluginEngine
 
 
 class TestPythonPluginEngine(unittest.TestCase):
 
     def setUp(self):
-        logger = get_logger()
         self._tested = PythonPluginEngine()
 
     def tearDown(self) -> None:
-        logger = get_logger()
+        pass
 
     def test_register_plugin_should_register_the_plugin(self):
         # Arrange

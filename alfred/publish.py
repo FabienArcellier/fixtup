@@ -8,11 +8,7 @@ import click
 from click import UsageError, Choice
 from plumbum.commands.processes import ProcessExecutionError
 
-import fixtup
-
 ROOT_DIR = os.path.realpath(os.path.join(__file__, "..", ".."))
-VERSION = importlib.metadata.version(fixtup.__name__)
-
 
 @alfred.command("publish", help="tag a new release and trigger pypi publication")
 def publish():
@@ -21,6 +17,9 @@ def publish():
 
     >>> $ alfred publish
     """
+    import fixtup
+    VERSION = importlib.metadata.version(fixtup.__name__)
+
     git = alfred.sh("git", "git should be present")
     os.chdir(ROOT_DIR)
 

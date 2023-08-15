@@ -1,21 +1,20 @@
 import os
 from contextlib import contextmanager
-from typing import Generator, List, Union
+from typing import Generator, Optional
 
+from fixtup.context import lib_context_setup, lib_context_teardown
 from fixtup.entity.settings import Settings
 from fixtup.fixture.factory import lookup_fixture_engine
 from fixtup.fixture_template.base import fixture_template
-from fixtup.logger import get_logger
+from fixtup.settings.base import load_settings
 from fixtup.settings.module import configure_from_code
-
-logger = get_logger()
 
 current_working_dir = None
 
 
 def configure(settings: dict) -> None:
     """
-    configure the module fixtup to override configuration
+    (deprecated) configure the module fixtup to override configuration
 
     You should prefer configure fixtup using
     python manifest like setup.cfg or pyproject.toml.
@@ -34,7 +33,7 @@ def configure(settings: dict) -> None:
 
 
 @contextmanager
-def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None, None]:
+def up(fixture: str, keep_mounted_fixture: bool = False, settings: Optional[dict] = None) -> Generator[None, None, None]:
     """
     Mount a fixture to use it in a test.
 
@@ -58,7 +57,12 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
     # >>> with fixtup.up('fixture1'):
     # >>>  with fixtup.up('fixture2'):
     #       ...
-    #
+    lib_context_setup()
+    if settings is not None:
+        _settings = Settings.from_configuration(settings)
+        configure_from_code(_settings)
+
+
     global current_working_dir
     if current_working_dir is None:
         highest_context = True
@@ -68,6 +72,7 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
     if current_working_dir is not None:
         os.chdir(current_working_dir)
 
+    load_settings()
     fixture_engine = lookup_fixture_engine(highest_context=highest_context)
     template = fixture_template(fixture)
 
@@ -81,3 +86,6 @@ def up(fixture: str, keep_mounted_fixture: bool = False) -> Generator[None, None
         os.chdir(current_working_dir)
         if highest_context is True:
             current_working_dir = None
+
+        lib_context_teardown()
+

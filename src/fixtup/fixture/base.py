@@ -8,6 +8,7 @@ from typing import Any
 
 import attr
 
+from fixtup import logger
 from fixtup.entity.fixtup_process import FixtupProcess
 from fixtup.entity.fixture import Fixture, State
 from fixtup.entity.fixture_template import FixtureTemplate
@@ -15,7 +16,6 @@ from fixtup.exceptions import PluginRuntimeError, HookRuntimeError
 from fixtup.hook.base import HookEngine, HookEvent
 from fixtup.lib.env import with_cwd
 from fixtup.lib.signal import register_signal_handler, unregister_signal_handler
-from fixtup.logger import get_logger
 from fixtup.os import is_posix, is_windows
 from fixtup.plugin.base import PluginEngine, PluginEvent
 
@@ -50,7 +50,6 @@ class FixtureEngine:
         self._teardown()
 
     def process_teardown_signal(self, code: int, frame: Any):
-        logger = get_logger()
         logger.info(f'user interruption through os signal {code}, tear down mounted fixtures')
         self._teardown()
 
@@ -71,7 +70,6 @@ class FixtureEngine:
         :param keep_mounted_fixture:
         :return:
         """
-        logger = get_logger()
         fixture = self.new_fixture(template)
         try:
             self.start(template, fixture)

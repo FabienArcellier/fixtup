@@ -5,18 +5,20 @@ import unittest
 import yaml
 
 import fixtup
+from fixtup.context import lib_context_inject, lib_context_eject
 from fixtup.entity.fixture_template import FixtureTemplate
-from fixtup.factory import reset_runtime_context, RuntimeContext
 from fixtup.scaffold.base import scaffold_new_fixture
+from fixtures import fixture_context
 
 
 class TestScaffold(unittest.TestCase):
 
     def setUp(self):
-        reset_runtime_context(RuntimeContext(unittest=True, enable_plugins=False))
+        self.context = lib_context_inject()
+        self.context.enable_plugins = False
 
     def tearDown(self) -> None:
-        reset_runtime_context()
+        lib_context_eject()
 
     def test_scaffold_new_fixture_should_generate_a_fixture_directory(self):
         # Arrange

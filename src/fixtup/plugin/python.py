@@ -4,9 +4,9 @@ from typing import List
 
 import attr
 
+from fixtup import logger
 from fixtup.entity.plugin import Plugin
 from fixtup.exceptions import PluginRuntimeError
-from fixtup.logger import get_logger
 from fixtup.plugin.base import PluginEngine, PluginEvent, event_to_function
 
 
@@ -26,7 +26,6 @@ class PythonPluginEngine(PluginEngine):
                     raise PluginRuntimeError(str(exception), plugin) from exception
 
     def register_plugin(self, module: str):
-        logger = get_logger()
         try:
             _module = importlib.import_module(module)
             plugin = Plugin.create_from_module(_module)

@@ -5,10 +5,10 @@ import shutil
 from jinja2 import Environment
 import yaml
 
+from fixtup import logger
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.entity.plugin import PluginEvent
 from fixtup.entity.settings import Settings
-from fixtup.logger import get_logger
 from fixtup.plugin.factory import lookup_plugin_engine
 
 RESOURCE_DIR = os.path.realpath(os.path.join(__file__, '..', 'resource'))
@@ -23,7 +23,6 @@ def scaffold_fixture_repository(settings: Settings):
     :param settings:
     :return:
     """
-    logger = get_logger()
     logger.debug(f'scaffold fixture repository: {settings.fixtures_dir}')
     os.makedirs(settings.fixtures_dir)
 
@@ -33,7 +32,6 @@ def scaffold_new_fixture(fixture: FixtureTemplate):
     :param fixture: the fixture definition
     :return:
     """
-    logger = get_logger()
     logger.debug(f'scaffold new fixture: {fixture}')
     os.makedirs(fixture.directory)
 

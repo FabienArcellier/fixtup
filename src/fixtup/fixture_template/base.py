@@ -3,15 +3,16 @@ import os
 
 import yaml
 
+from fixtup.context import lib_context
 from fixtup.entity.fixture_template import FixtureTemplate
 from fixtup.exceptions import FixtureNotFound
 from fixtup.logger import get_logger
-from fixtup.settings import read_settings
 
 
 def fixture_template(identifier: str) -> FixtureTemplate:
-    settings = read_settings()
-    fixtures_path = settings.fixtures_dir
+    fixtup_context = lib_context()
+
+    fixtures_path = fixtup_context.fixturesdir
     fixture_template = _fixture_template_path(fixtures_path, identifier)
     config = _read_fixture_yml(fixture_template)
     return FixtureTemplate.create_from_fixture_template(fixture_template, config)

@@ -1,20 +1,19 @@
-from fixtup.factory import factory, RuntimeContext
+from fixtup.context import lib_context
 from fixtup.plugin.base import PluginEngine
 from fixtup.plugin.mock import MockPluginEngine
 from fixtup.plugin.python import PythonPluginEngine
-from fixtup.settings import read_settings
 
 
-@factory
-def lookup_plugin_engine(context: RuntimeContext) -> PluginEngine:
+def lookup_plugin_engine() -> PluginEngine:
+    fixtup_context = lib_context()
     plugin_engine: PluginEngine
-    if context.enable_plugins:
+    if fixtup_context.enable_plugins is True:
         plugin_engine = PythonPluginEngine()
     else:
         plugin_engine = MockPluginEngine()
 
-    settings = read_settings()
-    for plugin in settings.plugins:
+    # settings = read_settings()
+    for plugin in fixtup_context.plugins:
         plugin_engine.register_plugin(plugin)
 
     return plugin_engine
