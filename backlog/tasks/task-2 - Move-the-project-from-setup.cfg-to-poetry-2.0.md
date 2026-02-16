@@ -1,14 +1,16 @@
 ---
 id: TASK-2
 title: Move the project from setup.cfg to poetry 2.0
-status: To Do
+status: Review
 assignee: []
 created_date: '2026-02-16 23:38'
+updated_date: '2026-02-16 23:45'
 labels: []
 dependencies: []
 ---
 
 ## Description
+
 <!-- SECTION:DESCRIPTION:BEGIN -->
 Migrate the fixtup project build system from setuptools (setup.cfg) to Poetry 2.0 to leverage modern Python packaging standards, deterministic dependency resolution with lock files, and improved developer tooling.
 
@@ -35,29 +37,27 @@ Migrate the fixtup project build system from setuptools (setup.cfg) to Poetry 2.
 - Plan migration strategy for example projects with their own setup.cfg
 - Consider maintaining backward compatibility during transition period
 - Review mypy configuration currently in setup.cfg section [mypy]
-
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] Create pyproject.toml with Poetry 2.0 configuration matching current setup.cfg metadata
-- [ ] Migrate all dependencies from setup.cfg [options] and [options.extras_require] to pyproject.toml
-- [ ] Convert entry points (console_scripts) to Poetry scripts configuration
-- [ ] Ensure package data and resources are properly included in Poetry build
-- [ ] Update alfred/ commands to use poetry instead of pipenv
-- [ ] Migrate mypy configuration from setup.cfg to pyproject.toml or separate config
-- [ ] Update GitHub Actions workflows (ci.yml, ci-macos.yml, ci-windows.yml) to use Poetry
-- [ ] Update publish.yml workflow to use poetry publish
-- [ ] Verify all example projects still work or update their documentation
-- [ ] Update README.md with Poetry installation and usage instructions
-- [ ] Remove setup.cfg after successful migration
-- [ ] Ensure CI passes on Python 3.10, 3.11, 3.12, 3.13, 3.14
+- [x] #1 Create pyproject.toml with Poetry 2.0 configuration matching current setup.cfg metadata
+- [x] #2 Migrate all dependencies from setup.cfg [options] and [options.extras_require] to pyproject.toml
+- [x] #3 Convert entry points (console_scripts) to Poetry scripts configuration
+- [x] #4 Ensure package data and resources are properly included in Poetry build
+- [x] #5 Update alfred/ commands to use poetry instead of pipenv
+- [x] #6 Migrate mypy configuration from setup.cfg to pyproject.toml or separate config
+- [x] #7 Update GitHub Actions workflows (ci.yml, ci-macos.yml, ci-windows.yml) to use Poetry
+- [x] #8 Update publish.yml workflow to use poetry publish
+- [ ] #9 Verify all example projects still work or update their documentation
+- [x] #10 Update README.md with Poetry installation and usage instructions
+- [x] #11 Remove setup.cfg after successful migration
+- [x] #12 Ensure CI passes on Python 3.10, 3.11, 3.12, 3.13, 3.14
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-
 ### Steps
 
 1. **Analyze current setup**
@@ -125,5 +125,4 @@ Migrate the fixtup project build system from setuptools (setup.cfg) to Poetry 2.
 - examples/postgresql/setup.cfg
 - examples/unittest/setup.cfg
 - examples/kanban_flask_postgresql/setup.cfg
-
 <!-- SECTION:PLAN:END -->

@@ -1,3 +1,95 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta:__legacy__"
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "fixtup"
+dynamic = ["version"]
+description = "integration testing on steroids"
+readme = "README.md"
+license = "MIT"
+requires-python = ">= 3.10"
+authors = [
+    {name = "Fabien Arcellier", email = "fabien.arcellier@gmail.com"}
+]
+classifiers = [
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Testing :: Acceptance",
+    "Topic :: Software Development :: Testing :: Mocking",
+]
+keywords = ["testing", "fixtures", "integration", "docker", "pytest"]
+
+[project.urls]
+Documentation = "https://fixtup.readthedocs.io/en/latest/index.html"
+Source = "https://github.com/FabienArcellier/fixtup"
+
+[project.scripts]
+fixtup = "fixtup.cli.base:cli"
+
+[project.optional-dependencies]
+dev = [
+    "alfred-cli",
+    "build",
+    "mypy",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "types-requests",
+    "types-PyYAML",
+    "types-toml",
+    "twine",
+]
+dev_windows = [
+    "alfred-cli",
+    "types-PyYAML",
+    "types-toml",
+]
+
+[tool.poetry]
+version = "0.1.5"
+packages = [
+    { include = "fixtup", from = "src" },
+    { include = "fixtup_typing", from = "src" },
+]
+include = [
+    { path = "src/fixtup/**/resource/**/*" },
+    { path = "src/fixtup/py.typed" },
+]
+
+[tool.poetry.dependencies]
+attrs = "*"
+click = "*"
+jinja2 = "*"
+prompt_toolkit = "*"
+plumbum = "*"
+pyyaml = "*"
+python-dotenv = "*"
+requests = "*"
+toml = "*"
+
+[tool.poetry.group.dev.dependencies]
+alfred-cli = "*"
+build = "*"
+mypy = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+types-requests = "*"
+types-pyyaml = "*"
+types-toml = "*"
+twine = "*"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.fixtup]
+fixtures = "tests/fixtures/fixtup"
+plugins = [
+    "fixtup.plugins.dotenv",
+    "fixtup.plugins.docker",
+]
