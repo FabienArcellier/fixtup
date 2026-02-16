@@ -126,3 +126,44 @@ pipenv shell
 ## CI/CD
 
 GitHub Actions runs `alfred ci --no-docs` on Python 3.8-3.11.
+
+## Task Management with Backlog.md
+
+This project uses Backlog.md for task management. Use the following MCP tools:
+
+```bash
+# List tasks
+backlog_md_task_list
+
+# Search tasks
+backlog_md_task_search "query"
+
+# View a task
+backlog_md_task_view TASK-123
+
+# Create a new task
+backlog_md_task_create --title "Task title" --description "Description"
+
+# Edit a task
+backlog_md_task_edit TASK-123 --status "In Progress"
+
+# Complete a task
+backlog_md_task_complete TASK-123
+
+# Archive a task
+backlog_md_task_archive TASK-123
+
+# List milestones
+backlog_md_milestone_list
+
+# Create/Edit/Archive documents
+backlog_md_document_list
+backlog_md_document_view DOC-123
+backlog_md_document_create --title "Doc title" --content "Content"
+```
+
+Workflow guides available:
+- `backlog_md_get_workflow_overview` - General workflow
+- `backlog_md_get_task_creation_guide` - Creating tasks
+- `backlog_md_get_task_execution_guide` - Executing tasks
+- `backlog_md_get_task_finalization_guide` - Finalizing tasks
