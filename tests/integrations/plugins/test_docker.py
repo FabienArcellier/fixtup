@@ -61,8 +61,13 @@ class TestDocker(unittest.TestCase):
                     splitted_path = os.path.split(path)
                     docker_compose_prefix = splitted_path[-1]
 
-                    docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
-                    self.assertIn(docker_compose_identifier, output_row[-1])
+                    docker_compose_identifiers = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
+                    match = False
+                    for docker_compose_identifier in docker_compose_identifiers:
+                        match |= docker_compose_identifier in output_row[-1]
+
+                    self.assertTrue(match,
+                                    f"invalid docker identifier {docker_compose_identifiers} not in {output_row[-1]}")
 
                     if _if_linux():
                         self.assertIn(f'Up', output_row[-1])
@@ -95,13 +100,17 @@ class TestDocker(unittest.TestCase):
 
                     splitted_path = os.path.split(path)
                     docker_compose_prefix = splitted_path[-1]
-                    docker_compose_identifier = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
-                    self.assertNotIn(docker_compose_identifier, output_row[-1])
+                    docker_compose_identifiers = _docker_compose_identifier(docker_compose_prefix, 'sandbox', 1)
+                    match = False
+                    for docker_compose_identifier in docker_compose_identifiers:
+                        match |= docker_compose_identifier in output_row[-1]
+
+                    self.assertFalse(match, f"invalid docker identifier {docker_compose_identifiers} in {output_row[-1]}")
                 finally:
                     get_docker_compose_cmd()('down')
 
 
-def _docker_compose_identifier(docker_prefix: str, identifier: str, index: int) -> str:
+def _docker_compose_identifier(docker_prefix: str, identifier: str, index: int) -> list[str]:
     """
     Docker compose build different identifier that depends of the platform
 
@@ -111,11 +120,10 @@ def _docker_compose_identifier(docker_prefix: str, identifier: str, index: int) 
     linux : simple_fixture_docker__l16555o3_sandbox_1
     macos : simple_fixture_docker__l16555o3-sandbox-1
     """
-    if _if_linux():  # could be "linux", "linux2", "linux3", ...
-        return f"{docker_prefix}_{identifier}_{index}"
-
-    if _if_macos() or is_windows():
-        return f"{docker_prefix}-{identifier}-{index}"
+    return [
+        f"{docker_prefix}_{identifier}_{index}",
+        f"{docker_prefix}-{identifier}-{index}"
+    ]
 
     raise OSError(f"not supported platform : {sys.platform}")
 
