@@ -4,7 +4,7 @@ title: Move the project from setup.cfg to poetry 2.0
 status: Review
 assignee: []
 created_date: '2026-02-16 23:38'
-updated_date: '2026-02-16 23:45'
+updated_date: '2026-02-16 23:49'
 labels: []
 dependencies: []
 ---
@@ -53,6 +53,7 @@ Migrate the fixtup project build system from setuptools (setup.cfg) to Poetry 2.
 - [x] #10 Update README.md with Poetry installation and usage instructions
 - [x] #11 Remove setup.cfg after successful migration
 - [x] #12 Ensure CI passes on Python 3.10, 3.11, 3.12, 3.13, 3.14
+- [x] #13 Fix les versions de toutes les dépendances
 <!-- AC:END -->
 
 ## Implementation Plan
