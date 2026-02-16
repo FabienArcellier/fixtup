@@ -3,9 +3,10 @@ id: TASK-1
 title: >-
   Support de docker compose en plus de docker-compose pour les installations
   d'ubuntu plus récente dans le plugin docker
-status: To Do
+status: Review
 assignee: []
 created_date: '2026-02-16 22:58'
+updated_date: '2026-02-16 23:04'
 labels:
   - docker
   - ubuntu
@@ -14,6 +15,7 @@ dependencies: []
 ---
 
 ## Description
+
 <!-- SECTION:DESCRIPTION:BEGIN -->
 Modern Docker installations on Ubuntu 22.04+ and other recent distributions use the `docker compose` command (Docker Compose V2 plugin) instead of the legacy standalone `docker-compose` binary. The current docker plugin only supports the legacy `docker-compose` command, causing failures on systems with modern Docker installations.
 
@@ -35,24 +37,22 @@ This task involves implementing automatic detection and support for both command
 - Consider adding a configuration option to force a specific command variant
 - Document the detection behavior for users
 - Monitor Docker's deprecation timeline for Compose V1
-
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] Implement automatic detection of available docker compose command (`docker compose` vs `docker-compose`)
-- [ ] Modify `get_docker_compose_cmd()` to return the appropriate command based on availability
-- [ ] Add helper function to detect which command is available on the system
-- [ ] Update all docker compose invocations to use the detected command
-- [ ] Unit tests cover the detection logic for both scenarios
-- [ ] Integration tests pass with both command variants
-- [ ] Documentation updated to explain the automatic detection behavior
+- [x] #1 Implement automatic detection of available docker compose command (`docker compose` vs `docker-compose`)
+- [x] #2 Modify `get_docker_compose_cmd()` to return the appropriate command based on availability
+- [x] #3 Add helper function to detect which command is available on the system
+- [x] #4 Update all docker compose invocations to use the detected command
+- [x] #5 Unit tests cover the detection logic for both scenarios
+- [x] #6 Integration tests pass with both command variants
+- [ ] #7 Documentation updated to explain the automatic detection behavior
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-
 ### Steps
 
 1. **Analyze current implementation**
@@ -88,5 +88,4 @@ This task involves implementing automatic detection and support for both command
 - `src/fixtup/plugins/docker.py` - Main plugin implementation
 - `tests/integrations/plugins/test_docker.py` - Integration tests
 - `tests/units/plugins/` - Unit tests (create if needed)
-
 <!-- SECTION:PLAN:END -->

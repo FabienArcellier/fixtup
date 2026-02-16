@@ -4,12 +4,12 @@ on: [push]
 
 jobs:
     build:
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
         timeout-minutes: 10
 
         strategy:
           matrix:
-            python-version: ["3.10"]
+            python-version: ["3.12"]
             examples: ['kanban_flask_sqlite', 'unittest', 'kanban_flask_postgresql']
 
         steps:

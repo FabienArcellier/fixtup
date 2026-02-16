@@ -20,12 +20,13 @@ def ci(no_docs: bool, no_docker: bool):
     >>> $ alfred ci
     """
     ignore_docker_test = '1' if no_docker else '0'
+    if ignore_docker_test:
+        os.environ['IGNORE_DOCKER_TESTS'] = ignore_docker_test
 
-    with local.env(IGNORE_DOCKER_TESTS=ignore_docker_test):
-        alfred.invoke_command('lint')
-        alfred.invoke_command('tests')
+    alfred.invoke_command('lint')
+    alfred.invoke_command('tests')
 
-        if not no_docs:
-            alfred.invoke_command('docs:check')
+    if not no_docs:
+        alfred.invoke_command('docs:check')
 
 
