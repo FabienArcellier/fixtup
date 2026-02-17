@@ -1,7 +1,7 @@
 ---
 id: TASK-2
 title: Move the project from setup.cfg to poetry 2.0
-status: Review
+status: Done
 assignee: []
 created_date: '2026-02-16 23:38'
 updated_date: '2026-02-17 08:29'
