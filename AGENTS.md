@@ -45,9 +45,9 @@ alfred publish       # Publish to PyPI
 ## Development Environment Setup
 
 ```bash
-# Install dependencies (uses pipenv)
-pipenv install --dev
-pipenv shell
+# Install dependencies (uses poetry)
+poetry install
+poetry shell
 ```
 
 ## Code Style Guidelines
@@ -119,13 +119,13 @@ pipenv shell
 
 ### Configuration
 
-* Dependencies in `setup.cfg`
-* mypy config in `setup.cfg`
-* Version in `src/fixtup/__init__.py`
+* Dependencies in `pyproject.toml` (Poetry)
+* mypy config in `pyproject.toml` [tool.mypy]
+* Version in `src/fixtup/__init__.py` and `pyproject.toml` [tool.poetry.version]
 
 ## CI/CD
 
-GitHub Actions runs `alfred ci --no-docs` on Python 3.8-3.11.
+GitHub Actions runs `alfred ci --no-docs` on Python 3.10-3.14.
 
 ## Task Management with Backlog.md
 

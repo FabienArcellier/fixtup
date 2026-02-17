@@ -1,5 +1,21 @@
 [build-system]
-build-backend = 'setuptools.build_meta'
-requires = [
-    'setuptools >= 43.0.0',
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "postgresql-example"
+version = "0.1.0"
+description = "Example: PostgreSQL integration with fixtup"
+authors = ["Fabien Arcellier <fabien.arcellier@gmail.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fixtup = { path = "../..", develop = true }
+
+[tool.fixtup]
+fixtures = "tests/fixtures"
+plugins = [
+    "fixtup.plugins.dotenv",
+    "fixtup.plugins.docker",
 ]

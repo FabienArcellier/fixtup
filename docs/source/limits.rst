@@ -18,6 +18,6 @@ the fixture has finished executing.
 Here are some examples :
 
 * If a fixture instantiates a container on a port with docker-compose, docker will refuse to start a second fixture
-* If a fixture remains up with a ``keep_mounted`` policy between 2 tests played in parallel, you risk data consistency
+* If a fixture remains up with a ``keep_up`` policy between 2 tests played in parallel, you risk data consistency
   issue in the fixture directory
 * ...

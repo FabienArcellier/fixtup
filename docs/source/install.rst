@@ -67,13 +67,13 @@ in the ``setup.cfg`` manifest of your python project.
 Configure fixture with pyproject.toml
 =====================================
 
-Another way to configure ``Fixtup`` is to add a ``tools.fixtup`` section in
+Another way to configure ``Fixtup`` is to add a ``tool.fixtup`` section in
 the ``pyproject.toml`` manifest of your python project.
 
 .. code-block:: ini
     :caption: ./pyproject.toml
 
-    [tools.fixtup]
+    [tool.fixtup]
     fixtures=tests/fixtures
     plugins=[
         "fixtup.plugins.dotenv",

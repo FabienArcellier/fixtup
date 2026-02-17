@@ -39,7 +39,12 @@ class PyprojectToml(SettingsParser):
 
         with io.open(manifest_expected_path) as file_pointer:
             global_settings = toml.load(file_pointer)
-            return "tools" in global_settings and "fixtup" in global_settings["tools"]
+            if "tools" in global_settings and "fixtup" in global_settings["tools"]:
+                return True
+            if "tool" in global_settings and "fixtup" in global_settings["tool"]:
+                return True
+
+            return False
 
     def read_settings(self, path: str) -> Settings:
         """
@@ -54,7 +59,11 @@ class PyprojectToml(SettingsParser):
 
         with io.open(manifest_expected_path) as file_pointer:
             global_settings = toml.load(file_pointer)
-            settings = global_settings["tools"]["fixtup"]
+            if "tools" in global_settings:
+                settings = global_settings["tools"]["fixtup"]
+            else:
+                settings = global_settings["tool"]["fixtup"]
+
             return Settings.from_manifest(manifest_expected_path, settings)
 
     def append_settings(self, settings: Settings):

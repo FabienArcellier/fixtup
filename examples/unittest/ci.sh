@@ -4,4 +4,4 @@
 # to check this example in the continuous integration process
 # of fixtup.
 
-python3 -m unittest discover tests/integrations
+poetry run python -m unittest discover tests/integrations

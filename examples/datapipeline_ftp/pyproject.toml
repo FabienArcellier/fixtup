@@ -1,3 +1,30 @@
 [build-system]
-build-backend = 'setuptools.build_meta'
-requires = ['setuptools >= 43.0.0']
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "datapipeline-ftp"
+version = "0.1.0"
+description = "Example: Data pipeline from API to FTP server"
+authors = ["Fabien Arcellier <fabien.arcellier@gmail.com>"]
+packages = [
+    { include = "datapipeline_ftp", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+apscheduler = "^3.10.0"
+requests = "^2.31.0"
+ftputil = "^5.0.0"
+fixtup = { path = "../..", develop = true }
+
+[tool.poetry.group.dev.dependencies]
+freezegun = "^1.2.0"
+pytest = "^8.0.0"
+
+[tool.fixtup]
+fixtures = "tests/fixtures"
+plugins = [
+    "fixtup.plugins.dotenv",
+    "fixtup.plugins.docker",
+]

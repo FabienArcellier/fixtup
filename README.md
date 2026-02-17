@@ -63,6 +63,68 @@ Want more ? [Fixtup even mount your containers, take a try](https://fixtup.readt
 
 [The complete example is available in the repo](https://github.com/FabienArcellier/fixtup/tree/master/examples)
 
+## Installation
+
+### Using pip
+
+```bash
+pip install fixtup
+```
+
+### Using Poetry (recommended for development)
+
+```bash
+poetry add --group dev fixtup
+```
+
+## Development Setup
+
+This project uses [Poetry](https://python-poetry.org/) for dependency management and packaging.
+
+### Prerequisites
+
+- Python 3.10 or higher
+- [Poetry](https://python-poetry.org/docs/#installation)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/FabienArcellier/fixtup.git
+cd fixtup
+
+# Install dependencies
+poetry install
+
+# Activate the virtual environment
+poetry shell
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+poetry run alfred tests
+
+# Run specific test suites
+poetry run alfred tests:units
+poetry run alfred tests:integrations
+poetry run alfred tests:acceptances
+```
+
+### Linting
+
+```bash
+poetry run alfred lint
+```
+
+### Building Documentation
+
+```bash
+poetry run alfred docs:build
+poetry run alfred docs:display
+```
+
 ## Contributing
 
 [More information into CONTRIBUTING.md](https://github.com/FabienArcellier/fixtup/blob/master/CONTRIBUTING.md)

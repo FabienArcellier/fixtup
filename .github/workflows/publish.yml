@@ -15,26 +15,23 @@ jobs:
             python-version: ["3.12"]
 
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
 
             - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v2
+              uses: actions/setup-python@v5
               with:
                   python-version: ${{ matrix.python-version }}
 
-            - name: update package manager & install python3 environment
+            - name: Install Poetry
               run: |
-                pip install setuptools
-                pip install pipenv
-                pipenv install --dev
+                pip install poetry
 
             - name: run continuous integration to validate fixtup
               run: |
-                pipenv run alfred ci
+                poetry run alfred ci
 
             - name: publish on pypi
               run: |
-                pipenv run alfred publish:pypi
+                poetry publish --no-interaction
               env:
-                  TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-                  TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+                  POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
