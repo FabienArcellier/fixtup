@@ -29,14 +29,14 @@ def publish():
 
     current_version: Optional[str] = None
     try:
-        current_version = git["describe", "--tags", "--abbrev=0"]().strip()
+        current_version = alfred.run(git, ["describe", "--tags", "--abbrev=0"])[1].strip()
     except ProcessExecutionError as exception:
         # happens when no tag exists yet
         if "fatal: No names found, cannot describe anything." in exception.stderr:
             current_version = None
         else:
             raise
-    git_status: str = git["status"]()
+    git_status: str = alfred.run(git, ["status"])[1]
 
     on_master = "On branch master" in git_status
     if not on_master:
