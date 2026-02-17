@@ -10,20 +10,21 @@ jobs:
         strategy:
           matrix:
             python-version: ["3.12"]
-            examples: ['kanban_flask_sqlite', 'unittest', 'kanban_flask_postgresql']
+            examples: ['datapipeline_ftp', 'kanban_flask_sqlite', 'unittest', 'kanban_flask_postgresql']
 
         steps:
-            - uses: actions/checkout@v2
+            -   uses: actions/checkout@v4
 
-            - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v2
-              with:
-                  python-version: ${{ matrix.python-version }}
+            -   name: Set up Python ${{ matrix.python-version }}
+                uses: actions/setup-python@v5
+                with:
+                    python-version: ${{ matrix.python-version }}
 
             - name: update package manager & install python3 environment
               run: |
                 cd examples/${{matrix.examples}}
-                pip install .[dev]
+                pip install poetry
+                poetry install
 
             - name: run the validation tests
               run:  |

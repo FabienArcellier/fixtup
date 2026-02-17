@@ -1,16 +1,17 @@
 ---
 id: TASK-3
 title: Migrate example projects to Poetry and install fixtup as local dependency
-status: Review
+status: Done
 assignee: []
 created_date: '2026-02-17 09:28'
-updated_date: '2026-02-17 10:06'
+updated_date: '2026-02-17 10:27'
 labels:
   - examples
   - poetry
   - dependencies
 dependencies: []
 priority: medium
+ordinal: 500
 ---
 
 ## Description

@@ -5,4 +5,4 @@
 # of fixtup.
 
 
-python -m unittest discover tests/acceptances
+poetry run python -m unittest discover tests/acceptances

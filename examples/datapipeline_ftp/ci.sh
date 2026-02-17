@@ -5,4 +5,4 @@
 # of fixtup.
 
 
-python -m unittest discover tests/integrations
+poetry run pytest tests/integrations
