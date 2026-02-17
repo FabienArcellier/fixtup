@@ -25,6 +25,7 @@ jobs:
             - name: Install Poetry
               run: |
                 pip install poetry
+                poetry install  --no-interaction
 
             - name: run continuous integration to validate fixtup
               run: |
@@ -32,6 +33,7 @@ jobs:
 
             - name: publish on pypi
               run: |
+                poetry build
                 poetry publish --no-interaction
               env:
                   POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}

@@ -24,7 +24,7 @@ jobs:
               run: |
                 cd examples/${{matrix.examples}}
                 pip install poetry
-                poetry install
+                poetry install  --no-interaction
 
             - name: run the validation tests
               run:  |
