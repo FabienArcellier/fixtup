@@ -4,7 +4,7 @@ title: Move the project from setup.cfg to poetry 2.0
 status: Review
 assignee: []
 created_date: '2026-02-16 23:38'
-updated_date: '2026-02-17 08:26'
+updated_date: '2026-02-17 08:29'
 labels: []
 dependencies: []
 ---
@@ -43,28 +43,26 @@ Migrate the fixtup project build system from setuptools (setup.cfg) to Poetry 2.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
-
 <!-- AC:BEGIN -->
-- [x] Create pyproject.toml with Poetry 2.0 configuration matching current setup.cfg metadata
-- [x] Migrate all dependencies from setup.cfg [options] and [options.extras_require] to pyproject.toml
-- [x] Convert entry points (console_scripts) to Poetry scripts configuration
-- [x] Ensure package data and resources are properly included in Poetry build
-- [x] Update alfred/ commands to use poetry instead of pipenv
-- [x] Migrate mypy configuration from setup.cfg to pyproject.toml or separate config
-- [ ] Update GitHub Actions workflows (ci.yml, ci-macos.yml, ci-windows.yml) to use Poetry
-- [x] Update publish.yml workflow to use poetry publish
-- [ ] Verify all example projects still work or update their documentation
-- [x] Update README.md with Poetry installation and usage instructions
-- [x] Remove setup.cfg after successful migration
-- [x] Ensure CI passes on Python 3.10, 3.11, 3.12, 3.13, 3.14
-- [x] Fix les versions de toutes les dépendances
-- [ ] Migrate windows dependency in poetry section [tool.poetry.group.dev_windows.dependencies]
+- [x] #1 Create pyproject.toml with Poetry 2.0 configuration matching current setup.cfg metadata
+- [x] #2 Migrate all dependencies from setup.cfg [options] and [options.extras_require] to pyproject.toml
+- [x] #3 Convert entry points (console_scripts) to Poetry scripts configuration
+- [x] #4 Ensure package data and resources are properly included in Poetry build
+- [x] #5 Update alfred/ commands to use poetry instead of pipenv
+- [x] #6 Migrate mypy configuration from setup.cfg to pyproject.toml or separate config
+- [x] #7 Update GitHub Actions workflows (ci.yml, ci-macos.yml, ci-windows.yml) to use Poetry
+- [x] #8 Update publish.yml workflow to use poetry publish
+- [ ] #9 Verify all example projects still work or update their documentation
+- [x] #10 Update README.md with Poetry installation and usage instructions
+- [x] #11 Remove setup.cfg after successful migration
+- [x] #12 Ensure CI passes on Python 3.10, 3.11, 3.12, 3.13, 3.14
+- [x] #13 Fix les versions de toutes les dépendances
+- [x] #14 Migrate windows dependency in poetry section [tool.poetry.group.dev_windows.dependencies]
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
-
 ### Steps
 
 1. **Analyze current setup**
@@ -130,5 +128,4 @@ Migrate the fixtup project build system from setuptools (setup.cfg) to Poetry 2.
 - .github/workflows/ci-windows.yml
 - .github/workflows/publish.yml
 - .github/workflows/validate_examples.yml
-
 <!-- SECTION:PLAN:END -->

@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "integration testing on steroids"
 readme = "README.md"
 license = "MIT"
-requires-python = ">= 3.10"
+requires-python = ">= 3.10,<4.0"
 authors = [
     {name = "Fabien Arcellier", email = "fabien.arcellier@gmail.com"}
 ]
@@ -33,29 +33,10 @@ Source = "https://github.com/FabienArcellier/fixtup"
 [project.scripts]
 fixtup = "fixtup.cli.base:cli"
 
-[project.optional-dependencies]
-dev = [
-    "alfred-cli",
-    "build",
-    "mypy",
-    "sphinx",
-    "sphinx-rtd-theme",
-    "types-requests",
-    "types-PyYAML",
-    "types-toml",
-    "twine",
-]
-dev_windows = [
-    "alfred-cli",
-    "types-PyYAML",
-    "types-toml",
-]
-
 [tool.poetry]
 version = "0.1.5"
 packages = [
-    { include = "fixtup", from = "src" },
-    { include = "fixtup_typing", from = "src" },
+    { include = "fixtup", from = "src" }
 ]
 include = [
     { path = "src/fixtup/**/resource/**/*" },
@@ -83,6 +64,11 @@ types-requests = "^2.31.0"
 types-pyyaml = "^6.0.1"
 types-toml = "^0.10.8"
 twine = "^5.1.0"
+
+[tool.poetry.group.dev_windows.dependencies]
+alfred-cli = "^2.2.7"
+types-pyyaml = "^6.0.1"
+types-toml = "^0.10.8"
 
 [tool.mypy]
 ignore_missing_imports = true
