@@ -14,42 +14,96 @@ priority: medium
 
 ## Description
 <!-- SECTION:DESCRIPTION:BEGIN -->
-Migrate the example projects located in ./examples from their current setup to Poetry. Update the dependency management so that fixtup is installed as a local dependency (using path-based installation) rather than being pulled from PyPI.
+Migrate the 5 example projects located in `./examples/` from setuptools-based configuration to Poetry 2.0. Each example currently uses `setup.cfg` for dependency management and has a minimal `pyproject.toml` that only specifies the build system. The goal is to modernize the dependency management by converting each example to use Poetry's `pyproject.toml` format with a path-based dependency on the local fixtup package (`{path = "../..", develop = true}`).
 
-This will make it easier to test changes to fixtup against the examples without needing to publish to PyPI first.
+This migration will enable developers to test changes to fixtup against the examples immediately without publishing to PyPI, ensuring faster feedback loops during development.
 
 ### Impacts
 
 #### Positive
-- Easier local development and testing of fixtup changes
-- No need to publish to PyPI to test examples
-- Consistent dependency management across all projects
+- **Faster development cycle**: Test fixtup changes against examples without PyPI publishing
+- **Consistent tooling**: All examples use Poetry like the main project
+- **Better dependency resolution**: Poetry's lock file ensures reproducible builds
+- **Local development support**: Path-based dependency enables real-time testing
+- **Simplified configuration**: Single `pyproject.toml` replaces `setup.cfg` + `pyproject.toml`
 
 #### Negative
-- Requires updating all example project configurations
-- Contributors need Poetry installed to run examples
+- **Breaking change**: Contributors must have Poetry installed to run examples
+- **Migration effort**: All 5 examples need configuration updates
+- **Learning curve**: Contributors unfamiliar with Poetry need to learn basic commands
 
 #### Further consideration
-- Consider adding a script to automate the migration process
-- Document the new setup process for contributors
+- Update `examples/README.md` with Poetry setup instructions
+- Consider adding a validation script to check all examples have valid Poetry configs
+- Document troubleshooting steps for common Poetry issues
+- Add CI job to verify examples can be installed with Poetry
 
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] Migrate all example projects in ./examples to use Poetry
-- [ ] Configure fixtup as a local path dependency instead of PyPI
-- [ ] Verify examples still work after migration
+- [ ] All 5 example projects migrated from setuptools to Poetry 2.0
+- [ ] Each example has a complete `pyproject.toml` with Poetry configuration
+- [ ] fixtup configured as path dependency (`{path = "../..", develop = true}`) in all examples
+- [ ] All `setup.cfg` files removed from examples
+- [ ] All legacy `pyproject.toml` files updated or replaced
+- [ ] Each example's dependencies correctly mapped to Poetry format
+- [ ] Examples can be installed with `poetry install` without errors
+- [ ] Examples still pass their tests after migration
+- [ ] `examples/README.md` updated with Poetry instructions
 <!-- AC:END -->
 
 ## Implementation Plan
 
 <!-- SECTION:PLAN:BEGIN -->
 
+### Steps
+
+1. **Analyze current setup**
+   - Review each example's `setup.cfg` to extract dependencies
+   - Document current dependency versions and extras
+
+2. **Create Poetry configuration for each example**
+   - Convert `setup.cfg` metadata to Poetry `[tool.poetry]` section
+   - Map `install_requires` to `[tool.poetry.dependencies]`
+   - Map `extras_require` dev to `[tool.poetry.group.dev.dependencies]`
+   - Add fixtup as path dependency: `{path = "../..", develop = true}`
+   - Update `[build-system]` to use `poetry-core>=2.0.0`
+
+3. **Remove legacy files**
+   - Delete `setup.cfg` from each example
+   - Clean up any `setup.py` if present
+   - Remove old build artifacts
+
+4. **Test migration**
+   - Run `poetry install` in each example directory
+   - Verify dependencies are installed correctly
+   - Run example tests to ensure they still pass
+
+5. **Update documentation**
+   - Update `examples/README.md` with Poetry setup instructions
+   - Add troubleshooting section for common issues
+
 ### Files
 
-- examples/*/pyproject.toml (new files for each example)
-- examples/*/requirements.txt (to be removed)
-- examples/*/setup.py (to be removed if exists)
+**To be created/modified:**
+- `examples/datapipeline_ftp/pyproject.toml` - Poetry config with FTP-related deps
+- `examples/kanban_flask_postgresql/pyproject.toml` - Poetry config with Flask + PostgreSQL deps
+- `examples/kanban_flask_sqlite/pyproject.toml` - Poetry config with Flask + SQLite deps
+- `examples/postgresql/pyproject.toml` - Poetry config with PostgreSQL deps
+- `examples/unittest/pyproject.toml` - Poetry config with Pillow deps
+- `examples/README.md` - Update with Poetry instructions
+
+**To be removed:**
+- `examples/datapipeline_ftp/setup.cfg`
+- `examples/datapipeline_ftp/pyproject.toml` (legacy build-system only)
+- `examples/kanban_flask_postgresql/setup.cfg`
+- `examples/kanban_flask_postgresql/pyproject.toml` (legacy build-system only)
+- `examples/kanban_flask_sqlite/setup.cfg`
+- `examples/kanban_flask_sqlite/pyproject.toml` (legacy build-system only)
+- `examples/postgresql/setup.cfg`
+- `examples/postgresql/pyproject.toml` (legacy build-system only)
+- `examples/unittest/setup.cfg`
+- `examples/unittest/pyproject.toml` (legacy build-system only)
 
 <!-- SECTION:PLAN:END -->
